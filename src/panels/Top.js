@@ -107,21 +107,25 @@ class Top extends React.Component {
 					)}
 				<div style={{ marginBottom: me ? 48 * 2 : 48 }}>
 					{isTop ? (
-						<InfiniteScroll
-							pageStart={pageStart}
-							loadMore={this.loadTop}
-							hasMore={hasMore}
-							loader={<Spinner size={"large"} key={0} />}
-						>
-							<List>
-								{top.map(student => (
-									<TopCell key={student.id} {...student} />
-								))}
-								{!isFetching && !top.length && search && (
-									<Placeholder>не найдено</Placeholder>
-								)}
-							</List>
-						</InfiniteScroll>
+						(!isFetching && !top.length && search && (
+							<Placeholder>не найдено</Placeholder>
+						)) || (
+							<InfiniteScroll
+								pageStart={pageStart}
+								loadMore={this.loadTop}
+								hasMore={hasMore}
+								loader={<Spinner size={"large"} key={0} />}
+							>
+								<List>
+									{top.map(student => (
+										<TopCell
+											key={student.id}
+											{...student}
+										/>
+									))}
+								</List>
+							</InfiniteScroll>
+						)
 					) : (
 						<Empty />
 					)}
