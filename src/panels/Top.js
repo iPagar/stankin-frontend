@@ -144,7 +144,13 @@ class Top extends React.Component {
 					search: userInfo.id
 				})
 				.then(rating => {
-					if (!rating.data.length) return null;
+					console.log(rating);
+					if (
+						rating.data.find(
+							student => student.id === userInfo.id
+						) === undefined
+					)
+						return null;
 					return {
 						...rating.data.find(
 							student => student.id === userInfo.id
