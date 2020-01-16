@@ -209,7 +209,7 @@ class Top extends React.Component {
 							me: me,
 							isTop: true,
 							top: resp,
-							hasMore: resp.length === 10,
+							hasMore: !(resp.length % 10),
 							pageStart: state.pageStart + 1,
 							isFetching: false
 						}));
@@ -223,7 +223,7 @@ class Top extends React.Component {
 							isTop: true,
 							top: resp,
 							isFetching: false,
-							hasMore: resp.length === 10,
+							hasMore: !(resp.length % 10),
 							pageStart: state.pageStart + 1
 						}));
 				});
