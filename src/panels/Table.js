@@ -9,17 +9,10 @@ class Table extends Component {
 	state = { tooltip: false };
 
 	calcRating() {
-		const subjects = this.props.marks.filter(
-			mark =>
-				mark.subject !== "ФК" &&
-				mark.subject !== "Физическая культура" &&
-				mark.subject !== "Прикладная физическая культура"
-		);
-
 		let sum = 0;
 		let sumFactor = 0;
 
-		subjects.forEach(subject => {
+		marks.forEach(subject => {
 			let sumFactorSubject = 0;
 			let sumSubject = 0;
 
