@@ -73,7 +73,8 @@ class Table extends Component {
 					columns={[
 						{
 							title: "Предмет",
-							field: "subject"
+							field: "subject",
+							customSort: (a, b) => a.factor - b.factor
 						},
 						{
 							title: "М1",
