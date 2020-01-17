@@ -9,6 +9,8 @@ class Table extends Component {
 	state = { tooltip: false };
 
 	calcRating() {
+		const { marks } = this.props;
+
 		let sum = 0;
 		let sumFactor = 0;
 
