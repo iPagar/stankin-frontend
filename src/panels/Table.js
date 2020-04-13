@@ -64,8 +64,8 @@ class Table extends Component {
 			<div
 				style={{
 					maxWidth: "100%",
-					marginTop: 46,
-					marginBottom: 46
+					marginTop: 100,
+					marginBottom: 48
 				}}
 			>
 				<MaterialTable
@@ -179,6 +179,7 @@ class Table extends Component {
 					<FixedLayout vertical="bottom">
 						<List>
 							<Cell
+								style={{ backgroundColor: "#ffffff" }}
 								indicator={
 									<div>
 										{hasRating || (

@@ -1,13 +1,13 @@
 import React from "react";
 import {
 	Panel,
-	PanelHeader,
-	HeaderButton,
+	PanelHeaderButton,
+	PanelHeaderSimple,
 	List,
 	Cell,
 	Header,
 	InfoRow,
-	CellButton
+	CellButton,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
 import { setView, notify, exit } from "../redux/actions";
@@ -15,30 +15,28 @@ import { setView, notify, exit } from "../redux/actions";
 import Icon24Cancel from "@vkontakte/icons/dist/24/cancel";
 import Icon24Notification from "@vkontakte/icons/dist/24/notification";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
-		student: state.init.student
+		student: state.init.student,
 	};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
 	return {
-		onCancelClick: tag => {
+		onCancelClick: (tag) => {
 			dispatch(setView(tag));
 		},
 		onNotifyClick: () => {
 			dispatch(notify());
 		},
 		onExitClick: () => {
-			dispatch(exit()).then(() => {
-				setView("loginView");
-			});
-		}
+			dispatch(exit());
+		},
 	};
 };
 
 class Profile extends React.Component {
-	onCancelClick = e => {
+	onCancelClick = (e) => {
 		const tag = e.currentTarget.dataset.tag;
 
 		this.props.onCancelClick(tag);
@@ -54,7 +52,7 @@ class Profile extends React.Component {
 
 	renderExit() {
 		return (
-			<CellButton level={"danger"} onClick={this.onExit}>
+			<CellButton mode={"danger"} onClick={this.onExit}>
 				Выйти
 			</CellButton>
 		);
@@ -65,7 +63,7 @@ class Profile extends React.Component {
 
 		return (
 			<CellButton
-				level={(notify && `danger`) || `primary`}
+				mode={(notify && `danger`) || `primary`}
 				onClick={this.setNotify}
 				before={<Icon24Notification />}
 			>
@@ -82,17 +80,17 @@ class Profile extends React.Component {
 				<Header level="secondary">Информация о студенте</Header>
 				<List>
 					<Cell>
-						<InfoRow title="ФИО">
+						<InfoRow header="ФИО">
 							{`${student.surname} ${student.initials}`}
 						</InfoRow>
 					</Cell>
 					<Cell>
-						<InfoRow title="Студенческий билет">
+						<InfoRow header="Студенческий билет">
 							{student.student}
 						</InfoRow>
 					</Cell>
 					<Cell>
-						<InfoRow title="Группа">{student.stgroup}</InfoRow>
+						<InfoRow header="Группа">{student.stgroup}</InfoRow>
 					</Cell>
 				</List>
 			</div>
@@ -101,19 +99,19 @@ class Profile extends React.Component {
 
 	render() {
 		return (
-			<Panel id="profile" theme="white">
-				<PanelHeader
+			<Panel id="profile" theme="white" separator={false}>
+				<PanelHeaderSimple
 					left={
-						<HeaderButton
+						<PanelHeaderButton
 							data-tag="mainView"
 							onClick={this.onCancelClick}
 						>
 							<Icon24Cancel />
-						</HeaderButton>
+						</PanelHeaderButton>
 					}
 				>
 					Профиль
-				</PanelHeader>
+				</PanelHeaderSimple>
 				{this.renderProfile()}
 				<List>
 					{this.renderNotify()}

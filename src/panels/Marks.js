@@ -1,16 +1,16 @@
 import React from "react";
 import {
 	Panel,
-	PanelHeader,
+	PanelHeaderSimple,
+	PanelHeaderContext,
 	PanelHeaderContent,
-	HeaderContext,
 	List,
 	Cell,
 	FixedLayout,
 	Tabs,
 	HorizontalScroll,
 	TabsItem,
-	HeaderButton
+	PanelHeaderButton,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
 import { selectSemester, setActiveTopTab, setView } from "../redux/actions";
@@ -23,28 +23,28 @@ import Top from "./Top";
 
 import Icon24Settings from "@vkontakte/icons/dist/24/settings";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
 		selectedSemester: state.init.selectedSemester,
 		semesters: state.init.semesters,
 		marks: state.init.marks[state.init.selectedSemester],
 		scheme: state.config.scheme,
 		activeTopTab: state.config.activeTopTab,
-		activeBottomTab: state.config.activeBottomTab
+		activeBottomTab: state.config.activeBottomTab,
 	};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
 	return {
-		onCellClick: tag => {
+		onCellClick: (tag) => {
 			dispatch(selectSemester(tag));
 		},
-		onTopTab: tag => {
+		onTopTab: (tag) => {
 			dispatch(setActiveTopTab(tag));
 		},
-		onProfileClick: tag => {
+		onProfileClick: (tag) => {
 			dispatch(setView(tag));
-		}
+		},
 	};
 };
 
@@ -55,14 +55,14 @@ class Marks extends React.Component {
 		popout: null,
 		tooltip: false,
 		login: "",
-		password: ""
+		password: "",
 	};
 
 	toggleContext = () => {
 		this.setState({ contextOpened: !this.state.contextOpened });
 	};
 
-	select = e => {
+	select = (e) => {
 		const tag = e.currentTarget.dataset.tag;
 
 		this.props.onCellClick(tag);
@@ -75,13 +75,15 @@ class Marks extends React.Component {
 		return `${semester.slice(0, 4)} ${semester.slice(5, 10)}`;
 	}
 
-	selectTopTab = e => {
+	selectTopTab = (e) => {
+		const { contextOpened } = this.state;
 		const tag = e.currentTarget.dataset.tag;
 
+		if (contextOpened) requestAnimationFrame(this.toggleContext);
 		this.props.onTopTab(tag);
 	};
 
-	onProfileClick = e => {
+	onProfileClick = (e) => {
 		const tag = e.currentTarget.dataset.tag;
 
 		this.props.onProfileClick(tag);
@@ -114,31 +116,37 @@ class Marks extends React.Component {
 		);
 	}
 
-	renderHeaderContext() {
-		const { semesters, selectedSemester } = this.props;
+	renderPanelHeaderContext() {
+		const { semesters, selectedSemester, activeTopTab } = this.props;
 
 		return (
-			<HeaderContext
+			<PanelHeaderContext
 				opened={this.state.contextOpened}
 				onClose={this.toggleContext}
 			>
-				<List style={{ top: 46 }}>
-					{semesters.map((semester, i) => (
-						<Cell
-							key={i}
-							data-tag={i}
-							asideContent={
-								selectedSemester === i ? (
-									<Icon24Done fill="var(--accent)" />
-								) : null
-							}
-							onClick={this.select}
-						>
-							{this.semesterFormat(semester)}
-						</Cell>
-					))}
-				</List>
-			</HeaderContext>
+				<div
+					style={{
+						marginTop: activeTopTab === "marks" ? -4 : 40,
+					}}
+				>
+					<List>
+						{semesters.map((semester, i) => (
+							<Cell
+								key={i}
+								data-tag={i}
+								asideContent={
+									selectedSemester === i ? (
+										<Icon24Done fill="var(--accent)" />
+									) : null
+								}
+								onClick={this.select}
+							>
+								{this.semesterFormat(semester)}
+							</Cell>
+						))}
+					</List>
+				</div>
+			</PanelHeaderContext>
 		);
 	}
 
@@ -147,27 +155,42 @@ class Marks extends React.Component {
 		const semester = this.semesterFormat(semesters[selectedSemester]);
 
 		return (
-			<Panel id="marks" theme="white" centered={activeTopTab === "marks"}>
-				<PanelHeader
+			<Panel
+				id="marks"
+				theme="white"
+				centered={activeTopTab === "marks"}
+				separator={false}
+			>
+				<PanelHeaderSimple
+					separator={false}
 					left={
-						<HeaderButton
+						<PanelHeaderButton
 							data-tag="profileView"
 							onClick={this.onProfileClick}
 						>
 							<Icon24Settings />
-						</HeaderButton>
+						</PanelHeaderButton>
 					}
-					noShadow
 				>
 					<PanelHeaderContent
-						aside={<Icon16Dropdown />}
+						aside={
+							<Icon16Dropdown
+								style={{
+									transform: `rotate(${
+										this.state.contextOpened
+											? "180deg"
+											: "0"
+									})`,
+								}}
+							/>
+						}
 						onClick={this.toggleContext}
 					>
 						{semester}
 					</PanelHeaderContent>
-				</PanelHeader>
+				</PanelHeaderSimple>
 
-				{this.renderHeaderContext()}
+				{this.renderPanelHeaderContext()}
 				{this.renderFixedTop()}
 				{(activeTopTab === "marks" && <Table marks={marks} />) || (
 					<Top />

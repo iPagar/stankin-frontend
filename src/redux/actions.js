@@ -9,15 +9,15 @@ import {
 	SET_ACTIVE_TOP_TAB,
 	SET_ACTIVE_BOTTOM_TAB,
 	RECEIVE_NOTIFY,
-	RECEIVE_EXIT
+	RECEIVE_EXIT,
 } from "./actionTypes";
 
 export function openRating(tag) {
-	return dispatch => {};
+	return (dispatch) => {};
 }
 
 export function openRatingSt(tag) {
-	return dispatch => {};
+	return (dispatch) => {};
 }
 
 export function setView(content) {
@@ -53,7 +53,7 @@ function invalidateInit() {
 }
 
 export function exit() {
-	return dispatch => {
+	return (dispatch) => {
 		dispatch(requestInit());
 		return api
 			.delete("/student")
@@ -66,7 +66,7 @@ export function exit() {
 }
 
 export function notify() {
-	return dispatch => {
+	return (dispatch) => {
 		dispatch(requestInit());
 		return api
 			.post("/notify")
@@ -81,31 +81,31 @@ export function notify() {
 }
 
 export function fetchInit() {
-	return dispatch => {
+	return (dispatch) => {
 		dispatch(requestInit());
 		return Promise.all([
-			api.post("/student").then(student => student.data),
-			api.post("/semesters").then(semesters => {
+			api.post("/student").then((student) => student.data),
+			api.post("/semesters").then((semesters) => {
 				return Promise.all([
 					Promise.all(
-						semesters.data.map(semester => {
+						semesters.data.map((semester) => {
 							return api.post("/marks", { semester });
 						})
-					).then(marks => marks.map(mark => mark.data))
-				]).then(resp => {
+					).then((marks) => marks.map((mark) => mark.data)),
+				]).then((resp) => {
 					return {
 						semesters: semesters.data,
-						marks: resp[0]
+						marks: resp[0],
 					};
 				});
-			})
+			}),
 		])
-			.then(response => {
+			.then((response) => {
 				dispatch(
 					receiveInit({
 						student: response[0],
 						semesters: response[1].semesters,
-						marks: response[1].marks
+						marks: response[1].marks,
 					})
 				);
 			})

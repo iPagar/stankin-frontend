@@ -7,33 +7,31 @@ import {
 	UsersStack,
 	Spinner,
 	Search,
-	Placeholder
+	Placeholder,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
 import InfiniteScroll from "react-infinite-scroller";
 import { api } from "../services";
 import { setActiveBottomTab } from "../redux/actions";
-import { VKMiniAppAPI } from "@vkontakte/vk-mini-apps-api";
+import vkc from "@vkontakte/vk-bridge";
 
 import TopCell from "./TopCell";
 import Empty from "./Empty";
 
-const vkc = new VKMiniAppAPI();
-
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
 		selectedSemester: state.init.selectedSemester,
 		student: state.init.student,
 		semesters: state.init.semesters,
-		activeBottomTab: state.config.activeBottomTab
+		activeBottomTab: state.config.activeBottomTab,
 	};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
 	return {
-		onBottomTab: tag => {
+		onBottomTab: (tag) => {
 			dispatch(setActiveBottomTab(tag));
-		}
+		},
 	};
 };
 
@@ -46,10 +44,10 @@ class Top extends React.Component {
 		pageStart: 0,
 		offset: 0,
 		me: null,
-		search: ""
+		search: "",
 	};
 
-	selectBottomTab = e => {
+	selectBottomTab = (e) => {
 		const tag = e.currentTarget.dataset.tag;
 
 		this.props.onBottomTab(tag);
@@ -67,19 +65,19 @@ class Top extends React.Component {
 				me: null,
 				top: [],
 				isFetching: true,
-				isTop: true
+				isTop: true,
 			});
 		}
 	}
 
-	onSearchChange = search => {
+	onSearchChange = (search) => {
 		this.setState({
-			search,
+			search: search.target.value,
 			top: [],
 			me: null,
 			pageStart: 0,
 			hasMore: true,
-			isFetching: true
+			isFetching: true,
 		});
 	};
 
@@ -91,7 +89,7 @@ class Top extends React.Component {
 			hasMore,
 			top,
 			me,
-			isFetching
+			isFetching,
 		} = this.state;
 		const { activeBottomTab } = this.props;
 
@@ -117,7 +115,7 @@ class Top extends React.Component {
 								loader={<Spinner size={"large"} key={0} />}
 							>
 								<List>
-									{top.map(student => (
+									{top.map((student) => (
 										<TopCell
 											key={student.id}
 											{...student}
@@ -137,25 +135,24 @@ class Top extends React.Component {
 	fetchMe() {
 		const { semesters, selectedSemester, activeBottomTab } = this.props;
 
-		return vkc.getUserInfo().then(userInfo =>
+		return vkc.sendPromise("VKWebAppGetUserInfo", {}).then((userInfo) =>
 			api
 				.post(activeBottomTab === "rating" ? `/rating` : `/ratingst`, {
 					semester: semesters[selectedSemester],
-					search: userInfo.id
+					search: userInfo.id,
 				})
-				.then(rating => {
-					console.log(rating);
+				.then((rating) => {
 					if (
 						rating.data.find(
-							student => student.id === userInfo.id
+							(student) => student.id === userInfo.id
 						) === undefined
 					)
 						return null;
 					return {
 						...rating.data.find(
-							student => student.id === userInfo.id
+							(student) => student.id === userInfo.id
 						),
-						...userInfo
+						...userInfo,
 					};
 				})
 		);
@@ -166,79 +163,82 @@ class Top extends React.Component {
 		const { activeBottomTab, semesters, selectedSemester } = this.props;
 
 		return vkc
-			.getAuthToken(7010368)
-			.then(auth =>
+			.sendPromise("VKWebAppGetAuthToken", { app_id: 7010368, scope: "" })
+			.then((auth) =>
 				api
 					.post(`/${activeBottomTab}`, {
 						semester: semesters[selectedSemester],
 						search,
-						offset: pageStart
+						offset: pageStart,
 					})
 
-					.then(resp => ({
+					.then((resp) => ({
 						students: resp.data,
-						auth
+						auth,
 					}))
 			)
-			.then(resp =>
+			.then((resp) =>
 				vkc
-					.callAPIMethod("users.get", {
+					.sendPromise("VKWebAppCallAPIMethod", {
+						method: "users.get",
 						request_id: 1,
-						user_ids: resp.students
-							.map(student => student.id)
-							.toString(),
-						fields: "photo_50",
-						v: "5.103",
-						access_token: resp.auth.accessToken
+						params: {
+							user_ids: resp.students
+								.map((student) => student.id)
+								.toString(),
+							fields: "photo_50",
+							v: "5.103",
+							access_token: resp.auth.access_token,
+						},
 					})
-					.then(users => ({
+					.then((users) => ({
 						students: resp.students,
-						users
+						users: users.response,
 					}))
 			)
-			.then(resp => {
+			.then((resp) => {
 				const top = !pageStart
 					? resp.users.map((user, i) => ({
 							...user,
-							...resp.students[i]
+							...resp.students[i],
 					  }))
 					: [
 							...this.state.top,
 							...resp.users.map((user, i) => ({
 								...user,
-								...resp.students[i]
-							}))
+								...resp.students[i],
+							})),
 					  ];
 
 				return top;
 			})
-			.then(resp => {
-				return this.fetchMe().then(me => {
+			.then((resp) => {
+				return this.fetchMe().then((me) => {
 					if (pageStart === 0 && resp.length && !search) {
-						this.setState(state => ({
+						this.setState((state) => ({
 							me: me,
 							isTop: true,
 							top: resp,
 							hasMore: !(resp.length % 10),
 							pageStart: state.pageStart + 1,
-							isFetching: false
+							isFetching: false,
 						}));
 					} else if (pageStart === 0 && !resp.length && !search)
-						this.setState(state => ({
-							isTop: false
+						this.setState((state) => ({
+							isTop: false,
 						}));
 					else
-						this.setState(state => ({
+						this.setState((state) => ({
 							me: me,
 							isTop: true,
 							top: resp,
 							isFetching: false,
 							hasMore: !(resp.length % 10),
-							pageStart: state.pageStart + 1
+							pageStart: state.pageStart + 1,
 						}));
 				});
 			})
-			.catch(error => {
+			.catch((error) => {
 				this.setState({ top: [] });
 			});
 	};
@@ -253,7 +253,7 @@ class Top extends React.Component {
 					bottom: "48px",
 					zIndex: 3,
 					background: "var(--background_content)",
-					width: "100%"
+					width: "100%",
 				}}
 				photos={[me.photo_100]}
 			>

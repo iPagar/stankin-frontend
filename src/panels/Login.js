@@ -1,7 +1,7 @@
 import React from "react";
 import {
 	Panel,
-	PanelHeader,
+	PanelHeaderSimple,
 	FormLayout,
 	Input,
 	Button,
@@ -132,8 +132,8 @@ class Login extends React.Component {
 		const { didInvalidate } = this.props;
 
 		return (
-			<Panel id="login" theme="white" centered>
-				<PanelHeader>Модульный журнал</PanelHeader>
+			<Panel id="login" theme="white" separator={false} centered>
+				<PanelHeaderSimple>Модульный журнал</PanelHeaderSimple>
 				{(didInvalidate && this.renderForm()) || <Logo />}
 				{snackbar}
 			</Panel>

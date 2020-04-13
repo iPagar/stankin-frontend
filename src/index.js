@@ -3,12 +3,12 @@ import "core-js/features/set";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import connect from "@vkontakte/vk-connect";
+import connect from "@vkontakte/vk-bridge";
 import App from "./App";
 import store from "./redux/store";
 
 // Init VK  Mini App
-connect.send("VKWebAppInit");
+connect.send("VKWebAppInit", {});
 
 ReactDOM.render(
 	<Provider store={store}>
