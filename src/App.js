@@ -2,6 +2,7 @@ import React from "react";
 import { View, Root, ScreenSpinner } from "@vkontakte/vkui";
 import { connect } from "react-redux";
 import "@vkontakte/vkui/dist/vkui.css";
+import "./app.css";
 
 import Login from "./panels/Login";
 import Marks from "./panels/Marks";

@@ -192,9 +192,9 @@ class Marks extends React.Component {
 
 				{this.renderPanelHeaderContext()}
 				{this.renderFixedTop()}
-				{(activeTopTab === "marks" && <Table marks={marks} />) || (
-					<Top />
-				)}
+				{(activeTopTab === "marks" && (
+					<Table marks={marks} semester={semester} />
+				)) || <Top />}
 			</Panel>
 		);
 	}
