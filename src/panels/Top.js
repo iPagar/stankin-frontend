@@ -250,7 +250,7 @@ class Top extends React.Component {
 			<UsersStack
 				style={{
 					position: "fixed",
-					bottom: "48px",
+					bottom: "calc(48px + var(--tabbar_height))",
 					zIndex: 3,
 					background: "var(--background_content)",
 					width: "100%",
@@ -269,8 +269,9 @@ class Top extends React.Component {
 		return (
 			<div style={{ marginTop: 48 }}>
 				{this.myComponent()}
-				{me && this.renderMe()}
+
 				<FixedLayout vertical="bottom">
+					{me && this.renderMe()}
 					<Tabs>
 						<TabsItem
 							data-tag={"rating"}
@@ -293,4 +294,7 @@ class Top extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Top);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Top);

@@ -200,4 +200,7 @@ class Marks extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Marks);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Marks);

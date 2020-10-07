@@ -1,3 +1,4 @@
+export const SET_STORY = "SET_STORY";
 export const SET_VIEW = "SET_VIEW";
 export const SET_ACTIVE_TOP_TAB = "SET_ACTIVE_TOP_TAB";
 export const SET_ACTIVE_BOTTOM_TAB = "SET_ACTIVE_BOTTOM_TAB";
@@ -13,3 +14,6 @@ export const RECEIVE_NOTIFY = "RECEIVE_NOTIFY";
 
 export const RECEIVE_EXIT = "RECEIVE_EXIT";
 
+export const SET_ACTIVE_STGROUP = "SET_ACTIVE_STGROUP";
+export const SET_ACTIVE_GROUP = "SET_ACTIVE_GROUP";
+export const SET_MODAL = "SET_MODAL";

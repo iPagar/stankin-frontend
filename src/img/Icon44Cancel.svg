@@ -1,0 +1,19 @@
+<svg width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+ <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+ <title>cancel_44</title>
+ <desc>Created with Sketch.</desc>
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g fill-rule="evenodd" fill="none" id="Page-2">
+   <g stroke="null" id="cancel_44">
+    <rect stroke="null" height="63.30119" width="60.987937" y="-2.891556" x="-2.650596" id="Bounds"/>
+    <path stroke="null" fill-rule="nonzero" fill="currentColor" id="Mask" d="m24.259236,23.004386l10.801657,11.211346c0.541296,0.561841 0.541296,1.472745 0,2.034587c-0.54131,0.561827 -1.418926,0.561827 -1.960235,0l-10.801643,-11.21136l-10.801643,11.21136c-0.54131,0.561827 -1.418926,0.561827 -1.960235,0c-0.541296,-0.561841 -0.541296,-1.472745 0,-2.034587l10.801657,-11.211346l-10.801657,-11.211346c-0.541296,-0.561841 -0.541296,-1.472745 0,-2.034587c0.54131,-0.561827 1.418926,-0.561827 1.960235,0l10.801643,11.21136l10.801643,-11.21136c0.54131,-0.561827 1.418926,-0.561827 1.960235,0c0.541296,0.561841 0.541296,1.472745 0,2.034587l-10.801657,11.211346z"/>
+   </g>
+  </g>
+ </g>
+</svg>

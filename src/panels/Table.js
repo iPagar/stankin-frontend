@@ -148,7 +148,7 @@ class Table extends Component {
 				style={{
 					maxWidth: "100%",
 					marginTop: 120,
-					marginBottom: 48,
+					marginBottom: "calc(var(--tabbar_height) + 48px)",
 				}}
 			>
 				<MaterialTable

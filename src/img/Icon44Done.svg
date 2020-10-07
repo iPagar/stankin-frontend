@@ -1,0 +1,19 @@
+<svg width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+ <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+ <title>done_36</title>
+ <desc>Created with Sketch.</desc>
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="46" width="46" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g fill-rule="evenodd" fill="none" id="Page-2">
+   <g stroke="null" id="done_44">
+    <polygon stroke="null" points="0,0 43.9541996717453,0 43.9541996717453,43.71755933761597 0,43.71755933761597 " id="Shape"/>
+    <path stroke="null" fill-rule="nonzero" fill="currentColor" id="Mask" d="m16.525685,30.254716l-7.904972,-7.862413c-0.715215,-0.711366 -1.87481,-0.711366 -2.590026,0c-0.715217,0.711365 -0.715217,1.864717 0,2.576081l9.202797,9.153251c0.716312,0.712457 1.878073,0.711203 2.59283,-0.002797l21.015716,-20.993421c0.713662,-0.712907 0.711148,-1.866255 -0.005616,-2.576077c-0.716766,-0.70982 -1.876357,-0.70732 -2.590021,0.005586l-19.720708,19.69979z"/>
+   </g>
+  </g>
+ </g>
+</svg>

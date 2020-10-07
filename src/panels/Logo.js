@@ -6,9 +6,9 @@ import { Spring } from "react-spring/renderprops";
 import logo from "../img/logo.jpg";
 import logoblack from "../img/logoblack.png";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
 	return {
-		scheme: state.config.scheme,
+		scheme: state.config.scheme
 	};
 };
 
@@ -18,11 +18,11 @@ class Logo extends React.Component {
 
 		return (
 			<Spring
-				config={{ delay: 15, duration: 1000 }}
+				config={{ delay: 0, duration: 1000 }}
 				from={{ opacity: 0 }}
 				to={{ opacity: 1 }}
 			>
-				{(props) => (
+				{props => (
 					<div style={props}>
 						<Div
 							style={{
@@ -30,7 +30,7 @@ class Logo extends React.Component {
 								display: "flex",
 								flexDirection: "column",
 								alignItems: "center",
-								marginTop: 20,
+								marginTop: 20
 							}}
 						>
 							<img
@@ -42,7 +42,7 @@ class Logo extends React.Component {
 							<Spinner
 								size="large"
 								style={{
-									marginTop: 20,
+									marginTop: 20
 								}}
 							/>
 						</Div>

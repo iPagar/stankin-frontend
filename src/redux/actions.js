@@ -1,5 +1,6 @@
 import { api } from "../services";
 import {
+	SET_STORY,
 	SET_VIEW,
 	SET_SCHEME,
 	REQUEST_INIT,
@@ -10,6 +11,9 @@ import {
 	SET_ACTIVE_BOTTOM_TAB,
 	RECEIVE_NOTIFY,
 	RECEIVE_EXIT,
+	SET_ACTIVE_STGROUP,
+	SET_ACTIVE_GROUP,
+	SET_MODAL,
 } from "./actionTypes";
 
 export function openRating(tag) {
@@ -20,8 +24,24 @@ export function openRatingSt(tag) {
 	return (dispatch) => {};
 }
 
+export function setModal(content) {
+	return { type: SET_MODAL, payload: content };
+}
+
+export function setActiveGroup(content) {
+	return { type: SET_ACTIVE_GROUP, payload: content };
+}
+
+export function setActiveStgroup(content) {
+	return { type: SET_ACTIVE_STGROUP, payload: content };
+}
+
 export function setView(content) {
 	return { type: SET_VIEW, payload: content };
+}
+
+export function setStory(content) {
+	return { type: SET_STORY, payload: content };
 }
 
 export function setActiveTopTab(content) {
