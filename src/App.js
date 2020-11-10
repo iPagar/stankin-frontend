@@ -37,10 +37,28 @@ const mapDispatchToProps = (dispatch) => {
 		onStoryChange: (e) => {
 			dispatch(setStory(e.currentTarget.dataset.story));
 		},
+		changeStory: (story) => {
+			dispatch(setStory(story));
+		},
 	};
 };
 
 class App extends React.Component {
+	componentDidMount() {
+		const hash = window.location.hash.slice(1);
+		let story = "scheduleView";
+
+		switch (hash) {
+			case "marks":
+				story = "marksRoot";
+				break;
+			default:
+				story = "scheduleView";
+				break;
+		}
+		this.props.changeStory(story);
+	}
+
 	render() {
 		const {
 			isFetching,
@@ -48,6 +66,7 @@ class App extends React.Component {
 			activeStory,
 			onStoryChange,
 		} = this.props;
+		const withTeachers = false;
 
 		return (
 			<Epic
@@ -68,13 +87,15 @@ class App extends React.Component {
 						>
 							<Icon20EducationOutline width={28} height={28} />
 						</TabbarItem>
-						<TabbarItem
-							onClick={onStoryChange}
-							selected={activeStory === "teachersView"}
-							data-story="teachersView"
-						>
-							<Icon24Users width={28} height={28} />
-						</TabbarItem>
+						{withTeachers && (
+							<TabbarItem
+								onClick={onStoryChange}
+								selected={activeStory === "teachersView"}
+								data-story="teachersView"
+							>
+								<Icon24Users width={28} height={28} />
+							</TabbarItem>
+						)}
 					</Tabbar>
 				}
 			>
