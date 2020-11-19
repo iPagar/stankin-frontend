@@ -16,7 +16,7 @@ import { setStory } from "../redux/actions";
 import Icon24Cancel from "@vkontakte/icons/dist/24/cancel";
 import Icon24Done from "@vkontakte/icons/dist/24/done";
 
-const ScheduleSettings = ({ onClose }) => {
+const ScheduleSettings = ({ activeModal, onSettingsClose }) => {
   const platform = usePlatform();
   const stgroup = useSelector((state) => state.schedule.activeStgroup);
   const group = useSelector((state) => state.schedule.activeGroup);
@@ -26,13 +26,14 @@ const ScheduleSettings = ({ onClose }) => {
     if (stgroup && group) {
       await api.put(`/schedule/favourite`, { stgroup, group });
     }
-    onClose();
+    onSettingsClose();
   };
 
   return (
-    <ModalRoot activeModal="select" onClose={onSuccess}>
+    <ModalRoot activeModal={activeModal} onClose={onSuccess}>
       <ModalPage
         id="select"
+        onClose={onSuccess}
         header={
           <ModalPageHeader
             left={

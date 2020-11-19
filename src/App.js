@@ -8,7 +8,7 @@ import {
 	TabbarItem,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
-import { setStory } from "./redux/actions";
+import { setStory, fetchInit } from "./redux/actions";
 import "@vkontakte/vkui/dist/vkui.css";
 import "./app.css";
 
@@ -40,11 +40,15 @@ const mapDispatchToProps = (dispatch) => {
 		changeStory: (story) => {
 			dispatch(setStory(story));
 		},
+		onPanelLoad: () => {
+			dispatch(fetchInit());
+		},
 	};
 };
 
 class App extends React.Component {
 	componentDidMount() {
+		this.props.onPanelLoad();
 		const hash = window.location.hash.slice(1);
 		let story = "scheduleView";
 

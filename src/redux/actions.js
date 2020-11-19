@@ -13,7 +13,6 @@ import {
 	RECEIVE_EXIT,
 	SET_ACTIVE_STGROUP,
 	SET_ACTIVE_GROUP,
-	SET_MODAL,
 } from "./actionTypes";
 
 export function openRating(tag) {
@@ -22,10 +21,6 @@ export function openRating(tag) {
 
 export function openRatingSt(tag) {
 	return (dispatch) => {};
-}
-
-export function setModal(content) {
-	return { type: SET_MODAL, payload: content };
 }
 
 export function setActiveGroup(content) {
@@ -128,6 +123,16 @@ export function fetchInit() {
 						marks: response[1].marks,
 					})
 				);
+			})
+			.then(() => {
+				return api.get(`/schedule/favourite`).then(async ({ data }) => {
+					if (data) {
+						const stgroup = data.stgroup;
+						const group = data.group;
+						dispatch(setActiveGroup(group));
+						dispatch(setActiveStgroup(stgroup));
+					}
+				});
 			})
 			.then(() => dispatch(setView("mainView")))
 			.catch(() => {

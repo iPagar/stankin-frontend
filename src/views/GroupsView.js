@@ -53,8 +53,23 @@ const GroupsView = ({ id }) => {
 								.map((group) => (
 									<Cell
 										key={group}
-										onClick={() => {
+										onClick={async () => {
 											dispatch(setActiveGroup(group));
+											await api
+												.get(`/schedule/favourite`)
+												.then(async ({ data }) => {
+													if (data) {
+														const stgroup =
+															data.stgroup;
+														const group =
+															data.group;
+														dispatch(
+															setActiveGroup(
+																group
+															)
+														);
+													}
+												});
 											onBack();
 										}}
 									>
@@ -63,8 +78,17 @@ const GroupsView = ({ id }) => {
 								))
 						) : (
 							<Cell
-								onClick={() => {
+								onClick={async () => {
 									dispatch(setActiveGroup(groups[0]));
+									await api
+										.get(`/schedule/favourite`)
+										.then(async ({ data }) => {
+											if (data) {
+												const stgroup = data.stgroup;
+												const group = data.group;
+												dispatch(setActiveGroup(group));
+											}
+										});
 									onBack();
 								}}
 							>

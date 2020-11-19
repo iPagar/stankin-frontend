@@ -16,4 +16,3 @@ export const RECEIVE_EXIT = "RECEIVE_EXIT";
 
 export const SET_ACTIVE_STGROUP = "SET_ACTIVE_STGROUP";
 export const SET_ACTIVE_GROUP = "SET_ACTIVE_GROUP";
-export const SET_MODAL = "SET_MODAL";

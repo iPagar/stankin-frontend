@@ -3,7 +3,6 @@ import {
 	View,
 	Panel,
 	PanelHeader,
-	PanelSpinner,
 	PanelHeaderButton,
 	Placeholder,
 	Header,
@@ -15,10 +14,13 @@ import {
 	Gallery,
 } from "@vkontakte/vkui";
 import { useSelector, useDispatch } from "react-redux";
-import { setModal, setActiveStgroup, setActiveGroup } from "../redux/actions";
+import {
+	setActiveStgroup,
+	setActiveGroup,
+	loadSchedule,
+} from "../redux/actions";
 import Icon28Settings from "@vkontakte/icons/dist/28/settings";
-import HorizontalCalendar from "vkui-horizontal-calendar";
-import ScheduleTable from "../services/ScheduleTable";
+import ScheduleTableWeek from "../services/ScheduleTableWeek";
 import { api } from "../services";
 import ScheduleSettings from "./ScheduleSettings";
 import Icon56Users3Outline from "@vkontakte/icons/dist/56/users_3_outline";
@@ -28,17 +30,20 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 	pdfjs.version
 }/pdf.worker.js`;
 
+let isEditing = false;
+
 const ScheduleView = ({ id }) => {
 	const [choosed, setChoosed] = useState(1);
 	const date = new Date();
+	const isTeacher = useSelector((state) => state.schedule.isTeacher);
 	const stgroup = useSelector((state) => state.schedule.activeStgroup);
 	const group = useSelector((state) => state.schedule.activeGroup);
-	const [isLoading, setIsLoading] = useState(true);
-	const [lessons, setLessons] = useState([]);
+	const isFetching = useSelector((state) => state.schedule.isFetching);
 	const [file, setFile] = useState(null);
 	const [activePanel, setActivePanel] = useState("main");
-	const modal = useSelector((state) => state.schedule.modal);
+	const [activeModal, setActiveModal] = useState(null);
 	const dispatch = useDispatch();
+	const [lessonsWeek, setLessonsWeek] = useState([]);
 
 	const load = async () => {
 		const result = new Date(date);
@@ -50,26 +55,33 @@ const ScheduleView = ({ id }) => {
 			"-" +
 			result.getDate();
 
-		if (!modal) {
-			await api.get(`/schedule/favourite`).then(async ({ data }) => {
-				if (data) {
-					const stgroup = data.stgroup;
-					const group = data.group;
+		let lessonsWeek = [];
 
-					await api
-						.get(
-							`/schedule/lessons?stgroup=${stgroup}&group=${group}&day=${parsedDate}`
-						)
-						.then(({ data }) => {
-							dispatch(setActiveStgroup(stgroup));
-							dispatch(setActiveGroup(group));
+		if (stgroup.length > 0 && group.length > 0) {
+			for (var i = 0; i < 7; i++) {
+				const result = new Date(date);
+				result.setDate(result.getDate() + i);
+				const parsedDate =
+					result.getFullYear() +
+					"-" +
+					parseInt(result.getMonth() + 1) +
+					"-" +
+					result.getDate();
 
-							setLessons(data);
-						});
-				}
-			});
+				await api
+					.get(
+						`/schedule/lessons?stgroup=${stgroup}&group=${group}&day=${parsedDate}`
+					)
+					.then(({ data }) => {
+						lessonsWeek = lessonsWeek.concat([data]);
+					});
+			}
+
+			setLessonsWeek(lessonsWeek);
 		}
-		setIsLoading(false);
+		if (stgroup.length > 0 && group.length === 0) {
+			setActiveModal("select");
+		}
 	};
 
 	useEffect(() => {
@@ -83,19 +95,24 @@ const ScheduleView = ({ id }) => {
 
 	useEffect(() => {
 		load();
-	}, [choosed, modal]);
+	}, [stgroup, group]);
 
 	const onHeaderButtonClick = () => {
-		dispatch(
-			setModal(
-				<ScheduleSettings
-					onClose={() => {
-						dispatch(setModal(null));
-					}}
-				/>
-			)
-		);
+		dispatch(setActiveGroup(""));
+		dispatch(setActiveStgroup(""));
+
+		setActiveModal("select");
 	};
+
+	const modal = (
+		<ScheduleSettings
+			id="scheduleSettings"
+			activeModal={activeModal}
+			onSettingsClose={() => {
+				setActiveModal(null);
+			}}
+		/>
+	);
 
 	return (
 		<View id={id} activePanel={activePanel} modal={modal}>
@@ -110,8 +127,8 @@ const ScheduleView = ({ id }) => {
 					Расписание
 				</PanelHeader>
 
-				{!isLoading ? (
-					!stgroup || !group ? (
+				{!isFetching &&
+					(!stgroup || !group ? (
 						<Placeholder
 							header="Группа не выбрана"
 							icon={<Icon56Users3Outline />}
@@ -119,66 +136,41 @@ const ScheduleView = ({ id }) => {
 						/>
 					) : (
 						<React.Fragment>
-							<HorizontalCalendar
-								date={date}
-								choosed={choosed}
-								onClick={({ choosedDay, dayNumber }) => {
-									if (dayNumber !== choosed) {
-										setChoosed(dayNumber);
+							{(!isTeacher && (
+								<ScheduleTableWeek
+									lessonsWeek={lessonsWeek}
+									before={
+										<Div style={{ textAlign: "center" }}>
+											<span>Сверьтесь с</span>{" "}
+											<span
+												style={{
+													color: "var(--accent)",
+												}}
+												onClick={() => {
+													setActivePanel("pdf");
+												}}
+											>
+												оригиналом
+											</span>
+											.<br />
+											<Link
+												href="https://vk.com/im?sel=-183639424"
+												target="_blank"
+											>
+												Сообщите
+											</Link>
+											<span> об ошибке.</span>
+										</Div>
 									}
-								}}
-							/>
-							<Div style={{ textAlign: "center" }}>
-								<span>Сверьтесь с</span>{" "}
-								<span
-									style={{ color: "var(--accent)" }}
-									onClick={() => {
-										setActivePanel("pdf");
-									}}
-								>
-									оригиналом
-								</span>
-								.<br />
-								<Link
-									href="https://vk.com/im?sel=-183639424"
-									target="_blank"
-								>
-									Сообщите
-								</Link>
-								<span> об ошибке.</span>
-							</Div>
-							<Header mode="secondary">
-								{lessons.length > 0
-									? lessons.length === 1
-										? `Сегодня ${lessons.length} пара`
-										: lessons.length > 1 &&
-										  lessons.length < 5
-										? `Сегодня ${lessons.length} пары`
-										: `Сегодня ${lessons.length} пар`
-									: "Сегодня нет пар"}
-							</Header>
-							<Gallery
-								slideWidth="100%"
-								align="center"
-								style={{ height: "100%" }}
-								slideIndex={choosed - 1}
-								onChange={(slideIndex) => {
-									setChoosed(slideIndex + 1);
-								}}
-							>
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-							</Gallery>
+								/>
+							)) || (
+								<ScheduleTableWeek
+									lessonsWeek={lessonsWeek}
+									isTeacher={isTeacher}
+								/>
+							)}
 						</React.Fragment>
-					)
-				) : (
-					<PanelSpinner size="large" />
-				)}
+					))}
 			</Panel>
 			<Panel id="pdf" centered>
 				<PanelHeader

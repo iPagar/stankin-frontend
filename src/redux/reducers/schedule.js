@@ -1,13 +1,8 @@
-import {
-	SET_ACTIVE_STGROUP,
-	SET_ACTIVE_GROUP,
-	SET_MODAL,
-} from "../actionTypes";
+import { SET_ACTIVE_STGROUP, SET_ACTIVE_GROUP } from "../actionTypes";
 
 const initialState = {
 	activeStgroup: "",
-	activeGroup: "",
-	modal: null,
+	acctiveGgroup: "",
 };
 
 export default function(state = initialState, action) {
@@ -20,10 +15,7 @@ export default function(state = initialState, action) {
 			const activeGroup = action.payload;
 			return { ...state, activeGroup };
 		}
-		case SET_MODAL: {
-			const modal = action.payload;
-			return { ...state, modal };
-		}
+
 		default:
 			return state;
 	}
