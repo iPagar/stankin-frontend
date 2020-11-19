@@ -6,11 +6,11 @@ import {
 	Input,
 	Button,
 	Snackbar,
-	Avatar
+	Avatar,
 } from "@vkontakte/vkui";
 import { Spring } from "react-spring/renderprops";
 import { connect } from "react-redux";
-import { fetchInit } from "../redux/actions";
+import { fetchInit, setView } from "../redux/actions";
 import { api } from "../services";
 
 import Icon24Error from "@vkontakte/icons/dist/24/error";
@@ -18,21 +18,25 @@ import Icon24Error from "@vkontakte/icons/dist/24/error";
 import Logo from "./Logo";
 
 const orangeBackground = {
-	backgroundImage: "linear-gradient(135deg, #ffb73d, #ffa000)"
+	backgroundImage: "linear-gradient(135deg, #ffb73d, #ffa000)",
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
+		student: state.init.student,
 		didInvalidate: state.init.didInvalidate,
-		scheme: state.config.scheme
+		scheme: state.config.scheme,
 	};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
 	return {
 		onPanelLoad: () => {
 			dispatch(fetchInit());
-		}
+		},
+		openMarks: () => {
+			dispatch(setView("mainView"));
+		},
 	};
 };
 
@@ -41,22 +45,26 @@ class Login extends React.Component {
 		isFetching: false,
 		popout: null,
 		login: "",
-		password: ""
+		password: "",
 	};
 
 	componentDidMount() {
-		this.props.onPanelLoad();
+		if (!this.props.student.hasOwnProperty("student"))
+			this.props.onPanelLoad();
+		else this.props.openMarks();
 	}
 
-	onSubmit = e => {
+	onSubmit = (e) => {
 		e.preventDefault();
 		const { login, password } = this.state;
 
 		this.setState({ isFetching: true });
 		api.put("/student", { student: login, password })
 			.then(() => {
-				this.props.onPanelLoad();
-				this.setState({ isFetching: false });
+				setTimeout(() => {
+					this.props.onPanelLoad();
+					this.setState({ isFetching: false });
+				}, 200);
 			})
 			.catch(() => {
 				this.openSnackbar();
@@ -79,7 +87,7 @@ class Login extends React.Component {
 				>
 					Произошла ошибка
 				</Snackbar>
-			)
+			),
 		});
 	}
 
@@ -94,14 +102,14 @@ class Login extends React.Component {
 						from={{ opacity: 0 }}
 						to={{ opacity: 1 }}
 					>
-						{props => (
+						{(props) => (
 							<div style={props}>
 								<FormLayout onSubmit={this.onSubmit}>
 									<Input
 										value={login}
-										onChange={e => {
+										onChange={(e) => {
 											this.setState({
-												login: e.target.value
+												login: e.target.value,
 											});
 										}}
 										type="number"
@@ -109,9 +117,9 @@ class Login extends React.Component {
 									/>
 									<Input
 										value={password}
-										onChange={e => {
+										onChange={(e) => {
 											this.setState({
-												password: e.target.value
+												password: e.target.value,
 											});
 										}}
 										type="password"
@@ -141,4 +149,7 @@ class Login extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Login);

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import {
   ModalRoot,
   ModalPageHeader,
@@ -9,28 +9,41 @@ import {
   PanelHeaderButton,
   SelectMimicry,
   FormLayout,
+  Tabs,
+  TabsItem,
+  Group,
+  Div,
 } from "@vkontakte/vkui";
 import { useDispatch, useSelector } from "react-redux";
 import { api } from "../services";
-import { setStory } from "../redux/actions";
+import { setStory, setView } from "../redux/actions";
 import Icon24Cancel from "@vkontakte/icons/dist/24/cancel";
 import Icon24Done from "@vkontakte/icons/dist/24/done";
 
-const ScheduleSettings = ({ onClose }) => {
+const ScheduleSettings = ({ onSettingsClose, activeModal }) => {
   const platform = usePlatform();
-  const stgroup = useSelector((state) => state.schedule.activeStgroup);
-  const group = useSelector((state) => state.schedule.activeGroup);
+  const stgroup = useSelector((state) => state.schedule.stgroup);
+  const group = useSelector((state) => state.schedule.group);
+  const isTeacher = useSelector((state) => state.schedule.isTeacher);
+
+  const [activeTab, setActiveTab] = useState("student");
   const dispatch = useDispatch();
 
   const onSuccess = async () => {
     if (stgroup && group) {
       await api.put(`/schedule/favourite`, { stgroup, group });
     }
-    onClose();
+
+    onSettingsClose();
   };
 
   return (
-    <ModalRoot activeModal="select" onClose={onSuccess}>
+    <ModalRoot
+      activeModal={activeModal}
+      onClose={onSuccess}
+      dynamicContentHeight
+      settlingHeight={100}
+    >
       <ModalPage
         id="select"
         header={
@@ -58,24 +71,27 @@ const ScheduleSettings = ({ onClose }) => {
                 )}
               </Fragment>
             }
+            onClick={onSuccess}
           >
-            Настройки
+            Выбор расписания
           </ModalPageHeader>
         }
       >
-        <FormLayout>
-          <SelectMimicry
-            top="Выберите группу"
-            placeholder={!stgroup ? "Не выбрана" : stgroup}
-            onClick={() => dispatch(setStory("stgroupsView"))}
-          />
-          <SelectMimicry
-            top="Выберите подгруппу"
-            placeholder={!group ? "Не выбрана" : group}
-            onClick={() => dispatch(setStory("groupsView"))}
-            disabled={!stgroup ? true : false}
-          />
-        </FormLayout>
+        {
+          <FormLayout>
+            <SelectMimicry
+              top="Выберите группу"
+              placeholder={!stgroup ? "Не выбрана" : stgroup}
+              onClick={() => dispatch(setView("stgroupsView"))}
+            />
+            <SelectMimicry
+              top="Выберите подгруппу"
+              placeholder={!group ? "Не выбрана" : group}
+              onClick={() => dispatch(setView("groupsView"))}
+              disabled={!stgroup ? true : false}
+            />
+          </FormLayout>
+        }
       </ModalPage>
     </ModalRoot>
   );

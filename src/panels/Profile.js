@@ -1,19 +1,22 @@
 import React from "react";
 import {
 	Panel,
-	PanelHeaderButton,
+	PanelHeaderBack,
 	PanelHeaderSimple,
 	List,
 	Cell,
 	Header,
 	InfoRow,
 	CellButton,
+	Placeholder,
+	Button,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
-import { setView, notify, exit } from "../redux/actions";
+import { setStory, notify, exit } from "../redux/actions";
 
 import Icon24Cancel from "@vkontakte/icons/dist/24/cancel";
 import Icon24Notification from "@vkontakte/icons/dist/24/notification";
+import Icon56UserCircleOutline from "@vkontakte/icons/dist/56/user_circle_outline";
 
 const mapStateToProps = (state) => {
 	return {
@@ -23,8 +26,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onCancelClick: (tag) => {
-			dispatch(setView(tag));
+		onSetStory: (name) => {
+			dispatch(setStory(name));
 		},
 		onNotifyClick: () => {
 			dispatch(notify());
@@ -36,12 +39,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 class Profile extends React.Component {
-	onCancelClick = (e) => {
-		const tag = e.currentTarget.dataset.tag;
-
-		this.props.onCancelClick(tag);
-	};
-
 	onExit = () => {
 		this.props.onExitClick();
 	};
@@ -102,24 +99,41 @@ class Profile extends React.Component {
 			<Panel id="profile" theme="white" separator={false}>
 				<PanelHeaderSimple
 					left={
-						<PanelHeaderButton
-							data-tag="mainView"
-							onClick={this.onCancelClick}
-						>
-							<Icon24Cancel />
-						</PanelHeaderButton>
+						<PanelHeaderBack onClick={this.props.onCancelClick} />
 					}
 				>
 					Профиль
 				</PanelHeaderSimple>
-				{this.renderProfile()}
-				<List>
-					{this.renderNotify()}
-					{this.renderExit()}
-				</List>
+				{this.props.student.hasOwnProperty("student") ? (
+					<React.Fragment>
+						{this.renderProfile()}
+						<List>
+							{this.renderNotify()}
+							{this.renderExit()}
+						</List>
+					</React.Fragment>
+				) : (
+					<Placeholder
+						action={
+							<Button
+								size="l"
+								onClick={() => {
+									this.props.onSetStory("marksRoot");
+								}}
+							>
+								Войти
+							</Button>
+						}
+						icon={<Icon56UserCircleOutline />}
+						stretched
+					/>
+				)}
 			</Panel>
 		);
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Profile);

@@ -10,16 +10,19 @@ import {
 	Search,
 	Footer,
 } from "@vkontakte/vkui";
-import { useDispatch } from "react-redux";
-import { setActiveStgroup, setActiveGroup, setStory } from "../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { setSchedule, setStory } from "../redux/actions";
 import { api } from "../services";
-// import ScreenSpinnerPromise from "vkui-screen-spinner-promise";
 
-const StgroupsView = ({ id }) => {
+const StgroupsView = ({ id, onBack, onCellClick }) => {
+	const activeStgroup = useSelector((state) => state.schedule.activeStgroup);
+	const activeGroup = useSelector((state) => state.schedule.activeGroup);
 	const [search, setSearch] = useState("");
 	const [stgroups, setStgroups] = useState([]);
+	const [groups, setGroups] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [popout, setPopout] = useState(null);
+	const [popout] = useState(null);
+	const [activePanel, setActivePanel] = useState("stgroups");
 	const dispatch = useDispatch();
 
 	const getStgroups = async () => {
@@ -36,10 +39,6 @@ const StgroupsView = ({ id }) => {
 		getStgroups();
 	}, []);
 
-	const onBack = () => {
-		dispatch(setStory("scheduleView"));
-	};
-
 	const filterStgroups = () => {
 		return stgroups
 
@@ -51,8 +50,8 @@ const StgroupsView = ({ id }) => {
 	};
 
 	return (
-		<View id={id} activePanel="main" popout={popout}>
-			<Panel id="main">
+		<View id={id} activePanel={activePanel} popout={popout}>
+			<Panel id="stgroups">
 				<PanelHeader
 					left={<PanelHeaderBack onClick={onBack} />}
 					separator={false}
@@ -72,17 +71,56 @@ const StgroupsView = ({ id }) => {
 							{filterStgroups().map((stgroup) => (
 								<Cell
 									key={stgroup._id}
-									onClick={() => {
-										dispatch(
-											setActiveStgroup(stgroup.name)
-										);
-										dispatch(setActiveGroup(""));
-										onBack();
-									}}
+									onClick={onCellClick}
+									data-stgroup={stgroup.name}
 								>
 									{stgroup.name}
 								</Cell>
 							))}
+						</Group>
+						{!search && <Footer>{stgroups.length} группы</Footer>}
+					</Fragment>
+				) : (
+					<PanelSpinner size="large" />
+				)}
+			</Panel>
+
+			<Panel id="groups">
+				<PanelHeader
+					left={
+						<PanelHeaderBack
+							onClick={() => {
+								setActivePanel("stgroups");
+							}}
+						/>
+					}
+					separator={false}
+				>
+					Выбор подгруппы
+				</PanelHeader>
+				{!isLoading ? (
+					<Fragment>
+						<Group separator="hide">
+							{groups
+								.filter((group) => group !== "Без подгруппы")
+								.map((group) => (
+									<Cell
+										key={group}
+										onClick={async () => {
+											setIsLoading(true);
+											await api.put(
+												`/schedule/favourite`,
+												{
+													stgroup: activeStgroup,
+													group: group,
+												}
+											);
+											onBack();
+										}}
+									>
+										{group}
+									</Cell>
+								))}
 						</Group>
 						{!search && <Footer>{stgroups.length} группы</Footer>}
 					</Fragment>

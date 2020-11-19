@@ -1,30 +1,16 @@
-import {
-	SET_ACTIVE_STGROUP,
-	SET_ACTIVE_GROUP,
-	SET_MODAL,
-} from "../actionTypes";
+import { createReducer, updateObject } from "./generator";
 
 const initialState = {
-	activeStgroup: "",
-	activeGroup: "",
-	modal: null,
+	isFetching: true,
+	didInvalidate: false,
+	stgroup: "",
+	group: "",
+	isTeacher: false,
 };
 
-export default function(state = initialState, action) {
-	switch (action.type) {
-		case SET_ACTIVE_STGROUP: {
-			const activeStgroup = action.payload;
-			return { ...state, activeStgroup };
-		}
-		case SET_ACTIVE_GROUP: {
-			const activeGroup = action.payload;
-			return { ...state, activeGroup };
-		}
-		case SET_MODAL: {
-			const modal = action.payload;
-			return { ...state, modal };
-		}
-		default:
-			return state;
-	}
-}
+const scheduleReducers = createReducer(initialState, {
+	LOAD_SCHEDULE: {},
+	SET_STGROUP: updateObject,
+});
+
+export default scheduleReducers;

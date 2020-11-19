@@ -13,7 +13,12 @@ import {
 	PanelHeaderButton,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
-import { selectSemester, setActiveTopTab, setView } from "../redux/actions";
+import {
+	selectSemester,
+	setActiveTopTab,
+	setView,
+	notify,
+} from "../redux/actions";
 
 import Icon16Dropdown from "@vkontakte/icons/dist/16/dropdown";
 import Icon24Done from "@vkontakte/icons/dist/24/done";
@@ -21,10 +26,12 @@ import Icon24Done from "@vkontakte/icons/dist/24/done";
 import Table from "./Table";
 import Top from "./Top";
 
-import Icon24Settings from "@vkontakte/icons/dist/24/settings";
+import Icon24Notification from "@vkontakte/icons/dist/24/notification";
+import Icon24NotificationDisable from "@vkontakte/icons/dist/24/notification_disable";
 
 const mapStateToProps = (state) => {
 	return {
+		student: state.init.student,
 		selectedSemester: state.init.selectedSemester,
 		semesters: state.init.semesters,
 		marks: state.init.marks[state.init.selectedSemester],
@@ -36,14 +43,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		onNotifyClick: () => {
+			dispatch(notify());
+		},
 		onCellClick: (tag) => {
 			dispatch(selectSemester(tag));
 		},
 		onTopTab: (tag) => {
 			dispatch(setActiveTopTab(tag));
-		},
-		onProfileClick: (tag) => {
-			dispatch(setView(tag));
 		},
 	};
 };
@@ -81,12 +88,6 @@ class Marks extends React.Component {
 
 		if (contextOpened) requestAnimationFrame(this.toggleContext);
 		this.props.onTopTab(tag);
-	};
-
-	onProfileClick = (e) => {
-		const tag = e.currentTarget.dataset.tag;
-
-		this.props.onProfileClick(tag);
 	};
 
 	renderFixedTop() {
@@ -164,11 +165,12 @@ class Marks extends React.Component {
 				<PanelHeaderSimple
 					separator={false}
 					left={
-						<PanelHeaderButton
-							data-tag="profileView"
-							onClick={this.onProfileClick}
-						>
-							<Icon24Settings />
+						<PanelHeaderButton onClick={this.props.onNotifyClick}>
+							{this.props.student.notify ? (
+								<Icon24NotificationDisable />
+							) : (
+								<Icon24Notification />
+							)}
 						</PanelHeaderButton>
 					}
 				>

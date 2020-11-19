@@ -15,7 +15,7 @@ import {
 	Gallery,
 } from "@vkontakte/vkui";
 import { useSelector, useDispatch } from "react-redux";
-import { setModal, setActiveStgroup, setActiveGroup } from "../redux/actions";
+import { setActiveSchedule } from "../redux/actions";
 import Icon28Settings from "@vkontakte/icons/dist/28/settings";
 import HorizontalCalendar from "vkui-horizontal-calendar";
 import ScheduleTable from "../services/ScheduleTable";
@@ -31,13 +31,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const ScheduleView = ({ id }) => {
 	const [choosed, setChoosed] = useState(1);
 	const date = new Date();
-	const stgroup = useSelector((state) => state.schedule.activeStgroup);
-	const group = useSelector((state) => state.schedule.activeGroup);
+	const stgroup = useSelector((state) => state.schedule.stgroup);
+	const group = useSelector((state) => state.schedule.group);
 	const [isLoading, setIsLoading] = useState(true);
 	const [lessons, setLessons] = useState([]);
 	const [file, setFile] = useState(null);
 	const [activePanel, setActivePanel] = useState("main");
-	const modal = useSelector((state) => state.schedule.modal);
+	const [modal, setModal] = useState(null);
 	const dispatch = useDispatch();
 
 	const load = async () => {
@@ -61,8 +61,7 @@ const ScheduleView = ({ id }) => {
 							`/schedule/lessons?stgroup=${stgroup}&group=${group}&day=${parsedDate}`
 						)
 						.then(({ data }) => {
-							dispatch(setActiveStgroup(stgroup));
-							dispatch(setActiveGroup(group));
+							setActiveSchedule({ stgroup, group });
 
 							setLessons(data);
 						});
@@ -86,14 +85,13 @@ const ScheduleView = ({ id }) => {
 	}, [choosed, modal]);
 
 	const onHeaderButtonClick = () => {
-		dispatch(
-			setModal(
-				<ScheduleSettings
-					onClose={() => {
-						dispatch(setModal(null));
-					}}
-				/>
-			)
+		setModal(
+			<ScheduleSettings
+				activeModal="select"
+				onSettingsClose={() => {
+					setModal(null);
+				}}
+			/>
 		);
 	};
 

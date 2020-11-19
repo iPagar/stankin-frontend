@@ -11,9 +11,10 @@ import {
 	SET_ACTIVE_BOTTOM_TAB,
 	RECEIVE_NOTIFY,
 	RECEIVE_EXIT,
-	SET_ACTIVE_STGROUP,
-	SET_ACTIVE_GROUP,
-	SET_MODAL,
+	SET_ACTIVE_SCHEDULE,
+	INVALIDATE_SCHEDULE,
+	REQUEST_SCHEDULE,
+	RECEIVE_SCHEDULE,
 } from "./actionTypes";
 
 export function openRating(tag) {
@@ -24,16 +25,12 @@ export function openRatingSt(tag) {
 	return (dispatch) => {};
 }
 
-export function setModal(content) {
-	return { type: SET_MODAL, payload: content };
+export function setActiveSchedule(content) {
+	return { type: SET_ACTIVE_SCHEDULE, payload: content };
 }
 
-export function setActiveGroup(content) {
-	return { type: SET_ACTIVE_GROUP, payload: content };
-}
-
-export function setActiveStgroup(content) {
-	return { type: SET_ACTIVE_STGROUP, payload: content };
+export function setStgroup(stgroup) {
+	return { type: "SET_STGROUP", stgroup };
 }
 
 export function setView(content) {
@@ -72,6 +69,18 @@ function invalidateInit() {
 	return { type: INVALIDATE_INIT };
 }
 
+function requestSchedule() {
+	return { type: REQUEST_SCHEDULE };
+}
+
+function receiveSchedule(content) {
+	return { type: RECEIVE_SCHEDULE, payload: content };
+}
+
+function invalidateSchedule() {
+	return { type: INVALIDATE_SCHEDULE };
+}
+
 export function exit() {
 	return (dispatch) => {
 		dispatch(requestInit());
@@ -81,6 +90,7 @@ export function exit() {
 			.then(() => dispatch(setActiveTopTab("marks")))
 			.then(() => dispatch(setActiveBottomTab("rating")))
 			.then(() => dispatch({ type: RECEIVE_EXIT }))
+			.then(() => dispatch(setStory("marksRoot")))
 			.catch(() => dispatch(invalidateInit()));
 	};
 }
@@ -128,10 +138,21 @@ export function fetchInit() {
 						marks: response[1].marks,
 					})
 				);
+				dispatch(setView("mainView"));
 			})
-			.then(() => dispatch(setView("mainView")))
 			.catch(() => {
 				dispatch(invalidateInit());
 			});
+	};
+}
+
+export function loadSchedule() {
+	return {
+		// Action to emit
+		request: "LOAD_SCHEDULE",
+		// Perform the fetching:
+		callAPI: () => api.get("/schedule/favourite"),
+		// Arguments to inject in begin/end actions
+		// payload: { stgroup, group, isTeacher },
 	};
 }

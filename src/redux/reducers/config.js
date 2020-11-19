@@ -7,8 +7,8 @@ import {
 } from "../actionTypes";
 
 const initialState = {
-	activeStory: "scheduleView",
-	activeView: "loginView",
+	activeStory: "scheduleRoot",
+	activeView: "scheduleView",
 	scheme: "light",
 	activeTopTab: "marks",
 	activeBottomTab: "rating",

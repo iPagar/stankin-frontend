@@ -7,7 +7,13 @@ import Icon24Info from "@vkontakte/icons/dist/24/info";
 import InputCell from "./InputCell";
 
 class Table extends Component {
-	state = { tooltip: false, marks: [], semester: "", hasRating: false };
+	state = {
+		tooltip: false,
+		marks: [],
+		semester: "",
+		hasRating: false,
+		isEdited: false,
+	};
 
 	calcRating() {
 		const { marks } = this.state;
@@ -77,6 +83,7 @@ class Table extends Component {
 		this.setState({
 			marks: this.props.marks,
 			semester: this.props.semester,
+			isEdited: false,
 		});
 	};
 
@@ -89,7 +96,7 @@ class Table extends Component {
 		const newMarks = JSON.parse(JSON.stringify(marks));
 		newMarks[i].marks[mark] = value;
 
-		this.setState({ marks: newMarks });
+		this.setState({ marks: newMarks, isEdited: this.isEdited(newMarks) });
 	};
 
 	handleFocus = (event) => {
@@ -133,8 +140,7 @@ class Table extends Component {
 		);
 	};
 
-	isEdited() {
-		const newMarks = JSON.stringify(this.state.marks);
+	isEdited(newMarks) {
 		const oldMarks = JSON.stringify(this.props.marks);
 
 		return newMarks !== oldMarks;
@@ -162,31 +168,39 @@ class Table extends Component {
 						{
 							title: "Предмет",
 							field: "subject",
+							minWidth: 200,
+							width: "100%",
+							maxWidth: 400,
 							customSort: (a, b) => a.factor - b.factor,
 						},
 						{
 							title: "М1",
 							sorting: false,
+							maxWidth: 50,
 							render: (rowData) => this.renderCell(rowData, "М1"),
 						},
 						{
 							title: "М2",
 							sorting: false,
+							maxWidth: 50,
 							render: (rowData) => this.renderCell(rowData, "М2"),
 						},
 						{
 							title: "К",
 							sorting: false,
+							maxWidth: 50,
 							render: (rowData) => this.renderCell(rowData, "К"),
 						},
 						{
 							title: "З",
 							sorting: false,
+							maxWidth: 18,
 							render: (rowData) => this.renderCell(rowData, "З"),
 						},
 						{
 							title: "Э",
 							sorting: false,
+							maxWidth: 50,
 							render: (rowData) => this.renderCell(rowData, "Э"),
 						},
 						{
@@ -230,7 +244,7 @@ class Table extends Component {
 									backgroundColor: "var(--header_background)",
 								}}
 								indicator={
-									this.isEdited() ? (
+									this.state.isEdited ? (
 										<div onClick={this.init}>
 											{"Сбросить"}
 										</div>

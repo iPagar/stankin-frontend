@@ -9,12 +9,12 @@ import {
 	Group,
 } from "@vkontakte/vkui";
 import { useDispatch, useSelector } from "react-redux";
-import { setStory, setActiveGroup } from "../redux/actions";
+import { setStory, setActiveSchedule } from "../redux/actions";
 import { api } from "../services";
 
-const GroupsView = ({ id }) => {
+const GroupsView = ({ id, onBack, onCellClick }) => {
 	const [groups, setGroups] = useState("");
-	const stgroup = useSelector((state) => state.schedule.activeStgroup);
+	const stgroup = useSelector((state) => state.schedule.stgroup);
 	const [isLoading, setIsLoading] = useState(true);
 	const dispatch = useDispatch();
 
@@ -31,10 +31,6 @@ const GroupsView = ({ id }) => {
 	useEffect(() => {
 		getGroups();
 	}, []);
-
-	const onBack = () => {
-		dispatch(setStory("scheduleView"));
-	};
 
 	return (
 		<View id={id} activePanel="main">
@@ -53,20 +49,26 @@ const GroupsView = ({ id }) => {
 								.map((group) => (
 									<Cell
 										key={group}
-										onClick={() => {
-											dispatch(setActiveGroup(group));
-											onBack();
+										onClick={async (e) => {
+											setIsLoading(true);
+
+											onCellClick(e);
 										}}
+										data-group={group}
+										data-stgroup={stgroup}
 									>
 										{group}
 									</Cell>
 								))
 						) : (
 							<Cell
-								onClick={() => {
-									dispatch(setActiveGroup(groups[0]));
-									onBack();
+								onClick={async (e) => {
+									setIsLoading(true);
+
+									onCellClick(e);
 								}}
+								data-group={groups[0]}
+								data-stgroup={stgroup}
 							>
 								{groups[0]}
 							</Cell>
