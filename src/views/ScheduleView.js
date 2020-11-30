@@ -6,19 +6,15 @@ import {
 	PanelSpinner,
 	PanelHeaderButton,
 	Placeholder,
-	Header,
 	PanelHeaderBack,
 	FixedLayout,
 	Link,
 	ScreenSpinner,
 	Div,
-	Gallery,
 } from "@vkontakte/vkui";
-import { useSelector, useDispatch } from "react-redux";
-import { setActiveSchedule } from "../redux/actions";
+import { useSelector } from "react-redux";
 import Icon28Settings from "@vkontakte/icons/dist/28/settings";
-import HorizontalCalendar from "vkui-horizontal-calendar";
-import ScheduleTable from "../services/ScheduleTable";
+import ScheduleTableWeek from "../services/ScheduleTableWeek";
 import { api } from "../services";
 import ScheduleSettings from "./ScheduleSettings";
 import Icon56Users3Outline from "@vkontakte/icons/dist/56/users_3_outline";
@@ -29,46 +25,47 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 }/pdf.worker.js`;
 
 const ScheduleView = ({ id }) => {
-	const [choosed, setChoosed] = useState(1);
 	const date = new Date();
 	const stgroup = useSelector((state) => state.schedule.stgroup);
 	const group = useSelector((state) => state.schedule.group);
+	const isFetching = useSelector((state) => state.schedule.isFetching);
 	const [isLoading, setIsLoading] = useState(true);
-	const [lessons, setLessons] = useState([]);
+	const [lessonsWeek, setLessonsWeek] = useState([]);
 	const [file, setFile] = useState(null);
 	const [activePanel, setActivePanel] = useState("main");
-	const [modal, setModal] = useState(null);
-	const dispatch = useDispatch();
+	const [activeModal, setActiveModal] = useState(null);
 
 	const load = async () => {
-		const result = new Date(date);
-		result.setDate(result.getDate() + choosed - 1);
-		const parsedDate =
-			result.getFullYear() +
-			"-" +
-			parseInt(result.getMonth() + 1) +
-			"-" +
-			result.getDate();
+		setIsLoading(true);
+		let lessonsWeek = [];
 
-		if (!modal) {
-			await api.get(`/schedule/favourite`).then(async ({ data }) => {
-				if (data) {
-					const stgroup = data.stgroup;
-					const group = data.group;
+		if (stgroup.length > 0 && group.length > 0) {
+			for (var i = 0; i < 7; i++) {
+				const result = new Date(date);
+				result.setDate(result.getDate() + i);
+				const parsedDate =
+					result.getFullYear() +
+					"-" +
+					parseInt(result.getMonth() + 1) +
+					"-" +
+					result.getDate();
 
-					await api
-						.get(
-							`/schedule/lessons?stgroup=${stgroup}&group=${group}&day=${parsedDate}`
-						)
-						.then(({ data }) => {
-							setActiveSchedule({ stgroup, group });
+				await api
+					.get(
+						`/schedule/lessons?stgroup=${stgroup}&group=${group}&day=${parsedDate}`
+					)
+					.then(({ data }) => {
+						lessonsWeek = lessonsWeek.concat([data]);
+					});
+			}
 
-							setLessons(data);
-						});
-				}
-			});
+			setLessonsWeek(lessonsWeek);
+			setIsLoading(false);
 		}
-		setIsLoading(false);
+		if (stgroup.length > 0 && group.length === 0) {
+			setIsLoading(false);
+			setActiveModal("select");
+		}
 	};
 
 	useEffect(() => {
@@ -82,18 +79,21 @@ const ScheduleView = ({ id }) => {
 
 	useEffect(() => {
 		load();
-	}, [choosed, modal]);
+	}, [isFetching]);
 
 	const onHeaderButtonClick = () => {
-		setModal(
-			<ScheduleSettings
-				activeModal="select"
-				onSettingsClose={() => {
-					setModal(null);
-				}}
-			/>
-		);
+		setActiveModal("select");
 	};
+
+	const modal = (
+		<ScheduleSettings
+			id="scheduleSettings"
+			activeModal={activeModal}
+			onSettingsClose={() => {
+				setActiveModal(null);
+			}}
+		/>
+	);
 
 	return (
 		<View id={id} activePanel={activePanel} modal={modal}>
@@ -104,6 +104,7 @@ const ScheduleView = ({ id }) => {
 							<Icon28Settings />
 						</PanelHeaderButton>
 					}
+					separator={false}
 				>
 					Расписание
 				</PanelHeader>
@@ -116,70 +117,40 @@ const ScheduleView = ({ id }) => {
 							stretched
 						/>
 					) : (
-						<React.Fragment>
-							<HorizontalCalendar
-								date={date}
-								choosed={choosed}
-								onClick={({ choosedDay, dayNumber }) => {
-									if (dayNumber !== choosed) {
-										setChoosed(dayNumber);
-									}
-								}}
-							/>
-							<Div style={{ textAlign: "center" }}>
-								<span>Сверьтесь с</span>{" "}
-								<span
-									style={{ color: "var(--accent)" }}
-									onClick={() => {
-										setActivePanel("pdf");
-									}}
-								>
-									оригиналом
-								</span>
-								.<br />
-								<Link
-									href="https://vk.com/im?sel=-183639424"
-									target="_blank"
-								>
-									Сообщите
-								</Link>
-								<span> об ошибке.</span>
-							</Div>
-							<Header mode="secondary">
-								{lessons.length > 0
-									? lessons.length === 1
-										? `Сегодня ${lessons.length} пара`
-										: lessons.length > 1 &&
-										  lessons.length < 5
-										? `Сегодня ${lessons.length} пары`
-										: `Сегодня ${lessons.length} пар`
-									: "Сегодня нет пар"}
-							</Header>
-							<Gallery
-								slideWidth="100%"
-								align="center"
-								style={{ height: "100%" }}
-								slideIndex={choosed - 1}
-								onChange={(slideIndex) => {
-									setChoosed(slideIndex + 1);
-								}}
-							>
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-								<ScheduleTable lessons={lessons} />
-							</Gallery>
-						</React.Fragment>
+						<ScheduleTableWeek
+							lessonsWeek={lessonsWeek}
+							before={
+								<Div style={{ textAlign: "center" }}>
+									<span>Сверьтесь с</span>{" "}
+									<span
+										style={{
+											color: "var(--accent)",
+										}}
+										onClick={() => {
+											setActivePanel("pdf");
+										}}
+									>
+										оригиналом
+									</span>
+									.<br />
+									<Link
+										href="https://vk.com/im?sel=-183639424"
+										target="_blank"
+									>
+										Сообщите
+									</Link>
+									<span> об ошибке.</span>
+								</Div>
+							}
+						/>
 					)
 				) : (
 					<PanelSpinner size="large" />
 				)}
 			</Panel>
-			<Panel id="pdf" centered>
+			<Panel id="pdf" centered separator={false}>
 				<PanelHeader
+					separator={false}
 					left={
 						<PanelHeaderBack
 							onClick={() => {

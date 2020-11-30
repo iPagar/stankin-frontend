@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { RichCell, Group, Caption, Header, Placeholder } from "@vkontakte/vkui";
+import React from "react";
+import { RichCell, Caption, Card } from "@vkontakte/vkui";
 
 const LessonCell = ({ lesson, isTeacher }) => {
 	return (
-		<Group key={lesson.start_time}>
+		<Card size="l">
 			<RichCell
 				before={
 					<div style={{ padding: 12 }}>
@@ -23,24 +23,14 @@ const LessonCell = ({ lesson, isTeacher }) => {
 				}
 				text={
 					lesson.subject &&
-					`${lesson.type} ${
-						lesson.teacher && !isTeacher
-							? `ведет ${lesson.teacher}`
-							: `у ${lesson.stgroups.toString()} ${
-									lesson.group !== "Без подгруппы"
-										? `подгруппы ${lesson.group.slice(
-												1,
-												2
-										  )}`
-										: ""
-							  } `
-					}`
+					`${lesson.type} ${lesson.teacher &&
+						"ведет "} ${lesson.teacher && lesson.teacher}`
 				}
 				multiline
 			>
 				{lesson.subject}
 			</RichCell>
-		</Group>
+		</Card>
 	);
 };
 

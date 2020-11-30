@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import {
-	Epic,
-	View,
-	Root,
-	ScreenSpinner,
-	Tabbar,
-	TabbarItem,
-} from "@vkontakte/vkui";
+import { Epic, View, Root, Tabbar, TabbarItem } from "@vkontakte/vkui";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	setStory,
@@ -14,6 +7,7 @@ import {
 	setView,
 	setStgroup,
 	fetchInit,
+	setBurgerPanel,
 } from "./redux/actions";
 import { api } from "./services";
 
@@ -27,16 +21,12 @@ import Icon28Menu from "@vkontakte/icons/dist/28/menu";
 import Login from "./panels/Login";
 import Marks from "./panels/Marks";
 import ScheduleView from "./views/ScheduleView";
-import TeachersView from "./views/TeachersView";
 import StgroupsView from "./views/StgroupsView";
 import GroupsView from "./views/GroupsView";
 import BurgerView from "./views/BurgerView";
 
-const App = ({}) => {
+const App = () => {
 	const dispatch = useDispatch();
-	const isScheduleFetching = useSelector(
-		(state) => state.schedule.isFetching
-	);
 	const activeView = useSelector((state) => state.config.activeView);
 	const activeStory = useSelector((state) => state.config.activeStory);
 	const student = useSelector((state) => state.init.student);
@@ -44,43 +34,41 @@ const App = ({}) => {
 	const onStoryChange = (e) => {
 		const story = e.currentTarget.dataset.story;
 
+		changeStory(story);
+	};
+	const changeStory = (story) => {
 		switch (story) {
 			case "marksRoot":
 				if (!student.hasOwnProperty("student"))
 					dispatch(setView("loginView"));
 				else dispatch(setView("mainView"));
+				dispatch(setStory(story));
 				break;
 			case "scheduleRoot":
 				dispatch(setView("scheduleView"));
-
+				dispatch(setStory(story));
+				break;
+			case "burgerView":
+				dispatch(setStory(story));
 				break;
 			default:
 				break;
 		}
-		dispatch(setStory(story));
-	};
-	const changeStory = (story) => {
-		dispatch(setStory(story));
 	};
 	const onAppLoad = () => {
 		dispatch(loadSchedule());
+		dispatch(fetchInit());
 	};
 
 	useEffect(() => {
 		onAppLoad();
 		const hash = window.location.hash.slice(1);
-		let story = "scheduleView";
+		let story = "scheduleRoot";
 
-		switch (hash) {
-			case "marks":
-				story = "marksRoot";
-				break;
-			case "teachers":
-				story = "burgerView";
-				break;
-			default:
-				story = "scheduleRoot";
-				break;
+		if (hash.includes("marks")) {
+			story = "marksRoot";
+		} else if (hash.includes("teachers")) {
+			story = "burgerView";
 		}
 		changeStory(story);
 	}, []);
@@ -126,11 +114,7 @@ const App = ({}) => {
 					<Marks id="marks" />
 				</View>
 			</Root>
-			<Root
-				id="scheduleRoot"
-				activeView={activeView}
-				popout={isScheduleFetching && <ScreenSpinner />}
-			>
+			<Root id="scheduleRoot" activeView={activeView}>
 				<ScheduleView id="scheduleView" />
 				<StgroupsView
 					id="stgroupsView"
@@ -147,10 +131,10 @@ const App = ({}) => {
 										stgroup: stgroup,
 										group: data[0],
 									});
-									dispatch(loadSchedule());
+									await dispatch(loadSchedule());
 									dispatch(setView("scheduleView"));
 								} else {
-									dispatch(setStgroup(stgroup));
+									await dispatch(setStgroup(stgroup));
 									dispatch(setView("groupsView"));
 								}
 							});
@@ -170,18 +154,12 @@ const App = ({}) => {
 							group,
 						});
 
-						dispatch(loadSchedule());
+						await dispatch(loadSchedule());
 						dispatch(setView("scheduleView"));
 					}}
 				/>
 			</Root>
 
-			<TeachersView
-				id="teachersView"
-				onCancelClick={() => {
-					changeStory("burgerView");
-				}}
-			/>
 			<BurgerView id="burgerView" />
 		</Epic>
 	);

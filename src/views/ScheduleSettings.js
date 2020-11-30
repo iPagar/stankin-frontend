@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import {
   ModalRoot,
   ModalPageHeader,
@@ -9,14 +9,10 @@ import {
   PanelHeaderButton,
   SelectMimicry,
   FormLayout,
-  Tabs,
-  TabsItem,
-  Group,
-  Div,
 } from "@vkontakte/vkui";
 import { useDispatch, useSelector } from "react-redux";
 import { api } from "../services";
-import { setStory, setView } from "../redux/actions";
+import { setView } from "../redux/actions";
 import Icon24Cancel from "@vkontakte/icons/dist/24/cancel";
 import Icon24Done from "@vkontakte/icons/dist/24/done";
 
@@ -24,9 +20,6 @@ const ScheduleSettings = ({ onSettingsClose, activeModal }) => {
   const platform = usePlatform();
   const stgroup = useSelector((state) => state.schedule.stgroup);
   const group = useSelector((state) => state.schedule.group);
-  const isTeacher = useSelector((state) => state.schedule.isTeacher);
-
-  const [activeTab, setActiveTab] = useState("student");
   const dispatch = useDispatch();
 
   const onSuccess = async () => {

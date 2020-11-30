@@ -69,18 +69,6 @@ function invalidateInit() {
 	return { type: INVALIDATE_INIT };
 }
 
-function requestSchedule() {
-	return { type: REQUEST_SCHEDULE };
-}
-
-function receiveSchedule(content) {
-	return { type: RECEIVE_SCHEDULE, payload: content };
-}
-
-function invalidateSchedule() {
-	return { type: INVALIDATE_SCHEDULE };
-}
-
 export function exit() {
 	return (dispatch) => {
 		dispatch(requestInit());
@@ -138,7 +126,6 @@ export function fetchInit() {
 						marks: response[1].marks,
 					})
 				);
-				dispatch(setView("mainView"));
 			})
 			.catch(() => {
 				dispatch(invalidateInit());
@@ -155,4 +142,28 @@ export function loadSchedule() {
 		// Arguments to inject in begin/end actions
 		// payload: { stgroup, group, isTeacher },
 	};
+}
+
+export function setBurgerPanel(activePanel) {
+	return { type: "SET_ACTIVE_PANEL", activePanel };
+}
+
+export function setBurgerModal(activeModal) {
+	return { type: "SET_ACTIVE_MODAL", activeModal };
+}
+
+export function setBurgerPopout(popout) {
+	return { type: "SET_POPOUT", popout };
+}
+
+export function setTeacher(teacher) {
+	return { type: "SET_TEACHER", teacher };
+}
+
+export function setSearchTeacher(searchTeacher) {
+	return { type: "SET_SEARCH_TEACHER", searchTeacher };
+}
+
+export function setSnackbar(snackbar) {
+	return { type: "SET_SNACKBAR", snackbar };
 }

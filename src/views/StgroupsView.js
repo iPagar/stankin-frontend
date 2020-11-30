@@ -9,21 +9,19 @@ import {
 	Group,
 	Search,
 	Footer,
+	FixedLayout,
 } from "@vkontakte/vkui";
-import { useDispatch, useSelector } from "react-redux";
-import { setSchedule, setStory } from "../redux/actions";
+import { useSelector } from "react-redux";
 import { api } from "../services";
 
 const StgroupsView = ({ id, onBack, onCellClick }) => {
 	const activeStgroup = useSelector((state) => state.schedule.activeStgroup);
-	const activeGroup = useSelector((state) => state.schedule.activeGroup);
 	const [search, setSearch] = useState("");
 	const [stgroups, setStgroups] = useState([]);
-	const [groups, setGroups] = useState([]);
+	const [groups] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [popout] = useState(null);
 	const [activePanel, setActivePanel] = useState("stgroups");
-	const dispatch = useDispatch();
 
 	const getStgroups = async () => {
 		await api
@@ -60,14 +58,16 @@ const StgroupsView = ({ id, onBack, onCellClick }) => {
 				</PanelHeader>
 				{!isLoading ? (
 					<Fragment>
-						<Search
-							value={search}
-							onChange={(e) => {
-								setSearch(e.currentTarget.value);
-							}}
-						/>
+						<FixedLayout vertical="top">
+							<Search
+								value={search}
+								onChange={(e) => {
+									setSearch(e.currentTarget.value);
+								}}
+							/>
+						</FixedLayout>
 
-						<Group separator="hide">
+						<Group style={{ marginTop: 60 }} separator="hide">
 							{filterStgroups().map((stgroup) => (
 								<Cell
 									key={stgroup._id}

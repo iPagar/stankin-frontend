@@ -1,30 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { RichCell, Group, Caption, Header, Cell } from "@vkontakte/vkui";
+import { Header, CardGrid, Placeholder } from "@vkontakte/vkui";
 import moment from "moment";
 import "moment/locale/ru";
 import LessonCell from "../cells/LessonCell";
 
+import Icon56GestureOutline from "@vkontakte/icons/dist/56/gesture_outline";
+
 moment.locale("ru");
 
-const ScheduleTableDay = ({ lessonsDay, isTeacher, number, style }) => {
+const ScheduleTableDay = ({
+	lessonsDay,
+	withHeaders,
+	isTeacher,
+	number,
+	style,
+}) => {
 	const [parsedLessons, setParsedLessons] = useState([]);
+	const pairtimes = [
+		{ start_time: "8:30", end_time: "10:10" },
+		{ start_time: "10:20", end_time: "12:00" },
+		{ start_time: "12:20", end_time: "14:00" },
+		{ start_time: "14:10", end_time: "15:50" },
+		{ start_time: "16:00", end_time: "17:40" },
+		{ start_time: "18:00", end_time: "19:30" },
+		{ start_time: "19:40", end_time: "21:10" },
+		{ start_time: "21:20", end_time: "22:50" },
+	];
 
 	useEffect(() => {
 		setParsedLessons(createTableData(lessonsDay));
 	}, [lessonsDay]);
 
 	const createTableData = (data) => {
-		const pairtimes = [
-			{ start_time: "8:30", end_time: "10:10" },
-			{ start_time: "10:20", end_time: "12:00" },
-			{ start_time: "12:20", end_time: "14:00" },
-			{ start_time: "14:10", end_time: "15:50" },
-			{ start_time: "16:00", end_time: "17:40" },
-			{ start_time: "18:00", end_time: "19:30" },
-			{ start_time: "19:40", end_time: "21:10" },
-			{ start_time: "21:20", end_time: "22:50" },
-		];
-
 		let lessonsDay = [];
 		const groups = [[], [], [], [], [], [], [], []];
 		data.forEach((lesson) => {
@@ -105,14 +112,16 @@ const ScheduleTableDay = ({ lessonsDay, isTeacher, number, style }) => {
 	};
 
 	return (
-		<div style={{ maxWidth: 400, ...style }}>
+		<div style={{ maxWidth: 400, display: "contents", ...style }}>
 			<Header mode="secondary">
-				{moment()
-					.add(number, "days")
-					.format("D MMMM, dddd")}
+				{withHeaders &&
+					moment()
+						.add(number, "days")
+						.format("D MMMM, dddd")}
 			</Header>
+
 			{(lessonsDay.length > 0 && (
-				<React.Fragment>
+				<CardGrid>
 					{parsedLessons.map((lesson, i) => {
 						return (
 							<LessonCell
@@ -122,10 +131,20 @@ const ScheduleTableDay = ({ lessonsDay, isTeacher, number, style }) => {
 							/>
 						);
 					})}
-				</React.Fragment>
-			)) || <Cell style={{ textAlign: "center" }}>Нет пар</Cell>}
+				</CardGrid>
+			)) || (
+				<Placeholder icon={<Icon56GestureOutline />} header="Нет пар" />
+			)}
 		</div>
 	);
 };
 
 export default ScheduleTableDay;
+
+// lessonsDay.length > 0
+// 					? lessonsDay.length === 1
+// 						? `Сегодня ${lessonsDay.length} пара`
+// 						: lessonsDay.length > 1 && lessonsDay.length < 5
+// 						? `Сегодня ${lessonsDay.length} пары`
+// 						: `Сегодня ${lessonsDay.length} пар`
+// 					: "Сегодня нет пар"

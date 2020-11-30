@@ -121,7 +121,7 @@ class Login extends React.Component {
       switch (e.detail.type) {
         case "VKWebAppUpdateConfig":
           this.setState({ scheme: e.detail.data.scheme });
-          console.log(1);
+
           break;
         default:
           break;
@@ -135,7 +135,6 @@ class Login extends React.Component {
         else throw new Error(response.status);
       })
       .catch((error) => {
-        // this.openBase();
         this.setState({ loadingUser: false });
       });
   }

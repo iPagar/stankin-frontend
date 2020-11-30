@@ -14,8 +14,6 @@ const InitialState = {
   student: {},
   semesters: [],
   marks: [],
-  favouriteStgroup: "",
-  favouriteGroup: "",
 };
 
 export default function(state = InitialState, action) {

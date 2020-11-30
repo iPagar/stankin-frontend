@@ -7,6 +7,7 @@ import {
 	Button,
 	Snackbar,
 	Avatar,
+	Link,
 } from "@vkontakte/vkui";
 import { Spring } from "react-spring/renderprops";
 import { connect } from "react-redux";
@@ -31,8 +32,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onPanelLoad: () => {
-			dispatch(fetchInit());
+		onPanelLoad: async () => {
+			await dispatch(fetchInit());
 		},
 		openMarks: () => {
 			dispatch(setView("mainView"));
@@ -60,11 +61,10 @@ class Login extends React.Component {
 
 		this.setState({ isFetching: true });
 		api.put("/student", { student: login, password })
-			.then(() => {
-				setTimeout(() => {
-					this.props.onPanelLoad();
-					this.setState({ isFetching: false });
-				}, 200);
+			.then(async () => {
+				await this.props.onPanelLoad();
+				this.props.openMarks();
+				this.setState({ isFetching: false });
 			})
 			.catch(() => {
 				this.openSnackbar();
@@ -85,7 +85,13 @@ class Login extends React.Component {
 						</Avatar>
 					}
 				>
-					Произошла ошибка
+					Произошла ошибка.
+					<Link
+						href="https://vk.com/im?sel=-183639424"
+						target="_blank"
+					>
+						<span> Напишите нам</span>.
+					</Link>
 				</Snackbar>
 			),
 		});

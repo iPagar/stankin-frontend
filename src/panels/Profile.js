@@ -12,9 +12,8 @@ import {
 	Button,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
-import { setStory, notify, exit } from "../redux/actions";
+import { setStory, setView, notify, exit } from "../redux/actions";
 
-import Icon24Cancel from "@vkontakte/icons/dist/24/cancel";
 import Icon24Notification from "@vkontakte/icons/dist/24/notification";
 import Icon56UserCircleOutline from "@vkontakte/icons/dist/56/user_circle_outline";
 
@@ -26,6 +25,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		onSetView: (name) => {
+			dispatch(setView(name));
+		},
 		onSetStory: (name) => {
 			dispatch(setStory(name));
 		},
@@ -119,6 +121,7 @@ class Profile extends React.Component {
 								size="l"
 								onClick={() => {
 									this.props.onSetStory("marksRoot");
+									this.props.onSetView("loginView");
 								}}
 							>
 								Войти

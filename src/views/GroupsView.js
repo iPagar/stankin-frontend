@@ -8,15 +8,13 @@ import {
 	Cell,
 	Group,
 } from "@vkontakte/vkui";
-import { useDispatch, useSelector } from "react-redux";
-import { setStory, setActiveSchedule } from "../redux/actions";
+import { useSelector } from "react-redux";
 import { api } from "../services";
 
 const GroupsView = ({ id, onBack, onCellClick }) => {
 	const [groups, setGroups] = useState("");
 	const stgroup = useSelector((state) => state.schedule.stgroup);
 	const [isLoading, setIsLoading] = useState(true);
-	const dispatch = useDispatch();
 
 	const getGroups = async () => {
 		await api

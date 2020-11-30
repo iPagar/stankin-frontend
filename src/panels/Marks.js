@@ -13,12 +13,7 @@ import {
 	PanelHeaderButton,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
-import {
-	selectSemester,
-	setActiveTopTab,
-	setView,
-	notify,
-} from "../redux/actions";
+import { selectSemester, setActiveTopTab, notify } from "../redux/actions";
 
 import Icon16Dropdown from "@vkontakte/icons/dist/16/dropdown";
 import Icon24Done from "@vkontakte/icons/dist/24/done";
