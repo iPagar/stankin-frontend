@@ -23,6 +23,8 @@ import Icon28MailOutline from "@vkontakte/icons/dist/28/mail_outline";
 import Icon20PhoneOutline from "@vkontakte/icons/dist/20/phone_outline";
 import Icon24Copy from "@vkontakte/icons/dist/24/copy";
 import Icon20Info from "@vkontakte/icons/dist/20/info";
+import Icon28CancelCircleFillRed from "@vkontakte/icons/dist/28/cancel_circle_fill_red";
+import Icon20CommentCircleFillGray from "@vkontakte/icons/dist/20/comment_circle_fill_gray";
 
 import like from "../img/reactions/like.svg";
 import love from "../img/reactions/love.svg";
@@ -106,26 +108,66 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 				key={teacher.name}
 				size="l"
 				before={
-					<Avatar
-						size={48}
+					<div
 						style={{
-							objectFit: "cover",
+							padding: 5,
+							display: "flex",
+							justifyContent: "center",
+							flexDirection: "column",
 						}}
-						src={
-							teacher.avatar
-								? `https://stankin.ru${teacher.avatar}`
-								: "https://vk.com/images/camera_200.png?ava=1"
-						}
-						onClick={() => {
-							bridge.send("VKWebAppShowImages", {
-								images: [
-									teacher.avatar
-										? `https://stankin.ru${teacher.avatar}`
-										: "https://vk.com/images/camera_200.png?ava=1",
-								],
-							});
-						}}
-					/>
+					>
+						<Avatar
+							size={80}
+							style={{
+								objectFit: "cover",
+							}}
+							src={
+								teacher.avatar
+									? `https://stankin.ru${teacher.avatar}`
+									: "https://vk.com/images/camera_200.png?ava=1"
+							}
+							onClick={() => {
+								bridge.send("VKWebAppShowImages", {
+									images: [
+										teacher.avatar
+											? `https://stankin.ru${
+													teacher.avatar
+											  }`
+											: "https://vk.com/images/camera_200.png?ava=1",
+									],
+								});
+							}}
+						/>
+						<UsersStack
+							style={{
+								padding: 0,
+								paddingRight: 16,
+							}}
+							size="m"
+							visibleCount={3}
+							photos={reactionsPhotos()}
+						/>
+						<div
+							style={{
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								flexDirection: "row",
+							}}
+						>
+							{teacher.comments.length > 0 && (
+								<Icon20CommentCircleFillGray
+									width={32}
+									height={32}
+								/>
+							)}
+							<UsersStack
+								size="m"
+								visibleCount={0}
+								photos={new Array(teacher.comments["length"])}
+							/>
+						</div>
+					</div>
 				}
 				indicator={
 					<Icon20ShareOutline
@@ -211,12 +253,16 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 										}
 									>
 										<Link
-											href={`tel:${teacher.phone}`}
+											href={`tel:${findNumbers(
+												teacher.phone,
+												"RU",
+												{
+													v2: true,
+												}
+											)[0].number.formatNational()}`}
 											target="_blank"
 										>
-											{findNumbers(teacher.phone, "RU", {
-												v2: true,
-											})[0].number.formatNational()}
+											Позвонить
 										</Link>
 									</MiniInfoCell>
 								)}
@@ -296,13 +342,13 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 										href={`mailto:${teacher.email}`}
 										target="_blank"
 									>
-										{teacher.email}
+										Написать
 									</Link>
 								</MiniInfoCell>
 							)}
 						</Group>
 						<Group>
-							{student.hasOwnProperty("student") ? (
+							{
 								<CellButton
 									before={
 										!teacher.reactions.data.length ? (
@@ -310,85 +356,21 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 												height={24}
 											/>
 										) : (
-											<div
-												style={{
-													display: "flex",
-													justiifyContent: "center",
-													alignItems: "center",
-												}}
-											>
-												<UsersStack
-													style={{
-														padding: 0,
-														paddingRight: 16,
-													}}
-													size="m"
-													visibleCount={3}
-													photos={reactionsPhotos()}
-												/>
-											</div>
+											<Icon28CancelCircleFillRed
+												height={24}
+											/>
 										)
 									}
 									onClick={onEmoClick}
 								>
 									{!teacher.reactions.my
 										? "Оценить"
-										: "Вы оценили"}
+										: "Убрать оценку"}
 								</CellButton>
-							) : (
-								<CellButton
-									before={
-										<div
-											style={{
-												display: "flex",
-												justiifyContent: "center",
-												alignItems: "center",
-											}}
-										>
-											<UsersStack
-												style={{
-													padding: 0,
-													paddingRight: 16,
-												}}
-												size="m"
-												visibleCount={3}
-												photos={reactionsPhotos()}
-											/>
-										</div>
-									}
-								/>
-							)}
+							}
 							<CellButton
 								before={
-									teacher.comments["length"] <= 1 ? (
-										<Icon28CommentCircleFillGreen
-											height={24}
-										/>
-									) : (
-										<div
-											style={{
-												display: "flex",
-												justiifyContent: "center",
-												alignItems: "center",
-											}}
-										>
-											<UsersStack
-												style={{
-													padding: 0,
-													paddingRight: 16,
-												}}
-												size="m"
-												visibleCount={0}
-												photos={
-													new Array(
-														teacher.comments[
-															"length"
-														]
-													)
-												}
-											/>
-										</div>
-									)
+									<Icon28CommentCircleFillGreen height={24} />
 								}
 								onClick={onCommentClick}
 							>
