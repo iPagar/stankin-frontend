@@ -71,11 +71,11 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 	};
 
 	const reactionsPhotos = () => {
-		const count = teacher.reactions.data.reduce((sum, reaction) => {
-			return +sum + parseInt(reaction.count);
-		}, 0);
+		// const count = teacher.reactions.data.reduce((sum, reaction) => {
+		// 	return +sum + parseInt(reaction.count);
+		// }, 0);
 
-		let photos = teacher.reactions.data.map((reaction) => {
+		let photos = teacher.reactions.data.slice(0, 3).map((reaction) => {
 			switch (reaction.reaction) {
 				case 1:
 					return like;
@@ -94,9 +94,9 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 			}
 		});
 
-		for (var i = photos.length; i < count; i++) {
-			photos = photos.concat({});
-		}
+		// for (var i = photos.length; i < count; i++) {
+		// 	photos = photos.concat({});
+		// }
 
 		return photos;
 	};
@@ -111,15 +111,20 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 				before={
 					<div
 						style={{
-							padding: 5,
+							paddingTop: 12,
+							paddingRight: 12,
 							display: "flex",
 							justifyContent: "center",
+							alignItems: "center",
 							flexDirection: "column",
 						}}
 					>
 						<Avatar
 							size={80}
 							style={{
+								display: "flex",
+								justifyContent: "center",
+								flexDirection: "column",
 								objectFit: "cover",
 							}}
 							src={
@@ -139,35 +144,46 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 								});
 							}}
 						/>
-						<UsersStack
-							style={{
-								padding: 0,
-								paddingRight: 16,
-							}}
-							size="m"
-							visibleCount={3}
-							photos={reactionsPhotos()}
-						/>
-						<div
-							style={{
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
-								flexDirection: "row",
-							}}
-						>
-							{teacher.comments.length > 0 && (
-								<Icon20CommentCircleFillGray
-									width={32}
-									height={32}
-								/>
-							)}
+						{teacher.reactions.data.length > 0 && (
 							<UsersStack
-								size="m"
-								visibleCount={0}
-								photos={new Array(teacher.comments["length"])}
+								style={{
+									paddingBottom: 0,
+									paddingLeft: 0,
+									paddingRight: 0,
+									paddingTop: 5,
+								}}
+								visibleCount={3}
+								photos={reactionsPhotos()}
 							/>
-						</div>
+						)}
+
+						{teacher.comments["length"] > 0 && (
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "center",
+									flexDirection: "row",
+									objectFit: "cover",
+									paddingTop: 5,
+								}}
+							>
+								<Icon20CommentCircleFillGray
+									width={24}
+									height={24}
+								/>
+								<div
+									className="UsersStack__photo UsersStack__photo--others"
+									style={{
+										padding: 0,
+										width: 24,
+										height: 24,
+										marginLeft: 5,
+									}}
+								>
+									{`+${teacher.comments["length"]}`}
+								</div>
+							</div>
+						)}
 					</div>
 				}
 				indicator={
