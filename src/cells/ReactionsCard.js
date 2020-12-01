@@ -28,6 +28,17 @@ const ReactionsCard = ({ id }) => {
 				name,
 				reaction: e.target.dataset.reaction,
 			});
+			dispatch(
+				setSnackbar(
+					<Snackbar
+						before={<Icon20Info />}
+						layout="vertical"
+						onClose={() => dispatch(setSnackbar(null))}
+					>
+						Оценка поставлена! Потяните список вниз, чтобы обновить!
+					</Snackbar>
+				)
+			);
 		} catch (e) {
 			dispatch(
 				setSnackbar(

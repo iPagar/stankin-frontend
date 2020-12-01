@@ -38,7 +38,7 @@ const BurgerView = ({ id }) => {
 			burgerPanel = "teachers";
 			dispatch(setBurgerPanel(burgerPanel));
 
-			if (hash.match(/\?.*/)[0].slice(1)) {
+			if (hash.match(/\?.*/) && hash.match(/\?.*/)[0].slice(1)) {
 				teacherName = decodeURI(hash.match(/\?.*/)[0].slice(1));
 				dispatch(setSearchTeacher(teacherName));
 			}

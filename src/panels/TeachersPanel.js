@@ -35,18 +35,14 @@ const TeachersPanel = ({ id, onCancelClick }) => {
 		setIsFetching(true);
 		let newTeachers = [];
 
-		for (var i = 0; i < teachers.length; i += 10) {
-			await api
-				.get(`/teachers?name=${name}&offset=${i}`)
-				.then(({ data }) => {
-					if (data.length !== 0) {
-						setHasMore(true);
-						newTeachers = [...newTeachers, ...data];
-					} else {
-						setHasMore(false);
-					}
-				});
-		}
+		await api.get(`/teachers?name=${name}&offset=${0}`).then(({ data }) => {
+			if (data.length !== 0) {
+				setHasMore(true);
+				newTeachers = [...data];
+			} else {
+				setHasMore(false);
+			}
+		});
 
 		student.hasOwnProperty("student") &&
 			(await api.get(`/teachers/my`).then(({ data }) => {
@@ -90,8 +86,8 @@ const TeachersPanel = ({ id, onCancelClick }) => {
 	}, [debouncedName]);
 
 	useEffect(() => {
-		if (modal === null) onRefresh();
-	}, [modal]);
+		onRefresh();
+	}, [student.hasOwnProperty("student")]);
 
 	return (
 		<Panel id={id}>

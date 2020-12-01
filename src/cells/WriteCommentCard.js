@@ -34,6 +34,18 @@ const WriteCommentCard = ({ id }) => {
 					isPublic: !checkboxRef.current.checked,
 					name: teacher,
 				});
+				dispatch(
+					setSnackbar(
+						<Snackbar
+							before={<Icon20Info />}
+							layout="vertical"
+							onClose={() => dispatch(setSnackbar(null))}
+						>
+							Комментарий отправлен! Потяните список вниз, чтобы
+							обновить!
+						</Snackbar>
+					)
+				);
 			} catch (e) {
 				dispatch(
 					setSnackbar(

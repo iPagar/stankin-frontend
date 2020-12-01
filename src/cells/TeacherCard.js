@@ -53,7 +53,18 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 				await api.delete("/teachers/reactions", {
 					params: { name: teacher.name },
 				});
-				onRefresh();
+				dispatch(
+					setSnackbar(
+						<Snackbar
+							before={<Icon20Info />}
+							layout="vertical"
+							onClose={() => dispatch(setSnackbar(null))}
+						>
+							Оценка удалена! Потяните список вниз, чтобы
+							обновить!
+						</Snackbar>
+					)
+				);
 			} catch (e) {
 				// dispatch(
 				// 	setSnackbar(
