@@ -16,16 +16,6 @@ const ScheduleTableDay = ({
 	style,
 }) => {
 	const [parsedLessons, setParsedLessons] = useState([]);
-	const pairtimes = [
-		{ start_time: "8:30", end_time: "10:10" },
-		{ start_time: "10:20", end_time: "12:00" },
-		{ start_time: "12:20", end_time: "14:00" },
-		{ start_time: "14:10", end_time: "15:50" },
-		{ start_time: "16:00", end_time: "17:40" },
-		{ start_time: "18:00", end_time: "19:30" },
-		{ start_time: "19:40", end_time: "21:10" },
-		{ start_time: "21:20", end_time: "22:50" },
-	];
 
 	useEffect(() => {
 		setParsedLessons(createTableData(lessonsDay));
@@ -35,72 +25,16 @@ const ScheduleTableDay = ({
 		let lessonsDay = [];
 		const groups = [[], [], [], [], [], [], [], []];
 		data.forEach((lesson) => {
-			switch (new Date(lesson.start_date).getHours()) {
-				case 8:
-					lessonsDay[0] = {
-						...pairtimes[0],
-						...lesson,
-					};
-					groups[0].push(lesson.stgroup);
+			const day = moment(lesson.start_date);
 
-					break;
-				case 10:
-					lessonsDay[1] = {
-						...pairtimes[1],
-						...lesson,
-					};
-					groups[1].push(lesson.stgroup);
-
-					break;
-				case 12:
-					lessonsDay[2] = {
-						...pairtimes[2],
-						...lesson,
-					};
-					groups[2].push(lesson.stgroup);
-
-					break;
-				case 14:
-					lessonsDay[3] = {
-						...pairtimes[3],
-						...lesson,
-					};
-					groups[3].push(lesson.stgroup);
-					break;
-				case 16:
-					lessonsDay[4] = {
-						...pairtimes[4],
-						...lesson,
-					};
-					groups[4].push(lesson.stgroup);
-					break;
-				case 18:
-					lessonsDay[5] = {
-						...pairtimes[5],
-						...lesson,
-					};
-					groups[5].push(lesson.stgroup);
-
-					break;
-				case 19:
-					lessonsDay[6] = {
-						...pairtimes[6],
-						...lesson,
-					};
-					groups[6].push(lesson.stgroup);
-
-					break;
-				case 21:
-					lessonsDay[7] = {
-						...pairtimes[7],
-						...lesson,
-					};
-					groups[7].push(lesson.stgroup);
-
-					break;
-				default:
-					throw new Error("err");
-			}
+			lessonsDay.push({
+				start_time: day.format("H:mm"),
+				end_time:
+					moment.utc(lesson.start_date).hours() + 3 < 18
+						? day.add(100, "minutes").format("H:mm")
+						: day.add(90, "minutes").format("H:mm"),
+				...lesson,
+			});
 		});
 
 		if (isTeacher)

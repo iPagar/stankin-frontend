@@ -104,6 +104,7 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 	return (
 		<Card size="l">
 			<Cell
+				style={{ paddingLeft: 0 }}
 				multiline
 				key={teacher.name}
 				size="l"
@@ -170,15 +171,17 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 					</div>
 				}
 				indicator={
-					<Icon20ShareOutline
-						onClick={() => {
-							bridge.send("VKWebAppShare", {
-								link: `https://vk.com/stankin.moduli#teachers?${encodeURI(
-									teacher.name
-								)}`,
-							});
-						}}
-					/>
+					<div style={{ padding: 5 }}>
+						<Icon20ShareOutline
+							onClick={() => {
+								bridge.send("VKWebAppShare", {
+									link: `https://vk.com/stankin.moduli#teachers?${encodeURI(
+										teacher.name
+									)}`,
+								});
+							}}
+						/>
+					</div>
 				}
 				bottomContent={
 					<div>
@@ -188,6 +191,7 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 									v2: true,
 								}).length > 0 && (
 									<MiniInfoCell
+										style={{ paddingLeft: 0 }}
 										textWrap="full"
 										before={<Icon20PhoneOutline />}
 										after={
@@ -268,6 +272,7 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 								)}
 							{teacher.email && (
 								<MiniInfoCell
+									style={{ paddingLeft: 0 }}
 									textWrap="full"
 									before={
 										<Icon28MailOutline
@@ -350,8 +355,9 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 						<Group>
 							{
 								<CellButton
+									style={{ paddingLeft: 0 }}
 									before={
-										!teacher.reactions.data.length ? (
+										!teacher.reactions.my ? (
 											<Icon28AddCircleFillBlue
 												height={24}
 											/>
@@ -369,6 +375,7 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 								</CellButton>
 							}
 							<CellButton
+								style={{ paddingLeft: 0 }}
 								before={
 									<Icon28CommentCircleFillGreen height={24} />
 								}
