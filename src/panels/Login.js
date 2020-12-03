@@ -49,10 +49,18 @@ class Login extends React.Component {
 		password: "",
 	};
 
-	componentDidMount() {
-		if (!this.props.student.hasOwnProperty("student"))
-			this.props.onPanelLoad();
-		else this.props.openMarks();
+	async componentDidMount() {
+		if (!this.props.student.hasOwnProperty("student")) {
+			try {
+				await this.props.onPanelLoad();
+				if (
+					!this.props.didInvalidate &&
+					!this.props.student.hasOwnProperty("student")
+				) {
+					this.props.openMarks();
+				}
+			} catch (e) {}
+		} else this.props.openMarks();
 	}
 
 	onSubmit = (e) => {
@@ -62,8 +70,10 @@ class Login extends React.Component {
 		this.setState({ isFetching: true });
 		api.put("/student", { student: login, password })
 			.then(async () => {
-				await this.props.onPanelLoad();
-				this.props.openMarks();
+				try {
+					await this.props.onPanelLoad();
+					this.props.openMarks();
+				} catch (e) {}
 				this.setState({ isFetching: false });
 			})
 			.catch(() => {
@@ -155,7 +165,4 @@ class Login extends React.Component {
 	}
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
