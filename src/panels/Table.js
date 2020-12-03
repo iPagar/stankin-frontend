@@ -176,31 +176,31 @@ class Table extends Component {
 						{
 							title: "М1",
 							sorting: false,
-							maxWidth: 50,
+							maxWidth: 60,
 							render: (rowData) => this.renderCell(rowData, "М1"),
 						},
 						{
 							title: "М2",
 							sorting: false,
-							maxWidth: 50,
+							maxWidth: 60,
 							render: (rowData) => this.renderCell(rowData, "М2"),
 						},
 						{
 							title: "К",
 							sorting: false,
-							maxWidth: 50,
+							maxWidth: 60,
 							render: (rowData) => this.renderCell(rowData, "К"),
 						},
 						{
 							title: "З",
 							sorting: false,
-							maxWidth: 18,
+							maxWidth: 60,
 							render: (rowData) => this.renderCell(rowData, "З"),
 						},
 						{
 							title: "Э",
 							sorting: false,
-							maxWidth: 50,
+							maxWidth: 60,
 							render: (rowData) => this.renderCell(rowData, "Э"),
 						},
 						{
@@ -231,9 +231,11 @@ class Table extends Component {
 					}}
 				/>
 				<Tooltip
-					text="Модули без оценки считаются минимальными"
+					text="Модули без оценки считаются минимальными. Нажмите на оценку, чтобы изменить ее."
 					isShown={tooltip}
-					onClose={() => this.setState({ tooltip: false })}
+					onClose={() => {
+						this.setState({ tooltip: false });
+					}}
 					alignY={"top"}
 					alignX={"right"}
 				>
@@ -253,15 +255,16 @@ class Table extends Component {
 								asideContent={
 									<div>
 										{hasRating || (
-											<div style={{ float: "right" }}>
-												<Icon24Info
-													fill={"#5181b8"}
-													onClick={() =>
-														this.setState({
-															tooltip: true,
-														})
-													}
-												/>
+											<div
+												style={{ float: "right" }}
+												onClick={(e) => {
+													e.stopPropagation();
+													this.setState({
+														tooltip: true,
+													});
+												}}
+											>
+												<Icon24Info fill={"#5181b8"} />
 											</div>
 										)}
 									</div>
