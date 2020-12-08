@@ -74,11 +74,3 @@ const ScheduleTableDay = ({
 };
 
 export default ScheduleTableDay;
-
-// lessonsDay.length > 0
-// 					? lessonsDay.length === 1
-// 						? `Сегодня ${lessonsDay.length} пара`
-// 						: lessonsDay.length > 1 && lessonsDay.length < 5
-// 						? `Сегодня ${lessonsDay.length} пары`
-// 						: `Сегодня ${lessonsDay.length} пар`
-// 					: "Сегодня нет пар"

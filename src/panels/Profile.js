@@ -12,7 +12,7 @@ import {
 	Button,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
-import { setStory, setView, notify, exit } from "../redux/actions";
+import { setStory, setView, exit } from "../redux/actions";
 
 import Icon24Notification from "@vkontakte/icons/dist/24/notification";
 import Icon56UserCircleOutline from "@vkontakte/icons/dist/56/user_circle_outline";
@@ -31,9 +31,6 @@ const mapDispatchToProps = (dispatch) => {
 		onSetStory: (name) => {
 			dispatch(setStory(name));
 		},
-		onNotifyClick: () => {
-			dispatch(notify());
-		},
 		onExitClick: () => {
 			dispatch(exit());
 		},
@@ -45,28 +42,10 @@ class Profile extends React.Component {
 		this.props.onExitClick();
 	};
 
-	setNotify = () => {
-		this.props.onNotifyClick();
-	};
-
 	renderExit() {
 		return (
 			<CellButton mode={"danger"} onClick={this.onExit}>
 				Выйти
-			</CellButton>
-		);
-	}
-
-	renderNotify() {
-		const { notify } = this.props.student;
-
-		return (
-			<CellButton
-				mode={(notify && `danger`) || `primary`}
-				onClick={this.setNotify}
-				before={<Icon24Notification />}
-			>
-				{(notify && `Не у`) || `У`}ведомлять об оценках
 			</CellButton>
 		);
 	}
@@ -109,10 +88,7 @@ class Profile extends React.Component {
 				{this.props.student.hasOwnProperty("student") ? (
 					<React.Fragment>
 						{this.renderProfile()}
-						<List>
-							{this.renderNotify()}
-							{this.renderExit()}
-						</List>
+						<List>{this.renderExit()}</List>
 					</React.Fragment>
 				) : (
 					<Placeholder

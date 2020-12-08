@@ -14,10 +14,12 @@ import {
 } from "@vkontakte/vkui";
 import { useSelector } from "react-redux";
 import Icon28Settings from "@vkontakte/icons/dist/28/settings";
+import Icon28ArticleOutline from "@vkontakte/icons/dist/28/article_outline";
 import ScheduleTableWeek from "../services/ScheduleTableWeek";
 import { api } from "../services";
 import ScheduleSettings from "./ScheduleSettings";
 import Icon56Users3Outline from "@vkontakte/icons/dist/56/users_3_outline";
+import bridge from "@vkontakte/vk-bridge";
 import { Document, pdfjs, Page } from "react-pdf";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${
@@ -95,14 +97,46 @@ const ScheduleView = ({ id }) => {
 		/>
 	);
 
+	const onHeaderScheduleClick = () => {
+		setActivePanel("pdf");
+	};
+
+	const checkSchedule = () => {
+		return (
+			<Div style={{ textAlign: "center" }}>
+				<span>Сверьтесь с</span>{" "}
+				<span
+					style={{
+						color: "var(--accent)",
+					}}
+					onClick={() => {
+						setActivePanel("pdf");
+					}}
+				>
+					оригиналом
+				</span>
+				.<br />
+				<Link href="https://vk.com/im?sel=-183639424" target="_blank">
+					Сообщите
+				</Link>
+				<span> об ошибке.</span>
+			</Div>
+		);
+	};
+
 	return (
 		<View id={id} activePanel={activePanel} modal={modal}>
 			<Panel id="main">
 				<PanelHeader
 					left={
-						<PanelHeaderButton onClick={onHeaderButtonClick}>
-							<Icon28Settings />
-						</PanelHeaderButton>
+						<React.Fragment>
+							<PanelHeaderButton onClick={onHeaderButtonClick}>
+								<Icon28Settings />
+							</PanelHeaderButton>{" "}
+							<PanelHeaderButton onClick={onHeaderScheduleClick}>
+								<Icon28ArticleOutline />
+							</PanelHeaderButton>
+						</React.Fragment>
 					}
 					separator={false}
 				>
@@ -119,29 +153,8 @@ const ScheduleView = ({ id }) => {
 					) : (
 						<ScheduleTableWeek
 							lessonsWeek={lessonsWeek}
-							before={
-								<Div style={{ textAlign: "center" }}>
-									<span>Сверьтесь с</span>{" "}
-									<span
-										style={{
-											color: "var(--accent)",
-										}}
-										onClick={() => {
-											setActivePanel("pdf");
-										}}
-									>
-										оригиналом
-									</span>
-									.<br />
-									<Link
-										href="https://vk.com/im?sel=-183639424"
-										target="_blank"
-									>
-										Сообщите
-									</Link>
-									<span> об ошибке.</span>
-								</Div>
-							}
+							//check schedule
+							before={null}
 						/>
 					)
 				) : (
