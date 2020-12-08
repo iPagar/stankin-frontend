@@ -53,8 +53,9 @@ const CommentCell = ({ comment }) => {
 				}
 				size="l"
 				multiline
+				
 			>
-				{comment.comment}
+				<span style={{whiteSpace:"pre-line"}}>{comment.comment}</span>
 			</Cell>
 		</Card>
 	);
