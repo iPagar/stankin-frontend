@@ -62,12 +62,12 @@ const ScheduleView = ({ id }) => {
 			}
 
 			setLessonsWeek(lessonsWeek);
-			setIsLoading(false);
 		}
 		if (stgroup.length > 0 && group.length === 0) {
-			setIsLoading(false);
 			setActiveModal("select");
 		}
+
+		setIsLoading(false);
 	};
 
 	useEffect(() => {

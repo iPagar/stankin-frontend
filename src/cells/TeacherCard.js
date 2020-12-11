@@ -115,7 +115,7 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 	return (
 		<Card size="l">
 			<Cell
-				style={{ paddingLeft: 0 }}
+				style={{ paddingLeft: 0, paddingBottom: 5 }}
 				multiline
 				key={teacher.name}
 				size="l"
@@ -380,7 +380,7 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 							)}
 						</Group>
 						<Group>
-							{
+							{student.hasOwnProperty("student") ? (
 								<CellButton
 									style={{ paddingLeft: 0 }}
 									before={
@@ -400,20 +400,34 @@ const TeacherCard = ({ teacher, onRefresh }) => {
 										? "Оценить"
 										: "Убрать оценку"}
 								</CellButton>
-							}
-							<CellButton
-								style={{ paddingLeft: 0 }}
-								before={
-									<Icon28CommentCircleFillGreen height={24} />
-								}
-								onClick={onCommentClick}
-							>
-								{student.hasOwnProperty("student")
-									? !teacher.comments.my
+							) : null}
+							{student.hasOwnProperty("student") ? (
+								<CellButton
+									style={{ paddingLeft: 0 }}
+									before={
+										<Icon28CommentCircleFillGreen
+											height={24}
+										/>
+									}
+									onClick={onCommentClick}
+								>
+									{!teacher.comments.my
 										? "Комментарии"
-										: "Отзыв оставлен"
-									: "Комментарии"}
-							</CellButton>
+										: "Отзыв оставлен"}
+								</CellButton>
+							) : teacher.comments["length"] ? (
+								<CellButton
+									style={{ paddingLeft: 0 }}
+									before={
+										<Icon28CommentCircleFillGreen
+											height={24}
+										/>
+									}
+									onClick={onCommentClick}
+								>
+									Комментарии
+								</CellButton>
+							) : null}
 						</Group>
 					</div>
 				}

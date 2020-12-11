@@ -9,6 +9,8 @@ import {
 	Banner,
 	Button,
 	Snackbar,
+	CardGrid,
+	Card,
 } from "@vkontakte/vkui";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -18,6 +20,7 @@ import {
 	notify,
 } from "../redux/actions";
 import bridge from "@vkontakte/vk-bridge";
+import { api } from "../services";
 import Profile from "../panels/Profile";
 import TeachersPanel from "../panels/TeachersPanel";
 import CommentsPage from "../cells/CommentsPage";
@@ -27,6 +30,7 @@ import ReactionsCard from "../cells/ReactionsCard";
 import Icon28Users from "@vkontakte/icons/dist/28/users";
 import Icon28UserCircleOutline from "@vkontakte/icons/dist/28/user_circle_outline";
 import Icon20Info from "@vkontakte/icons/dist/20/info";
+import Icon24UserAdd from "@vkontakte/icons/dist/24/user_add";
 
 import Icon28NotificationCircleFillGray from "@vkontakte/icons/dist/28/notification_circle_fill_gray";
 
@@ -37,8 +41,11 @@ const BurgerView = ({ id }) => {
 	const popout = useSelector((state) => state.burger.popout);
 	const [snackbar, setSnackbar] = useState(null);
 	const dispatch = useDispatch();
+	const [additional, setAdditional] = useState(null);
 
 	useEffect(() => {
+		updateAdditional();
+
 		const hash = window.location.hash.slice(1);
 		let burgerPanel = "main";
 		let teacherName = "";
@@ -53,6 +60,12 @@ const BurgerView = ({ id }) => {
 			}
 		}
 	}, []);
+
+	const updateAdditional = () => {
+		api.get(`/additional`).then((resp) => {
+			setAdditional(resp.data);
+		});
+	};
 
 	const modal = (
 		<ModalRoot
@@ -110,7 +123,12 @@ const BurgerView = ({ id }) => {
 
 											setSnackbar(
 												<Snackbar
-													before={<Icon20Info />}
+													before={
+														<Icon20Info
+															width={48}
+															height={48}
+														/>
+													}
 													layout="vertical"
 													onClose={() =>
 														setSnackbar(null)
@@ -123,6 +141,50 @@ const BurgerView = ({ id }) => {
 										}}
 									>
 										Хочу!
+									</Button>
+								</React.Fragment>
+							}
+						/>
+					)}
+
+					{additional && !additional.isMemberGroup && (
+						<Banner
+							before={<Icon24UserAdd width={48} height={48} />}
+							text="Будьте в курсе всех событий! Будьте с нами!"
+							actions={
+								<React.Fragment>
+									<Button
+										onClick={async () => {
+											const result = await bridge.send(
+												"VKWebAppJoinGroup",
+												{
+													group_id: 183639424,
+												}
+											);
+
+											if (
+												result &&
+												result.result === true
+											)
+												setSnackbar(
+													<Snackbar
+														before={
+															<Icon24UserAdd
+																width={20}
+															/>
+														}
+														layout="vertical"
+														onClose={() =>
+															setSnackbar(null)
+														}
+													>
+														Вы подписались на
+														группу!
+													</Snackbar>
+												);
+										}}
+									>
+										Подписаться
 									</Button>
 								</React.Fragment>
 							}
