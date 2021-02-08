@@ -22,7 +22,7 @@ import {
   Search,
   Group,
   UsersStack,
-  Placeholder
+  Placeholder,
 } from "@vkontakte/vkui";
 import ScreenSpinnerPromise from "vkui-screen-spinner-promise";
 import connect from "@vkontakte/vk-connect";
@@ -56,7 +56,7 @@ class Marks extends React.Component {
     search: "",
     offset: 0,
     rate: 0,
-    photo: ""
+    photo: "",
   };
 
   renderEmpty() {
@@ -88,11 +88,11 @@ class Marks extends React.Component {
       top: errorDiv,
       sttop: errorDiv,
       marks: errorDiv,
-      error: errorDiv
+      error: errorDiv,
     });
   };
 
-  select = e => {
+  select = (e) => {
     const { semesters } = this.state;
     const choosedSemester = JSON.parse(e.currentTarget.dataset.semester);
 
@@ -108,7 +108,7 @@ class Marks extends React.Component {
                 this.setState({ isLoading: false });
               });
             })
-            .catch(resp => {
+            .catch((resp) => {
               this.errorHandler();
               this.setState({ isLoading: false });
             });
@@ -118,7 +118,7 @@ class Marks extends React.Component {
     });
   };
 
-  onStoryChange = e => {
+  onStoryChange = (e) => {
     this.setState({ activeStory: e.currentTarget.dataset.story });
   };
 
@@ -139,19 +139,19 @@ class Marks extends React.Component {
                           .then(() =>
                             axios
                               .post("/student")
-                              .then(response =>
+                              .then((response) =>
                                 this.props.go("marks", response.data[0])
                               )
                           )
                       }
                       onCancel={() =>
                         this.setState({
-                          popout: null
+                          popout: null,
                         })
                       }
                       onDone={() => this.setState({ popout: null })}
                     />
-                  )
+                  ),
                 })
               }
             >
@@ -167,15 +167,15 @@ class Marks extends React.Component {
                         connect
                           .sendPromise("VKWebAppAllowMessagesFromGroup", {
                             group_id: 183639424,
-                            key: "dBuBKe1kFcdemzB"
+                            key: "dBuBKe1kFcdemzB",
                           })
-                          .then(resp =>
+                          .then((resp) =>
                             axios
                               .post("/notify", { notify: true })
                               .then(() =>
                                 axios
                                   .post("/student")
-                                  .then(response =>
+                                  .then((response) =>
                                     this.props.go("marks", response.data[0])
                                   )
                               )
@@ -183,12 +183,12 @@ class Marks extends React.Component {
                       }
                       onCancel={() =>
                         this.setState({
-                          popout: null
+                          popout: null,
                         })
                       }
                       onDone={() => this.setState({ popout: null })}
                     />
-                  )
+                  ),
                 })
               }
             >
@@ -207,14 +207,14 @@ class Marks extends React.Component {
                           .then(() => {
                             axios
                               .post("/student")
-                              .then(response =>
+                              .then((response) =>
                                 this.props.go("marks", response.data[0])
                               );
                           })
                       }
                       onCancel={() =>
                         this.setState({
-                          popout: null
+                          popout: null,
                         })
                       }
                       onDone={() => {
@@ -222,7 +222,7 @@ class Marks extends React.Component {
                         this.setState({ popout: null });
                       }}
                     />
-                  )
+                  ),
                 });
               }}
             >
@@ -240,14 +240,14 @@ class Marks extends React.Component {
                           .then(() => {
                             axios
                               .post("/student")
-                              .then(response =>
+                              .then((response) =>
                                 this.props.go("marks", response.data[0])
                               );
                           })
                       }
                       onCancel={() =>
                         this.setState({
-                          popout: null
+                          popout: null,
                         })
                       }
                       onDone={() => {
@@ -255,7 +255,7 @@ class Marks extends React.Component {
                         this.setState({ popout: null });
                       }}
                     />
-                  )
+                  ),
                 });
               }}
             >
@@ -271,7 +271,7 @@ class Marks extends React.Component {
                     onStart={() => axios.post("/delete")}
                     onCancel={() =>
                       this.setState({
-                        popout: null
+                        popout: null,
                       })
                     }
                     onDone={() => {
@@ -279,7 +279,7 @@ class Marks extends React.Component {
                       this.props.go("login");
                     }}
                   />
-                )
+                ),
               });
             }}
           >
@@ -292,12 +292,12 @@ class Marks extends React.Component {
             </ActionSheetItem>
           )}
         </ActionSheet>
-      )
+      ),
     });
   };
 
   updateSemesters = () => {
-    return axios.post("/semesters").then(semesters => {
+    return axios.post("/semesters").then((semesters) => {
       const sortedSemesters = semesters.data.sort((a, b) => {
         if (a.year < b.year) return -1;
 
@@ -312,22 +312,22 @@ class Marks extends React.Component {
     });
   };
 
-  updateMarks = semester => {
+  updateMarks = (semester) => {
     return axios
       .post("/marks", { year: semester.year, season: semester.season })
-      .then(json => {
+      .then((json) => {
         json = json.data;
         const sortMarks = [];
 
         for (const i in json) {
           const subject = json[i].subject;
 
-          if (!sortMarks.some(sortMark => sortMark.subject === subject)) {
+          if (!sortMarks.some((sortMark) => sortMark.subject === subject)) {
             const subjectMarks = { subject: subject };
 
             json
-              .filter(mark => mark.subject === subject)
-              .forEach(mark => (subjectMarks[`${mark.module}`] = mark.mark));
+              .filter((mark) => mark.subject === subject)
+              .forEach((mark) => (subjectMarks[`${mark.module}`] = mark.mark));
             sortMarks.push(subjectMarks);
           }
         }
@@ -351,12 +351,12 @@ class Marks extends React.Component {
   componentDidMount() {
     if (window.location.hash.slice(1) === "top")
       this.setState({ activeStory: "top" });
-
+    console.log(1);
     this.setState({ isLoading: true });
     this.updateSemesters()
-      .then(sortedSemesters => {
+      .then((sortedSemesters) => {
         this.setState({
-          semester: sortedSemesters[sortedSemesters.length - 1]
+          semester: sortedSemesters[sortedSemesters.length - 1],
         });
         sortedSemesters.forEach((semester, i) => {
           if (
@@ -372,7 +372,7 @@ class Marks extends React.Component {
           }
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({ isLoading: false });
         this.errorHandler();
       });
@@ -384,7 +384,7 @@ class Marks extends React.Component {
         document.getElementById("bottomLine").getBoundingClientRect().top >=
       30
     ) {
-      this.loadTop().then(top => {
+      this.loadTop().then((top) => {
         const newTop = this.state.top.props.children;
         newTop.push(top.props.children);
         this.setState({ top: <List>{newTop}</List> });
@@ -401,20 +401,20 @@ class Marks extends React.Component {
         search,
         year: semester.year,
         season: semester.season,
-        offset
+        offset,
       })
-      .then(top => {
+      .then((top) => {
         top = top.data;
-        return api.getAuthToken(7010368).then(auth =>
+        return api.getAuthToken(7010368).then((auth) =>
           api
             .callAPIMethod("users.get", {
               request_id: 1,
-              user_ids: top.map(student => student.id).toString(),
+              user_ids: top.map((student) => student.id).toString(),
               fields: "photo_50",
               v: "5.103",
-              access_token: auth.accessToken
+              access_token: auth.accessToken,
             })
-            .then(users => {
+            .then((users) => {
               const id = this.props.student.id;
               this.setState({ offset: offset + top.length });
               if (this.state.activeTab === "top")
@@ -432,7 +432,7 @@ class Marks extends React.Component {
                         person={{
                           id: group.id,
                           stgroup: group.stgroup,
-                          rating: group.rating
+                          rating: group.rating,
                         }}
                         user={users[i]}
                       />
@@ -448,19 +448,19 @@ class Marks extends React.Component {
   loadTopStgroup() {
     const { semester } = this.state;
 
-    return axios.post("/stgrouprate", semester).then(top => {
+    return axios.post("/stgrouprate", semester).then((top) => {
       const topStgroup = top.data;
 
-      return api.getAuthToken(7010368).then(auth =>
+      return api.getAuthToken(7010368).then((auth) =>
         api
           .callAPIMethod("users.get", {
             request_id: 1,
-            user_ids: topStgroup.map(student => student.id).toString(),
+            user_ids: topStgroup.map((student) => student.id).toString(),
             fields: "photo_50",
             v: "5.103",
-            access_token: auth.accessToken
+            access_token: auth.accessToken,
           })
-          .then(users => {
+          .then((users) => {
             return (
               <List>
                 {topStgroup.map((group, i) => {
@@ -470,7 +470,7 @@ class Marks extends React.Component {
                       position={group.number}
                       person={{
                         id: group.id,
-                        rating: group.rating
+                        rating: group.rating,
                       }}
                       user={users[i]}
                     />
@@ -496,81 +496,81 @@ class Marks extends React.Component {
                 Раздел отображается только в мобильном браузере.
                 <br />
               </Div>
-            )
+            ),
           })
         : [
-            this.loadTop().then(top => {
+            this.loadTop().then((top) => {
               if (top.props.children.length > 10)
                 this.setState({
-                  top
+                  top,
                 });
               else
                 this.setState({
-                  top: this.renderEmpty()
+                  top: this.renderEmpty(),
                 });
             }),
-            api.getAuthToken(7010368).then(auth =>
+            api.getAuthToken(7010368).then((auth) =>
               api
                 .callAPIMethod("users.get", {
                   request_id: 1,
                   user_ids: this.props.student.id,
                   fields: "photo_50",
                   v: "5.103",
-                  access_token: auth.accessToken
+                  access_token: auth.accessToken,
                 })
-                .then(resp => {
+                .then((resp) => {
                   this.setState({
-                    photo: resp[0].photo_50
+                    photo: resp[0].photo_50,
                   });
                 })
             ),
-            axios.post("/ratebyid", semester).then(resp => {
+            axios.post("/ratebyid", semester).then((resp) => {
               if (resp.data.rate.length)
                 this.setState({
-                  rate: resp.data.rate[0].number
+                  rate: resp.data.rate[0].number,
                 });
               else
                 this.setState({
-                  rate: 0
+                  rate: 0,
                 });
             }),
-            this.loadTopStgroup().then(sttop => {
+            this.loadTopStgroup().then((sttop) => {
               if (sttop.props.children.length > 1)
                 this.setState({
-                  sttop
+                  sttop,
                 });
               else
                 this.setState({
-                  sttop: this.renderEmpty()
+                  sttop: this.renderEmpty(),
                 });
 
               window.scrollTo(0, 0);
-            })
+            }),
           ]
-    ).catch(err => {
+    ).catch((err) => {
       console.log(err);
       this.setState({
         isLoading: false,
-        top: this.renderError()
+        top: this.renderError(),
       });
     });
   };
 
-  onSearchChange = search => {
+  onSearchChange = (search) => {
     let timeout = null;
     clearTimeout(timeout);
 
     this.setState({ search, offset: 0 }, () => {
       timeout = setTimeout(() => {
         if (search === this.state.search)
-          this.loadTop().then(top => {
+          this.loadTop().then((top) => {
             if (top.props.children.length)
               this.setState({
-                top
+                top,
               });
             else
               this.setState({
-                top: <Placeholder>Не найдено</Placeholder>
+                top: <Placeholder>Не найдено</Placeholder>,
               });
           });
       }, 200);
@@ -591,7 +591,7 @@ class Marks extends React.Component {
       sttop,
       error,
       rate,
-      photo
+      photo,
     } = this.state;
     const { id, student } = this.props;
 
@@ -683,7 +683,7 @@ class Marks extends React.Component {
                           this.setState({ isFetching: false });
                         });
                       })
-                      .catch(resp => {
+                      .catch((resp) => {
                         this.setState({ isFetching: false });
                         this.errorHandler();
                       });
@@ -715,7 +715,7 @@ class Marks extends React.Component {
               <div
                 style={{
                   marginTop: 48,
-                  paddingBottom: 0
+                  paddingBottom: 0,
                 }}
               >
                 {isLoading ? (
@@ -732,7 +732,7 @@ class Marks extends React.Component {
                             this.setState({ isFetching: false });
                           });
                         })
-                        .catch(resp => {
+                        .catch((resp) => {
                           this.setState({ isFetching: false });
                           this.errorHandler();
                         });
@@ -741,7 +741,7 @@ class Marks extends React.Component {
                   >
                     <div
                       style={{
-                        paddingBottom: 60
+                        paddingBottom: 60,
                       }}
                     >
                       <div>
@@ -761,7 +761,7 @@ class Marks extends React.Component {
                                   bottom: "48px",
                                   zIndex: 3,
                                   background: "var(--background_content)",
-                                  width: "100%"
+                                  width: "100%",
                                 }}
                                 photos={[photo]}
                               >
@@ -775,7 +775,7 @@ class Marks extends React.Component {
                         <div
                           id="bottomLine"
                           style={{
-                            paddingBottom: 60
+                            paddingBottom: 60,
                           }}
                         ></div>
                       </div>

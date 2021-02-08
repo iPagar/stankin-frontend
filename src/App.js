@@ -36,6 +36,7 @@ const App = () => {
 
 		changeStory(story);
 	};
+
 	const changeStory = (story) => {
 		switch (story) {
 			case "marksRoot":
@@ -62,8 +63,11 @@ const App = () => {
 
 	useEffect(() => {
 		onAppLoad();
+	}, []);
+
+	useEffect(() => {
 		const hash = window.location.hash.slice(1);
-		let story = "scheduleRoot";
+		let story = activeStory ? activeStory : "scheduleRoot";
 
 		if (hash.includes("marks")) {
 			story = "marksRoot";
@@ -71,7 +75,7 @@ const App = () => {
 			story = "burgerView";
 		}
 		changeStory(story);
-	}, []);
+	}, [student.hasOwnProperty("student")]);
 
 	const withTeachers = true;
 
