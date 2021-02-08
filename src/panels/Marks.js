@@ -13,6 +13,7 @@ import {
 	PanelHeaderButton,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
+import bridge from "@vkontakte/vk-bridge";
 import { selectSemester, setActiveTopTab, notify } from "../redux/actions";
 
 import Icon16Dropdown from "@vkontakte/icons/dist/16/dropdown";
@@ -160,7 +161,27 @@ class Marks extends React.Component {
 				<PanelHeaderSimple
 					separator={false}
 					left={
-						<PanelHeaderButton onClick={this.props.onNotifyClick}>
+						<PanelHeaderButton
+							onClick={async () => {
+								if (
+									this.props.student.hasOwnProperty(
+										"student"
+									) &&
+									!this.props.student.notify
+								) {
+									const drPr = await bridge.send(
+										"VKWebAppAllowMessagesFromGroup",
+										{
+											group_id: 183639424,
+											key: "dBuBKe1kFcdemzB",
+										}
+									);
+
+									if (drPr.result === true)
+										this.props.onNotifyClick();
+								} else this.props.onNotifyClick();
+							}}
+						>
 							{this.props.student.notify ? (
 								<Icon24NotificationDisable />
 							) : (

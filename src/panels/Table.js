@@ -230,52 +230,57 @@ class Table extends Component {
 						},
 					}}
 				/>
-				<Tooltip
-					text="Модули без оценки считаются минимальными. Нажмите на оценку, чтобы изменить ее."
-					isShown={tooltip}
-					onClose={() => {
-						this.setState({ tooltip: false });
-					}}
-					alignY={"top"}
-					alignX={"right"}
-				>
-					<FixedLayout vertical="bottom">
-						<List>
-							<Cell
-								style={{
-									backgroundColor: "var(--header_background)",
-								}}
-								indicator={
-									this.state.isEdited ? (
-										<div onClick={this.init}>
-											{"Сбросить"}
-										</div>
-									) : null
-								}
-								asideContent={
-									<div>
-										{hasRating || (
-											<div
-												style={{ float: "right" }}
-												onClick={(e) => {
-													e.stopPropagation();
-													this.setState({
-														tooltip: true,
-													});
-												}}
-											>
-												<Icon24Info fill={"#5181b8"} />
+				{this.calcRating() > 0 && (
+					<Tooltip
+						text="Модули без оценки считаются минимальными. Нажмите на оценку, чтобы изменить ее."
+						isShown={tooltip}
+						onClose={() => {
+							this.setState({ tooltip: false });
+						}}
+						alignY={"top"}
+						alignX={"right"}
+					>
+						<FixedLayout vertical="bottom">
+							<List>
+								<Cell
+									style={{
+										backgroundColor:
+											"var(--header_background)",
+									}}
+									indicator={
+										this.state.isEdited ? (
+											<div onClick={this.init}>
+												{"Сбросить"}
 											</div>
-										)}
-									</div>
-								}
-							>
-								{!hasRating && `Ожидаемый`} {`Рейтинг: `}
-								{this.calcRating()}
-							</Cell>
-						</List>
-					</FixedLayout>
-				</Tooltip>
+										) : null
+									}
+									asideContent={
+										<div>
+											{hasRating || (
+												<div
+													style={{ float: "right" }}
+													onClick={(e) => {
+														e.stopPropagation();
+														this.setState({
+															tooltip: true,
+														});
+													}}
+												>
+													<Icon24Info
+														fill={"#5181b8"}
+													/>
+												</div>
+											)}
+										</div>
+									}
+								>
+									{!hasRating && `Ожидаемый`} {`Рейтинг: `}
+									{this.calcRating()}
+								</Cell>
+							</List>
+						</FixedLayout>
+					</Tooltip>
+				)}
 			</div>
 		);
 	}

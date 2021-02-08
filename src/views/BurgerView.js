@@ -118,26 +118,35 @@ const BurgerView = ({ id }) => {
 							actions={
 								<React.Fragment>
 									<Button
-										onClick={() => {
-											dispatch(notify());
-
-											setSnackbar(
-												<Snackbar
-													before={
-														<Icon20Info
-															width={48}
-															height={48}
-														/>
-													}
-													layout="vertical"
-													onClose={() =>
-														setSnackbar(null)
-													}
-												>
-													Уведомления о модулях
-													включены!
-												</Snackbar>
+										onClick={async () => {
+											const drPr = await bridge.send(
+												"VKWebAppAllowMessagesFromGroup",
+												{
+													group_id: 183639424,
+													key: "dBuBKe1kFcdemzB",
+												}
 											);
+
+											if (drPr.result === true) {
+												dispatch(notify());
+												setSnackbar(
+													<Snackbar
+														before={
+															<Icon20Info
+																width={48}
+																height={48}
+															/>
+														}
+														layout="vertical"
+														onClose={() =>
+															setSnackbar(null)
+														}
+													>
+														Уведомления о модулях
+														включены!
+													</Snackbar>
+												);
+											}
 										}}
 									>
 										Хочу!
