@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env &&set PORT=10888&&set HTTPS=false&&react-scripts start",
-    "ssl": "cross-env &&set PORT=10888&&set HTTPS=true&&react-scripts start",
+    "start": "cross-env PORT=10888 HTTPS=false react-scripts start",
+    "ssl": "cross-env PORT=10888 HTTPS=true react-scripts start",
     "tunnel": "vk-tunnel --insecure=1 --http-protocol=https --ws-protocol=wss --host=localhost --port=10888",
     "build": "react-scripts build",
     "predeploy": "npm run build",
