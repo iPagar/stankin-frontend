@@ -12,6 +12,7 @@ import {
   CardGrid,
   Card,
   Link,
+  Cell,
 } from "@vkontakte/vkui";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -34,6 +35,7 @@ import Icon20Info from "@vkontakte/icons/dist/20/info";
 import Icon24UserAdd from "@vkontakte/icons/dist/24/user_add";
 import { Icon24AppBadgeOutline } from "@vkontakte/icons";
 import Icon28NotificationCircleFillGray from "@vkontakte/icons/dist/28/notification_circle_fill_gray";
+import free from "../img/free.jpg";
 
 const BurgerView = ({ id }) => {
   const activePanel = useSelector((state) => state.burger.activePanel);
@@ -189,6 +191,21 @@ const BurgerView = ({ id }) => {
               }
             />
           )}
+          <Cell
+            style={{
+              display: "flex",
+            }}
+          >
+            <Link href="https://warhelp2022.notion.site" target="_blank">
+              <img
+                src={free}
+                style={{
+                  width: "100%",
+                  maxHeight: 200,
+                }}
+              />
+            </Link>
+          </Cell>
         </List>
         {snackbar}
       </Panel>
