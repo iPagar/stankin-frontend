@@ -191,12 +191,7 @@ const BurgerView = ({ id }) => {
               }
             />
           )}
-          <Cell
-            style={{
-              display: "flex",
-              padding: 0,
-            }}
-          >
+          <SimpleCell>
             <Link href="https://warhelp2022.notion.site" target="_blank">
               <img
                 src={free}
@@ -206,7 +201,7 @@ const BurgerView = ({ id }) => {
                 }}
               />
             </Link>
-          </Cell>
+          </SimpleCell>
         </List>
         {snackbar}
       </Panel>
