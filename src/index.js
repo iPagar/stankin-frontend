@@ -10,16 +10,17 @@ import store from "./redux/store";
 // Init VK  Mini App
 connect.send("VKWebAppInit", {});
 connect.subscribe(({ detail: { type, data } }) => {
-	if (type === "VKWebAppUpdateConfig") {
-		const schemeAttribute = document.createAttribute("scheme");
-		schemeAttribute.value = data.scheme ? data.scheme : "client_light";
-		document.body.attributes.setNamedItem(schemeAttribute);
-	}
+  if (type === "VKWebAppUpdateConfig") {
+    const schemeAttribute = document.createAttribute("scheme");
+    schemeAttribute.value =
+      data.appearance === "light" ? "bright_light" : "space_gray";
+    document.body.attributes.setNamedItem(schemeAttribute);
+  }
 });
 
 ReactDOM.render(
-	<Provider store={store}>
-		<App />
-	</Provider>,
-	document.getElementById("root")
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
 );
