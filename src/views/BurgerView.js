@@ -191,17 +191,6 @@ const BurgerView = ({ id }) => {
               }
             />
           )}
-          <SimpleCell>
-            <Link href="https://warhelp2022.notion.site" target="_blank">
-              <img
-                src={free}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: 200,
-                }}
-              />
-            </Link>
-          </SimpleCell>
         </List>
         {snackbar}
       </Panel>
