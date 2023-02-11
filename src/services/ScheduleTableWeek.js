@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FixedLayout, Gallery, Div } from "@vkontakte/vkui";
 import ScheduleTableDay from "../services/ScheduleTableDay";
 import HorizontalCalendar from "vkui-horizontal-calendar";
+import { Banner } from "../views/banner";
 
 const ScheduleTableWeek = ({ lessonsWeek, isTeacher, before }) => {
   const [choosed, setChoosed] = useState(1);
@@ -9,6 +10,7 @@ const ScheduleTableWeek = ({ lessonsWeek, isTeacher, before }) => {
 
   return (
     <React.Fragment>
+      {window.innerWidth >= 768 && <Banner />}
       {window.innerWidth >= 768 || (
         <FixedLayout vertical="top" filled>
           <div style={{ margin: 0 }}>
