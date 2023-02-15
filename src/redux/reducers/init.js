@@ -16,7 +16,7 @@ const InitialState = {
   marks: [],
 };
 
-export default function(state = InitialState, action) {
+export default function (state = InitialState, action) {
   switch (action.type) {
     case INVALIDATE_INIT: {
       return { ...state, didInvalidate: true };
@@ -25,13 +25,8 @@ export default function(state = InitialState, action) {
       return { ...state, isFetching: true, didInvalidate: false };
     }
     case RECEIVE_INIT: {
-      const {
-        student,
-        semesters,
-        marks,
-        favouriteGroup,
-        favouriteStgroup,
-      } = action.payload;
+      const { student, semesters, marks, favouriteGroup, favouriteStgroup } =
+        action.payload;
 
       return {
         ...state,

@@ -3,7 +3,7 @@ import bridge from "@vkontakte/vk-bridge";
 import React, { useEffect, useState } from "react";
 
 export const Banner = () => {
-  const [bannerData, setBannerData] = useState({});
+  const [bannerData, setBannerData] = useState(null);
 
   useEffect(() => {
     bridge.send("VKWebAppGetAds").then((bannerInfo) => {
