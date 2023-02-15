@@ -92,10 +92,13 @@ class Marks extends React.Component {
       <PanelHeaderContext
         opened={this.state.contextOpened}
         onClose={this.toggleContext}
+        style={{
+          marginTop: 0,
+        }}
       >
         <div
           style={{
-            marginTop: activeTopTab === "marks" ? -4 : 40,
+            marginTop: 0,
           }}
         >
           <List>
