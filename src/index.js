@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import connect from "@vkontakte/vk-bridge";
 import App from "./App";
 import store from "./redux/store";
+import eruda from "eruda";
 
 // Init VK  Mini App
 connect.send("VKWebAppInit", {});
@@ -17,6 +18,11 @@ connect.subscribe(({ detail: { type, data } }) => {
     document.body.attributes.setNamedItem(schemeAttribute);
   }
 });
+
+// Init eruda
+if (process.env.NODE_ENV === "development") {
+  eruda.init();
+}
 
 ReactDOM.render(
   <Provider store={store}>
