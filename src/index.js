@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import connect from "@vkontakte/vk-bridge";
 import App from "./App";
 import store from "./redux/store";
+import { Banner } from "./views/banner";
 
 // Init VK  Mini App
 connect.send("VKWebAppInit", {});
@@ -21,6 +22,7 @@ connect.subscribe(({ detail: { type, data } }) => {
 ReactDOM.render(
   <Provider store={store}>
     <App />
+    <Banner />
   </Provider>,
   document.getElementById("root")
 );

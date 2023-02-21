@@ -25,7 +25,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@vkontakte/icons": "^1.54.0",
-    "@vkontakte/vk-bridge": "^2.3.0",
+    "@vkontakte/vk-bridge": "^2.7.2",
     "@vkontakte/vkui": "^3.13.1",
     "axios": "^0.20.0",
     "babel-eslint": "^10.1.0",
