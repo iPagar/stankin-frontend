@@ -34,6 +34,17 @@ const ScheduleView = ({ id }) => {
   const [file, setFile] = useState(null);
   const [activePanel, setActivePanel] = useState("main");
   const [activeModal, setActiveModal] = useState(null);
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    bridge.send("VKWebAppGetClientVersion").then((data) => {
+      if (data.platform === "android" || data.platform === "ios") {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    });
+  }, []);
 
   const load = async () => {
     setIsLoading(true);
@@ -134,10 +145,12 @@ const ScheduleView = ({ id }) => {
             <React.Fragment>
               <PanelHeaderButton onClick={onHeaderButtonClick}>
                 <Icon28Settings />
-              </PanelHeaderButton>{" "}
-              <PanelHeaderButton onClick={onHeaderScheduleClick}>
-                <Icon28ArticleOutline />
               </PanelHeaderButton>
+              {!isMobile && (
+                <PanelHeaderButton onClick={onHeaderScheduleClick}>
+                  <Icon28ArticleOutline />
+                </PanelHeaderButton>
+              )}
             </React.Fragment>
           }
           separator={false}
