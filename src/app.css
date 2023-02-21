@@ -1,17 +1,22 @@
 .material-icons {
-	color: var(--header_text) !important;
+  color: var(--header_text) !important;
 }
 
 .MuiTableSortLabel-root {
-	color: var(--header_text) !important;
+  color: var(--header_text) !important;
 }
 
 [disabled] {
-	background-color: transparent;
-	color: black;
+  background-color: transparent;
+  color: black;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-	-webkit-appearance: none;
+  -webkit-appearance: none;
+}
+
+body[scheme="space_gray"] {
+  --gears: invert(99%) sepia(1%) saturate(102%) hue-rotate(156deg)
+    brightness(111%) contrast(80%);
 }
