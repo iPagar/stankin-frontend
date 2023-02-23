@@ -14,6 +14,7 @@ import {
   Link,
   Cell,
   Div,
+  Text,
 } from "@vkontakte/vkui";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -29,6 +30,7 @@ import TeachersPanel from "../panels/TeachersPanel";
 import CommentsPage from "../cells/CommentsPage";
 import WriteCommentCard from "../cells/WriteCommentCard";
 import ReactionsCard from "../cells/ReactionsCard";
+import { differenceInMonths } from "date-fns";
 
 import Icon28Users from "@vkontakte/icons/dist/28/users";
 import Icon28UserCircleOutline from "@vkontakte/icons/dist/28/user_circle_outline";
@@ -111,6 +113,7 @@ const BurgerView = ({ id }) => {
           >
             Преподаватели
           </SimpleCell>
+
           <Banner
             before={<Icon24AppBadgeOutline width={48} height={48} />}
             text="Подписывайтесь на наш телеграм канал"
@@ -124,49 +127,49 @@ const BurgerView = ({ id }) => {
               </React.Fragment>
             }
           />
-          {/* {student.hasOwnProperty("student") && ( */}
 
-          <Div>
-            <div
-              style={{
-                padding: "12px 16px",
-                background: "var(--content_tint_background)",
-                boxShadow: "0 0 8px rgba(0, 0, 0, 0.15)",
-                borderRadius: 8,
-                border: "1px solid var(--image_border)",
-                maxWidth: 600,
-                position: "relative",
-              }}
-            >
+          {student.hasOwnProperty("student") && (
+            <Div>
               <div
                 style={{
-                  fontSize: 16,
-                  fontWeight: 500,
-                  marginBottom: 8,
-                  color: "var(--text_primary)",
-                  zIndex: 1,
+                  padding: "12px 16px",
+                  background: "var(--content_tint_background)",
+                  boxShadow: "0 0 8px rgba(0, 0, 0, 0.15)",
+                  borderRadius: 8,
+                  border: "1px solid var(--image_border)",
+                  maxWidth: 600,
                   position: "relative",
                 }}
               >
-                Участвуйте в тестировании приложения и влияйте на его развитие
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 500,
+                    marginBottom: 8,
+                    color: "var(--text_primary)",
+                    zIndex: 1,
+                    position: "relative",
+                  }}
+                >
+                  Участвуйте в тестировании приложения и влияйте на его развитие
+                </div>
+                <div
+                  style={{
+                    width: 64,
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    filter: "var(--gears)",
+                  }}
+                >
+                  <Lottie animationData={gearsAnimation} loop={true} />
+                </div>
+                <Link href="https://bit.ly/stankintesting" target="_blank">
+                  Перейти
+                </Link>
               </div>
-              <div
-                style={{
-                  width: 64,
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  filter: "var(--gears)",
-                }}
-              >
-                <Lottie animationData={gearsAnimation} loop={true} />
-              </div>
-              <Link href="https://bit.ly/stankintesting" target="_blank">
-                Перейти
-              </Link>
-            </div>
-          </Div>
-          {/* )} */}
+            </Div>
+          )}
           {student.hasOwnProperty("student") && !student.notify && (
             <Banner
               before={
@@ -235,6 +238,31 @@ const BurgerView = ({ id }) => {
               }
             />
           )}
+          <Div>
+            <Text
+              style={{
+                color: "var(--text_secondary)",
+              }}
+            >
+              На поддержку приложения за всё время было потрачено{" "}
+              <b>
+                {
+                  // old server
+                  differenceInMonths(
+                    new Date("23 September 2022"),
+                    new Date("19 June 2019")
+                  ) *
+                    5 +
+                    differenceInMonths(
+                      new Date(),
+                      new Date("23 September 2022")
+                    ) *
+                      15
+                }{" "}
+              </b>
+              долларов
+            </Text>
+          </Div>
         </List>
         {snackbar}
       </Panel>

@@ -31,6 +31,7 @@
     "babel-eslint": "^10.1.0",
     "chalk": "^2.4.2",
     "core-js": "^3.7.0",
+    "date-fns": "^2.0.0-alpha.27",
     "libphonenumber-js": "^1.9.4",
     "lottie-react": "^2.4.0",
     "material-table": "^1.69.2",

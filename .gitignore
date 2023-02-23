@@ -19,3 +19,4 @@ package-lock.json
 bundle.zip
 *.zip
 sftp-config.json
+.DS_Store
