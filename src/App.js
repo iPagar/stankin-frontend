@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Epic, View, Root, Tabbar, TabbarItem } from "@vkontakte/vkui";
 import { useDispatch, useSelector } from "react-redux";
+import { usePopper } from "react-popper";
 import {
   setStory,
   loadSchedule,
@@ -24,6 +25,8 @@ import ScheduleView from "./views/ScheduleView";
 import StgroupsView from "./views/StgroupsView";
 import GroupsView from "./views/GroupsView";
 import BurgerView from "./views/BurgerView";
+import bridge from "@vkontakte/vk-bridge";
+import { useClickAway } from "react-use";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -65,6 +68,17 @@ const App = () => {
 
   useEffect(() => {
     onAppLoad();
+
+    async function getTopLaunch() {
+      const data = await bridge.send("VKWebAppStorageGet", {
+        keys: ["student-top"],
+      });
+
+      if (data.keys[0].value !== "true") {
+        setPopperOpened(true);
+      }
+    }
+    getTopLaunch();
   }, []);
 
   useEffect(() => {
@@ -79,7 +93,38 @@ const App = () => {
     changeStory(story);
   }, [student.hasOwnProperty("student")]);
 
-  const withTeachers = true;
+  const [referenceElement, setReferenceElement] = useState(null);
+  const popperElementRef = useRef(null);
+  const [arrowElement, setArrowElement] = useState(null);
+  const { styles, attributes } = usePopper(
+    referenceElement,
+    popperElementRef.current,
+    {
+      modifiers: [
+        {
+          name: "arrow",
+          options: { element: arrowElement },
+        },
+        {
+          name: "offset",
+          options: {
+            offset: [-50, 20],
+          },
+        },
+      ],
+      placement: "top",
+    }
+  );
+  const [popperOpened, setPopperOpened] = useState(true);
+  useClickAway(popperElementRef, () => {
+    if (popperOpened) {
+      setPopperOpened(false);
+      bridge.send("VKWebAppStorageSet", {
+        key: "student-top",
+        value: "true",
+      });
+    }
+  });
 
   return (
     <Epic
@@ -100,15 +145,34 @@ const App = () => {
           >
             <Icon20EducationOutline width={28} height={28} />
           </TabbarItem>
-          {withTeachers && (
-            <TabbarItem
-              onClick={onStoryChange}
-              selected={activeStory === "burgerView"}
-              data-story="burgerView"
-            >
+          <TabbarItem
+            onClick={onStoryChange}
+            selected={activeStory === "burgerView"}
+            data-story="burgerView"
+          >
+            <div ref={setReferenceElement}>
               <Icon28Menu />
-            </TabbarItem>
-          )}
+            </div>
+            <div
+              ref={popperElementRef}
+              id="tooltip"
+              style={{
+                ...styles.popper,
+                whiteSpace: "nowrap",
+                visibility: popperOpened ? "visible" : "hidden",
+              }}
+              {...attributes.popper}
+            >
+              Топ студентов теперь здесь!
+              <div
+                ref={setArrowElement}
+                id="arrow"
+                style={styles.arrow}
+                className={popperOpened ? "" : "hidden"}
+                data-popper-arrow
+              />
+            </div>
+          </TabbarItem>
         </Tabbar>
       }
     >
