@@ -2,13 +2,11 @@ import { View, Panel, PanelHeader, PanelHeaderBack } from "@vkontakte/vkui";
 import React, { useState } from "react";
 import Top from "../panels/Top";
 
-const TopView = ({ id }) => {
+const TopView = ({ id, onCancelClick }) => {
   return (
-    <View id={id} activePanel="top">
-      <Panel id="top" separator={false}>
-        <Top />
-      </Panel>
-    </View>
+    <Panel id={id} separator={false}>
+      <Top onCancelClick={onCancelClick} />
+    </Panel>
   );
 };
 

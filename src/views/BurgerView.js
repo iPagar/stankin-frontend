@@ -33,9 +33,15 @@ import Icon28Users from "@vkontakte/icons/dist/28/users";
 import Icon28UserCircleOutline from "@vkontakte/icons/dist/28/user_circle_outline";
 import Icon20Info from "@vkontakte/icons/dist/20/info";
 import Icon24UserAdd from "@vkontakte/icons/dist/24/user_add";
-import { Icon24AppBadgeOutline } from "@vkontakte/icons";
+import { Icon24AppBadgeOutline, Icon28User } from "@vkontakte/icons";
 import Icon28NotificationCircleFillGray from "@vkontakte/icons/dist/28/notification_circle_fill_gray";
 import free from "../img/free.jpg";
+import TopView from "./TopView";
+import {
+  Icon24Education,
+  Icon28UserCircleFillBlue,
+  Icon28Users3,
+} from "@vkontakte/icons";
 
 const BurgerView = ({ id }) => {
   const activePanel = useSelector((state) => state.burger.activePanel);
@@ -91,7 +97,7 @@ const BurgerView = ({ id }) => {
           {
             <SimpleCell
               expandable
-              before={<Icon28UserCircleOutline />}
+              before={<Icon28User />}
               onClick={() => {
                 dispatch(setBurgerPanel("profile"));
               }}
@@ -99,16 +105,25 @@ const BurgerView = ({ id }) => {
               Профиль
             </SimpleCell>
           }
-
           <SimpleCell
             expandable
-            before={<Icon28Users />}
+            before={<Icon28Users3 />}
             onClick={() => {
               dispatch(setBurgerPanel("teachers"));
             }}
           >
             Преподаватели
           </SimpleCell>
+          <SimpleCell
+            expandable
+            before={<Icon24Education width={28} height={28} />}
+            onClick={() => {
+              dispatch(setBurgerPanel("top"));
+            }}
+          >
+            Студенты
+          </SimpleCell>
+
           <Banner
             before={<Icon24AppBadgeOutline width={48} height={48} />}
             text="Подписывайтесь на наш телеграм канал"
@@ -202,6 +217,12 @@ const BurgerView = ({ id }) => {
       />
       <Profile
         id="profile"
+        onCancelClick={() => {
+          dispatch(setBurgerPanel("main"));
+        }}
+      />
+      <TopView
+        id="top"
         onCancelClick={() => {
           dispatch(setBurgerPanel("main"));
         }}

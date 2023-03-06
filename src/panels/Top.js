@@ -12,6 +12,7 @@ import {
   PanelHeaderContent,
   Cell,
   PanelHeaderSimple,
+  PanelHeaderBack,
 } from "@vkontakte/vkui";
 import { connect } from "react-redux";
 import InfiniteScroll from "react-infinite-scroller";
@@ -29,7 +30,12 @@ const mapStateToProps = (state) => {
   return {
     student: state.init.student,
     semesters: [
-      ...new Array(new Date().getFullYear() - 2015)
+      // if month > 7, then current year is active
+      ...new Array(
+        new Date().getMonth() > 7
+          ? new Date().getFullYear() - 2015
+          : new Date().getFullYear() - 2016
+      )
         .fill(null)
         .map((_, i) => `${2016 + i}-весна`)
         .filter((semester) => {
@@ -42,11 +48,13 @@ const mapStateToProps = (state) => {
       )
         .fill(null)
         .map((_, i) => `${2016 + i}-осень`),
-    ].sort(
-      (a, b) =>
-        new Date(b.slice(0, 4), b.slice(5, 10) === "осень" ? 8 : 2) -
-        new Date(a.slice(0, 4), a.slice(5, 10) === "осень" ? 8 : 2)
-    ),
+    ]
+      .sort(
+        (a, b) =>
+          new Date(b.slice(0, 4), b.slice(5, 10) === "осень" ? 8 : 2) -
+          new Date(a.slice(0, 4), a.slice(5, 10) === "осень" ? 8 : 2)
+      )
+      .reverse(),
     activeBottomTab: state.config.activeBottomTab,
   };
 };
@@ -65,7 +73,7 @@ class Top extends React.Component {
     offset: 0,
     me: null,
     search: "",
-    selectedSemester: this.props.semesters[0],
+    selectedSemester: this.props.semesters[this.props.semesters.length - 1],
     activeBottomTab: "rating",
   };
 
@@ -353,7 +361,10 @@ class Top extends React.Component {
 
     return (
       <>
-        <PanelHeaderSimple separator={false}>
+        <PanelHeaderSimple
+          separator={false}
+          left={<PanelHeaderBack onClick={this.props.onCancelClick} />}
+        >
           <PanelHeaderContent
             aside={
               <Icon16Dropdown

@@ -24,8 +24,6 @@ import ScheduleView from "./views/ScheduleView";
 import StgroupsView from "./views/StgroupsView";
 import GroupsView from "./views/GroupsView";
 import BurgerView from "./views/BurgerView";
-import TopView from "./views/TopView";
-import { Icon20Users3Outline } from "@vkontakte/icons";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -77,8 +75,6 @@ const App = () => {
       story = "marksRoot";
     } else if (hash.includes("teachers")) {
       story = "burgerView";
-    } else if (hash.includes("top")) {
-      story = "topView";
     }
     changeStory(story);
   }, [student.hasOwnProperty("student")]);
@@ -104,13 +100,6 @@ const App = () => {
           >
             <Icon20EducationOutline width={28} height={28} />
           </TabbarItem>
-          <TabbarItem
-            onClick={onStoryChange}
-            selected={activeStory === "topView"}
-            data-story="topView"
-          >
-            <Icon20Users3Outline width={28} height={28} />
-          </TabbarItem>
           {withTeachers && (
             <TabbarItem
               onClick={onStoryChange}
@@ -131,8 +120,6 @@ const App = () => {
           <Marks id="marks" />
         </View>
       </Root>
-
-      <TopView id="topView" />
 
       <Root id="scheduleRoot" activeView={activeView}>
         <ScheduleView id="scheduleView" />
