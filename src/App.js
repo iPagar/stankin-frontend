@@ -115,7 +115,7 @@ const App = () => {
       placement: "top",
     }
   );
-  const [popperOpened, setPopperOpened] = useState(true);
+  const [popperOpened, setPopperOpened] = useState(false);
   useClickAway(popperElementRef, () => {
     if (popperOpened) {
       setPopperOpened(false);
