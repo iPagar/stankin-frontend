@@ -42,6 +42,7 @@ import {
   Icon28UserCircleFillBlue,
   Icon28Users3,
 } from "@vkontakte/icons";
+import telegram from "../img/telegram.png";
 
 const BurgerView = ({ id }) => {
   const activePanel = useSelector((state) => state.burger.activePanel);
@@ -125,7 +126,14 @@ const BurgerView = ({ id }) => {
           </SimpleCell>
 
           <Banner
-            before={<Icon24AppBadgeOutline width={48} height={48} />}
+            before={
+              <img
+                src={telegram}
+                style={{
+                  height: 64,
+                }}
+              />
+            }
             text="Подписывайтесь на наш телеграм канал"
             actions={
               <React.Fragment>
