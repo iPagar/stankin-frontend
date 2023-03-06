@@ -154,7 +154,7 @@ class Top extends React.Component {
                   key={i}
                   data-tag={semester}
                   asideContent={
-                    selectedSemester === i ? (
+                    selectedSemester === semester ? (
                       <Icon24Done fill="var(--accent)" />
                     ) : null
                   }
