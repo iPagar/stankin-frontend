@@ -65,7 +65,7 @@ function callAPIMiddleware({ dispatch, getState }) {
 
 const middlewares = [
   applyMiddleware(callAPIMiddleware),
-  process.env.NODE_ENV === "development" && applyMiddleware(logger),
+  import.meta.env.MODE === "development" && applyMiddleware(logger),
   applyMiddleware(thunkMiddleware),
 ].filter(Boolean);
 

@@ -20,7 +20,7 @@ connect.subscribe(({ detail: { type, data } }) => {
 });
 
 // Init eruda
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.MODE === "development") {
   eruda.init();
 }
 

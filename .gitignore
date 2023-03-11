@@ -20,3 +20,4 @@ bundle.zip
 *.zip
 sftp-config.json
 .DS_Store
+dist

@@ -23,6 +23,11 @@ import Table from "./Table";
 
 import Icon24Notification from "@vkontakte/icons/dist/24/notification";
 import Icon24NotificationDisable from "@vkontakte/icons/dist/24/notification_disable";
+import {
+  Icon24HistoryBackwardOutline,
+  Icon28ChevronBack,
+} from "@vkontakte/icons";
+import { MarksHistory } from "./marks-history";
 
 const mapStateToProps = (state) => {
   return {
@@ -58,6 +63,7 @@ class Marks extends React.Component {
     tooltip: false,
     login: "",
     password: "",
+    panel: "marks",
   };
 
   toggleContext = () => {
@@ -125,61 +131,86 @@ class Marks extends React.Component {
   render() {
     const { semesters, marks, selectedSemester, activeTopTab } = this.props;
     const semester = this.semesterFormat(semesters[selectedSemester]);
+    const { panel } = this.state;
 
     return (
       <Panel
         id="marks"
         theme="white"
-        centered={activeTopTab === "marks"}
+        centered={activeTopTab === "marks" && panel === "marks"}
         separator={false}
       >
         <PanelHeaderSimple
           separator={false}
           left={
-            <PanelHeaderButton
-              onClick={async () => {
-                if (
-                  this.props.student.hasOwnProperty("student") &&
-                  !this.props.student.notify
-                ) {
-                  const drPr = await bridge.send(
-                    "VKWebAppAllowMessagesFromGroup",
-                    {
-                      group_id: 183639424,
-                      key: "dBuBKe1kFcdemzB",
-                    }
-                  );
+            <PanelHeaderButton>
+              {panel === "marks" && (
+                <>
+                  <div
+                    onClick={async () => {
+                      if (
+                        this.props.student.hasOwnProperty("student") &&
+                        !this.props.student.notify
+                      ) {
+                        const drPr = await bridge.send(
+                          "VKWebAppAllowMessagesFromGroup",
+                          {
+                            group_id: 183639424,
+                            key: "dBuBKe1kFcdemzB",
+                          }
+                        );
 
-                  if (drPr.result === true) this.props.onNotifyClick();
-                } else this.props.onNotifyClick();
-              }}
-            >
-              {this.props.student.notify ? (
-                <Icon24NotificationDisable />
-              ) : (
-                <Icon24Notification />
+                        if (drPr.result === true) this.props.onNotifyClick();
+                      } else this.props.onNotifyClick();
+                    }}
+                  >
+                    {this.props.student.notify ? (
+                      <Icon24NotificationDisable />
+                    ) : (
+                      <Icon24Notification />
+                    )}
+                  </div>
+                  <Icon24HistoryBackwardOutline
+                    onClick={() => {
+                      this.setState({ panel: "marks_history" });
+                    }}
+                  />
+                </>
+              )}
+              {panel === "marks_history" && (
+                <Icon28ChevronBack
+                  onClick={() => {
+                    this.setState({ panel: "marks" });
+                  }}
+                />
               )}
             </PanelHeaderButton>
           }
         >
-          <PanelHeaderContent
-            aside={
-              <Icon16Dropdown
-                style={{
-                  transform: `rotate(${
-                    this.state.contextOpened ? "180deg" : "0"
-                  })`,
-                }}
-              />
-            }
-            onClick={this.toggleContext}
-          >
-            {semester}
-          </PanelHeaderContent>
+          {panel === "marks" && (
+            <PanelHeaderContent
+              aside={
+                <Icon16Dropdown
+                  style={{
+                    transform: `rotate(${
+                      this.state.contextOpened ? "180deg" : "0"
+                    })`,
+                  }}
+                />
+              }
+              onClick={this.toggleContext}
+            >
+              {semester}
+            </PanelHeaderContent>
+          )}
+          {panel === "marks_history" && (
+            <PanelHeaderContent>История</PanelHeaderContent>
+          )}
         </PanelHeaderSimple>
 
         {this.renderPanelHeaderContext()}
-        <Table marks={marks} semester={semester} />
+        {panel === "marks" && <Table marks={marks} semester={semester} />}
+        {panel === "marks_history" && <MarksHistory />}
       </Panel>
     );
   }

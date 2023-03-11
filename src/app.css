@@ -47,3 +47,8 @@ input::-webkit-inner-spin-button {
 .hidden::before {
   visibility: hidden !important;
 }
+
+body[scheme="space_gray"] {
+  --gears: invert(99%) sepia(1%) saturate(102%) hue-rotate(156deg)
+    brightness(111%) contrast(80%);
+}
