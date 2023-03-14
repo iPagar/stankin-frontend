@@ -184,10 +184,7 @@ export function MarksHistory() {
       ) : (
         <div>
           {isTesting && (
-            <Text
-              weight={"regular"}
-              style={{ marginBottom: 16, color: "var(--text_secondary)" }}
-            >
+            <Text weight={"regular"} style={{ color: "var(--text_secondary)" }}>
               Тестовые данные
             </Text>
           )}

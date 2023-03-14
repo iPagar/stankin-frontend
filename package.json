@@ -5,7 +5,7 @@
   "main": "index.js",
   "homepage": "./",
   "scripts": {
-    "start": "vite",
+    "start": "vite --host",
     "start:https": "cross-env HTTPS=true vite",
     "tunnel": "vk-tunnel --insecure=1 --http-protocol=http --host=localhost --port=10888 --timeout=5000",
     "build": "tsc && vite build",
