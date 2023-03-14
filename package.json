@@ -13,7 +13,7 @@
     "deploy": "vk-miniapps-deploy",
     "deploy:staging": "vk-miniapps-deploy",
     "predeploy:staging": "vite build --mode staging",
-    "serve": "vite preview"
+    "serve": "vite preview --port 10888 --host"
   },
   "keywords": [],
   "author": "",
