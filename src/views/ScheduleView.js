@@ -203,27 +203,9 @@ const ScheduleView = ({ id }) => {
         {file && (
           <FixedLayout vertical="bottom" filled>
             <Div style={{ textAlign: "center" }}>
-              <span
-                // href={file}
-                // download
-                onClick={() => {
-                  console.log(999);
-                  bridge
-                    .send("VKWebAppDownloadFile", {
-                      // create object url
-                      url: "https://get.wallhere.com/photo/5092x3438-px-animals-leopard-1098679.jpg",
-                      filename: `Расписание ${stgroup}.pdf`,
-                    })
-                    .then((data) => {
-                      console.log(data);
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
-                }}
-              >
+              <Link href={file} download>
                 Скачать
-              </span>
+              </Link>
             </Div>
           </FixedLayout>
         )}

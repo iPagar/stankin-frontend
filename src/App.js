@@ -69,6 +69,13 @@ const App = () => {
   useEffect(() => {
     onAppLoad();
 
+    const sub = bridge.subscribe((e) => {
+      if (e.detail.type === "VKWebAppViewRestore") {
+        // reload window
+        window.location.reload();
+      }
+    });
+
     async function getTopLaunch() {
       const data = await bridge.send("VKWebAppStorageGet", {
         keys: ["student-top"],
@@ -79,6 +86,10 @@ const App = () => {
       }
     }
     getTopLaunch();
+
+    return () => {
+      sub.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
