@@ -18,10 +18,10 @@ import gearsAnimation from "../assets/gears.json";
 
 const marksHistoryMock: Mark[] = [
   {
-    semester: "2017-весна",
+    semester: "2021-весна",
     subject: "Математика",
     module: "М2",
-    prev_value: 25,
+    prev_value: 0,
     next_value: 50,
     operation: "UPDATE",
     created_at: new Date().toString(),
@@ -100,14 +100,15 @@ export const formatSemester = (semester: string) => {
 export function MarksHistory() {
   const [marks, setMarks] = useState<GroupedMarks>({});
   const [loading, setLoading] = useState(true);
+  const [isTesting, setIsTesting] = useState(false);
 
   async function getMarksHistory() {
-    const response =
-      import.meta.env.MODE !== "production"
-        ? {
-            data: marksHistoryMock,
-          }
-        : await api.get<Mark[]>("/marks/history");
+    const response = await api.get<Mark[]>("/marks/history");
+
+    if (response.data.length === 0) {
+      setIsTesting(true);
+      response.data = marksHistoryMock;
+    }
     // group by date and by semester and by module
     const marks = response.data
       .filter((mark) => mark.operation === "UPDATE")
@@ -181,114 +182,139 @@ export function MarksHistory() {
           </div>
         </div>
       ) : (
-        Object.keys(marks).map((date, index) => {
-          return (
-            <Group
-              separator="hide"
-              header={
-                <Header mode="secondary">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      flexDirection: "row",
-                    }}
-                  >
-                    <Icon16CalendarOutline />
-                    {
-                      // check if date is today
-                      new Date(date).toLocaleDateString("ru-RU") ===
-                      new Date().toLocaleDateString("ru-RU") ? (
-                        <Text weight={"regular"}>Сегодня</Text>
-                      ) : (
-                        new Date(date).toLocaleDateString("ru-RU", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
-                      )
-                    }
-                  </div>
-                </Header>
-              }
+        <div>
+          {isTesting && (
+            <Text
+              weight={"regular"}
+              style={{ marginBottom: 16, color: "var(--text_secondary)" }}
             >
-              <Card key={index} mode="outline">
-                {Object.keys(marks[date]).map((semester, index) => {
-                  return (
-                    <Div key={index + semester}>
-                      <Headline weight={"regular"}>
-                        {formatSemester(semester)}
-                      </Headline>
-                      <List>
-                        {Object.keys(marks[date][semester]).map(
-                          (subject, index) => {
-                            return (
-                              <Cell key={index + semester + subject}>
-                                <Subhead weight={"bold"}>
-                                  {marks[date][semester][index].subject}
-                                </Subhead>
-                                {Object.entries(
-                                  marks[date][semester][index].modules
-                                ).map(
-                                  ([
-                                    module,
-                                    { prev_value, next_value, operation },
-                                  ]) => {
-                                    const operationContent = () => {
-                                      switch (operation) {
-                                        case "UPDATE":
-                                          return (
-                                            <div
-                                              style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: 8,
-                                              }}
-                                            >
-                                              <Text weight={"regular"}>
-                                                {module}:{" "}
-                                                <span
-                                                  style={{
-                                                    color: "red",
-                                                  }}
-                                                >
-                                                  {prev_value}
-                                                </span>{" "}
-                                                →{" "}
-                                                <span
-                                                  style={{
-                                                    color: "green",
-                                                  }}
-                                                >
-                                                  {next_value}
-                                                </span>
-                                              </Text>
-                                            </div>
-                                          );
-                                        case "CREATE":
-                                          return null;
-                                        case "DELETE":
-                                          return null;
-                                      }
-                                    };
+              Тестовые данные
+            </Text>
+          )}
+          {Object.keys(marks).map((date, index) => {
+            return (
+              <Group
+                separator="hide"
+                header={
+                  <Header mode="secondary">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Icon16CalendarOutline />
+                      {
+                        // check if date is today
+                        new Date(date).toLocaleDateString("ru-RU") ===
+                        new Date().toLocaleDateString("ru-RU") ? (
+                          <Text weight={"regular"}>Сегодня</Text>
+                        ) : (
+                          new Date(date).toLocaleDateString("ru-RU", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        )
+                      }
+                    </div>
+                  </Header>
+                }
+              >
+                <Card key={index} mode="outline">
+                  {Object.keys(marks[date]).map((semester, index) => {
+                    return (
+                      <Div key={index + semester}>
+                        <Headline weight={"regular"}>
+                          {formatSemester(semester)}
+                        </Headline>
+                        <List>
+                          {Object.keys(marks[date][semester]).map(
+                            (subject, index) => {
+                              return (
+                                <Cell key={index + semester + subject}>
+                                  <Subhead weight={"bold"}>
+                                    {marks[date][semester][index].subject}
+                                  </Subhead>
+                                  {Object.entries(
+                                    marks[date][semester][index].modules
+                                  ).map(
+                                    ([
+                                      module,
+                                      { prev_value, next_value, operation },
+                                    ]) => {
+                                      const operationContent = () => {
+                                        switch (operation) {
+                                          case "UPDATE":
+                                            return (
+                                              <div
+                                                style={{
+                                                  display: "flex",
+                                                  alignItems: "center",
+                                                  gap: 8,
+                                                }}
+                                              >
+                                                <Text weight={"regular"}>
+                                                  {prev_value > 0 ? (
+                                                    <>
+                                                      {module}:{" "}
+                                                      <span
+                                                        style={{
+                                                          color: "red",
+                                                        }}
+                                                      >
+                                                        {prev_value}
+                                                      </span>{" "}
+                                                      →{" "}
+                                                      <span
+                                                        style={{
+                                                          color: "green",
+                                                        }}
+                                                      >
+                                                        {next_value}
+                                                      </span>
+                                                    </>
+                                                  ) : (
+                                                    <>
+                                                      {module}:{" "}
+                                                      <span
+                                                        style={{
+                                                          color: "green",
+                                                        }}
+                                                      >
+                                                        {next_value}
+                                                      </span>
+                                                    </>
+                                                  )}
+                                                </Text>
+                                              </div>
+                                            );
+                                          case "CREATE":
+                                            return null;
+                                          case "DELETE":
+                                            return null;
+                                        }
+                                      };
 
-                                    return operationContent();
-                                  }
-                                )}
-                              </Cell>
-                            );
-                          }
-                        )}
-                      </List>
-                    </Div>
-                  );
-                })}
-              </Card>
-            </Group>
-          );
-        })
+                                      return operationContent();
+                                    }
+                                  )}
+                                </Cell>
+                              );
+                            }
+                          )}
+                        </List>
+                      </Div>
+                    );
+                  })}
+                </Card>
+              </Group>
+            );
+          })}
+        </div>
       )}
     </Div>
   );

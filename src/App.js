@@ -177,14 +177,11 @@ const App = () => {
       }
     >
       <Root id="marksRoot" activeView={activeView}>
-        {/* <View id="loginView" activePanel="login" header={false}>
+        <View id="loginView" activePanel="login" header={false}>
           <Login id="login" />
-        </View> */}
+        </View>
         <View id="mainView" activePanel="marks" header={false}>
-          {/* <Marks id="marks" /> */}
-          <Panel id="marks">
-            <MarksHistory />
-          </Panel>
+          <Marks id="marks" />
         </View>
       </Root>
 
