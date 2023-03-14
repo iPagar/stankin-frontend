@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { FixedLayout, Gallery, Div } from "@vkontakte/vkui";
-import ScheduleTableDay from "../services/ScheduleTableDay";
+import ScheduleTableDay from "./ScheduleTableDay";
 import HorizontalCalendar from "vkui-horizontal-calendar";
 import { Banner } from "../views/banner";
+
+const Calendar = HorizontalCalendar.default
+  ? HorizontalCalendar.default
+  : HorizontalCalendar;
 
 const ScheduleTableWeek = ({ lessonsWeek, isTeacher, before }) => {
   const [choosed, setChoosed] = useState(1);
@@ -14,7 +18,7 @@ const ScheduleTableWeek = ({ lessonsWeek, isTeacher, before }) => {
       {window.innerWidth >= 768 || (
         <FixedLayout vertical="top" filled>
           <div style={{ margin: 0 }}>
-            <HorizontalCalendar
+            <Calendar
               date={today}
               choosed={choosed}
               onClick={({ choosedDay, dayNumber }) => {
