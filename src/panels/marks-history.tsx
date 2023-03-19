@@ -146,13 +146,11 @@ export function MarksHistory() {
         return acc;
       }, {});
     setMarks(marks);
-    if (import.meta.env.MODE !== "production") {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-    } else {
+
+    // testing purposes
+    setTimeout(() => {
       setLoading(false);
-    }
+    }, 1000);
   }
 
   useEffect(() => {

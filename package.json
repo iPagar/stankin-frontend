@@ -5,15 +5,11 @@
   "main": "index.js",
   "homepage": "./",
   "scripts": {
-    "start": "vite --host",
-    "start:https": "cross-env HTTPS=true vite",
+    "start": "react-scripts start",
     "tunnel": "vk-tunnel --insecure=1 --http-protocol=http --host=localhost --port=10888 --timeout=5000",
-    "build": "tsc && vite build",
+    "build": "react-scripts build",
     "predeploy": "npm run build",
-    "deploy": "vk-miniapps-deploy",
-    "deploy:staging": "vk-miniapps-deploy",
-    "predeploy:staging": "vite build --mode staging",
-    "serve": "vite preview --port 10888 --host"
+    "deploy": "vk-miniapps-deploy"
   },
   "keywords": [],
   "author": "",
@@ -53,6 +49,7 @@
     "react-pdf": "^5.0.0",
     "react-popper": "^2.3.0",
     "react-redux": "^7.2.2",
+    "react-scripts": "^5.0.1",
     "react-spring": "^8.0.27",
     "react-zoom-pan-pinch": "^1.6.1",
     "redux": "^4.0.5",
