@@ -131,9 +131,11 @@ const ScheduleView = ({ id }) => {
               <PanelHeaderButton onClick={onHeaderButtonClick}>
                 <Icon28Settings />
               </PanelHeaderButton>{" "}
-              <PanelHeaderButton onClick={onHeaderScheduleClick}>
-                <Icon28ArticleOutline />
-              </PanelHeaderButton>
+              {!bridge.isWebView() && (
+                <PanelHeaderButton onClick={onHeaderScheduleClick}>
+                  <Icon28ArticleOutline />
+                </PanelHeaderButton>
+              )}
             </React.Fragment>
           }
           separator={false}
