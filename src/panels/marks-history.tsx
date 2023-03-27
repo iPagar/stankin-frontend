@@ -6,72 +6,16 @@ import {
   Header,
   Headline,
   List,
+  Placeholder,
   Subhead,
   Text,
 } from "@vkontakte/vkui";
 import { useEffect, useState } from "react";
 import { api } from "../services";
-import { Icon16CalendarOutline } from "@vkontakte/icons";
+import { Icon16CalendarOutline, Icon56ErrorOutline } from "@vkontakte/icons";
 import { format } from "date-fns";
 import Lottie from "lottie-react";
 import gearsAnimation from "../assets/gears.json";
-
-const marksHistoryMock: Mark[] = [
-  {
-    semester: "2021-весна",
-    subject: "Математика",
-    module: "М2",
-    prev_value: 0,
-    next_value: 50,
-    operation: "UPDATE",
-    created_at: new Date().toString(),
-  },
-  {
-    semester: "2017-весна",
-    subject: "Математика",
-    module: "М1",
-    prev_value: 25,
-    next_value: 50,
-    operation: "UPDATE",
-    created_at: "2023-03-10T10:47:14.390Z",
-  },
-  {
-    semester: "2017-весна",
-    subject: "Математика",
-    module: "З",
-    prev_value: 25,
-    next_value: 50,
-    operation: "UPDATE",
-    created_at: "2023-03-08T10:47:14.390Z",
-  },
-  {
-    semester: "2017-весна",
-    subject: "Математика",
-    module: "М2",
-    prev_value: 25,
-    next_value: 50,
-    operation: "UPDATE",
-    created_at: "2023-03-08T10:47:14.390Z",
-  },
-  {
-    semester: "2017-осень",
-    subject: "Математика",
-    module: "М1",
-    prev_value: 25,
-    next_value: 50,
-    operation: "UPDATE",
-    created_at: "2023-03-08T10:47:14.390Z",
-  },
-  {
-    semester: "2017-осень",
-    subject: "Математика",
-    module: "М2",
-    prev_value: 25,
-    next_value: 50,
-    operation: "UPDATE",
-    created_at: "2023-02-05T10:47:14.390Z",
-  },
-];
 
 type Mark = {
   semester: string;
@@ -100,15 +44,10 @@ export const formatSemester = (semester: string) => {
 export function MarksHistory() {
   const [marks, setMarks] = useState<GroupedMarks>({});
   const [loading, setLoading] = useState(true);
-  const [isTesting, setIsTesting] = useState(false);
 
   async function getMarksHistory() {
     const response = await api.get<Mark[]>("/marks/history");
 
-    if (response.data.length === 0) {
-      setIsTesting(true);
-      response.data = marksHistoryMock;
-    }
     // group by date and by semester and by module
     const marks = response.data
       .filter((mark) => mark.operation === "UPDATE")
@@ -146,11 +85,7 @@ export function MarksHistory() {
         return acc;
       }, {});
     setMarks(marks);
-
-    // testing purposes
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -159,7 +94,7 @@ export function MarksHistory() {
 
   return (
     <Div>
-      {loading ? (
+      {loading || Object.keys(marks).length === 0 ? (
         <div
           style={{
             width: "100%",
@@ -170,22 +105,21 @@ export function MarksHistory() {
             flexDirection: "column",
           }}
         >
-          <div
-            style={{
-              width: 128,
-              filter: "var(--gears)",
-            }}
-          >
-            <Lottie animationData={gearsAnimation} loop={true} />
-          </div>
+          {loading ? (
+            <div
+              style={{
+                width: 128,
+                filter: "var(--gears)",
+              }}
+            >
+              <Lottie animationData={gearsAnimation} loop={true} />
+            </div>
+          ) : (
+            <Placeholder icon={<Icon56ErrorOutline />} header="Нет истории" />
+          )}
         </div>
       ) : (
         <div>
-          {isTesting && (
-            <Text weight={"regular"} style={{ color: "var(--text_secondary)" }}>
-              Тестовые данные
-            </Text>
-          )}
           {Object.keys(marks).map((date, index) => {
             return (
               <Group
