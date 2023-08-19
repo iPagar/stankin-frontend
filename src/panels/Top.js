@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
     semesters: [
       // if month > 7, then current year is active
       ...new Array(
-        new Date().getMonth() > 7
+        new Date().getMonth() > 6
           ? new Date().getFullYear() - 2015
           : new Date().getFullYear() - 2016
       )
