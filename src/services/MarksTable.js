@@ -4,8 +4,8 @@ import MarkCell from "./MarkCell";
 import ClassicTable from "./ClassicTable";
 
 const MarksTable = ({ marks, style, is_classic }) => (
-	<div>
-		{!is_classic ? (
+  <div>
+    {/* {!is_classic ? (
 			<div style={style}>
 				{marks
 					.filter(
@@ -34,8 +34,8 @@ const MarksTable = ({ marks, style, is_classic }) => (
 			</div>
 		) : (
 			<ClassicTable marks={marks} />
-		)}
-	</div>
+		)} */}
+  </div>
 );
 
 export default MarksTable;

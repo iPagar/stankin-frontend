@@ -39,6 +39,16 @@ const ScheduleTableDay = ({
       });
     });
 
+    // remove duplicates
+    lessonsDay = lessonsDay.filter(
+      (lesson, index, self) =>
+        index ===
+        self.findIndex(
+          (t) =>
+            t.start_time === lesson.start_time && t.end_time === lesson.end_time
+        )
+    );
+
     if (isTeacher)
       lessonsDay = lessonsDay.map((lesson, i) => {
         return { ...lesson, stgroups: groups[i] };
@@ -46,7 +56,7 @@ const ScheduleTableDay = ({
 
     return lessonsDay;
   };
-
+  console.log(lessonsDay);
   return (
     <div style={{ maxWidth: 400, display: "contents", ...style }}>
       <Header mode="secondary">
