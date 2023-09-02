@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import connect from "@vkontakte/vk-bridge";
-import App from "./App";
+import { App } from "./App";
 import store from "./redux/store";
 import eruda from "eruda";
 

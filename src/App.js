@@ -14,7 +14,6 @@ import { api } from "./services";
 
 import "@vkontakte/vkui/dist/vkui.css";
 import "./app.css";
-
 import Icon28CalendarOutline from "@vkontakte/icons/dist/28/calendar_outline";
 import Icon20EducationOutline from "@vkontakte/icons/dist/20/education_outline";
 import Icon28Menu from "@vkontakte/icons/dist/28/menu";
@@ -28,7 +27,7 @@ import BurgerView from "./views/BurgerView";
 import bridge from "@vkontakte/vk-bridge";
 import { useClickAway } from "react-use";
 
-const App = () => {
+export function App() {
   const dispatch = useDispatch();
   const activeView = useSelector((state) => state.config.activeView);
   const activeStory = useSelector((state) => state.config.activeStory);
@@ -126,16 +125,6 @@ const App = () => {
       placement: "top",
     }
   );
-  const [popperOpened, setPopperOpened] = useState(false);
-  useClickAway(popperElementRef, () => {
-    if (popperOpened) {
-      setPopperOpened(false);
-      bridge.send("VKWebAppStorageSet", {
-        key: "student-top",
-        value: "true",
-      });
-    }
-  });
 
   return (
     <Epic
@@ -163,25 +152,6 @@ const App = () => {
           >
             <div ref={setReferenceElement}>
               <Icon28Menu />
-            </div>
-            <div
-              ref={popperElementRef}
-              id="tooltip"
-              style={{
-                ...styles.popper,
-                whiteSpace: "nowrap",
-                visibility: popperOpened ? "visible" : "hidden",
-              }}
-              {...attributes.popper}
-            >
-              Топ студентов теперь здесь!
-              <div
-                ref={setArrowElement}
-                id="arrow"
-                style={styles.arrow}
-                className={popperOpened ? "" : "hidden"}
-                data-popper-arrow
-              />
             </div>
           </TabbarItem>
         </Tabbar>
@@ -245,6 +215,4 @@ const App = () => {
       <BurgerView id="burgerView" />
     </Epic>
   );
-};
-
-export default App;
+}
