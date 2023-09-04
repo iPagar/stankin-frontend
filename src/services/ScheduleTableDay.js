@@ -58,18 +58,6 @@ const ScheduleTableDay = ({
           {parsedLessons.map((lesson, i) => {
             return <LessonCell key={i} lesson={lesson} isTeacher={isTeacher} />;
           })}
-          {window.innerWidth <= 768 && (
-            <Card
-              size="l"
-              style={{
-                paddingBottom: 1,
-                border: "none",
-                backgroundColor: "transparent",
-              }}
-            >
-              <Banner />
-            </Card>
-          )}
         </CardGrid>
       )) || <Placeholder icon={<Icon56GestureOutline />} header="Нет пар" />}
     </div>
