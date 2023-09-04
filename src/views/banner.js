@@ -3,7 +3,6 @@ import bridge from "@vkontakte/vk-bridge";
 import React, { useEffect, useState } from "react";
 
 export const Banner = () => {
-  console.log(bridge, 1);
   useEffect(() => {
     bridge
       .send("VKWebAppShowBannerAd")

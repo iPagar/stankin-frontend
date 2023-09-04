@@ -21,9 +21,9 @@ connect.subscribe(({ detail: { type, data } }) => {
 });
 
 // Init eruda
-// if (process.env.NODE_ENV === "development") {
-eruda.init();
-// }
+if (process.env.NODE_ENV === "development") {
+  eruda.init();
+}
 
 ReactDOM.render(
   <Provider store={store}>
