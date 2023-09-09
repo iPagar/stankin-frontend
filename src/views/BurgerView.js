@@ -31,16 +31,20 @@ import CommentsPage from "../cells/CommentsPage";
 import WriteCommentCard from "../cells/WriteCommentCard";
 import ReactionsCard from "../cells/ReactionsCard";
 import { differenceInMonths } from "date-fns";
+import Lottie from "lottie-react";
+import gearsAnimation from "../assets/gears.json";
 
 import Icon28Users from "@vkontakte/icons/dist/28/users";
 import Icon28UserCircleOutline from "@vkontakte/icons/dist/28/user_circle_outline";
 import Icon20Info from "@vkontakte/icons/dist/20/info";
 import Icon24UserAdd from "@vkontakte/icons/dist/24/user_add";
-import { Icon24AppBadgeOutline, Icon28WrenchOutline } from "@vkontakte/icons";
+import { Icon28User } from "@vkontakte/icons";
 import Icon28NotificationCircleFillGray from "@vkontakte/icons/dist/28/notification_circle_fill_gray";
 import free from "../img/free.jpg";
-import Lottie from "lottie-react";
-import gearsAnimation from "../assets/gears.json";
+import TopView from "./TopView";
+import Icon24Education from "@vkontakte/icons/dist/24/education";
+import telegram from "../img/telegram.png";
+import { Icon20Users3 } from "@vkontakte/icons";
 
 const BurgerView = ({ id }) => {
   const activePanel = useSelector((state) => state.burger.activePanel);
@@ -96,7 +100,7 @@ const BurgerView = ({ id }) => {
           {
             <SimpleCell
               expandable
-              before={<Icon28UserCircleOutline />}
+              before={<Icon28User />}
               onClick={() => {
                 dispatch(setBurgerPanel("profile"));
               }}
@@ -106,16 +110,32 @@ const BurgerView = ({ id }) => {
           }
           <SimpleCell
             expandable
-            before={<Icon28Users />}
+            before={<Icon20Users3 width={28} height={28} />}
             onClick={() => {
               dispatch(setBurgerPanel("teachers"));
             }}
           >
             Преподаватели
           </SimpleCell>
+          <SimpleCell
+            expandable
+            before={<Icon24Education width={28} height={28} />}
+            onClick={() => {
+              dispatch(setBurgerPanel("top"));
+            }}
+          >
+            Студенты
+          </SimpleCell>
 
           <Banner
-            before={<Icon24AppBadgeOutline width={48} height={48} />}
+            before={
+              <img
+                src={telegram}
+                style={{
+                  height: 64,
+                }}
+              />
+            }
             text="Подписывайтесь на наш телеграм канал"
             actions={
               <React.Fragment>
@@ -274,6 +294,12 @@ const BurgerView = ({ id }) => {
       />
       <Profile
         id="profile"
+        onCancelClick={() => {
+          dispatch(setBurgerPanel("main"));
+        }}
+      />
+      <TopView
+        id="top"
         onCancelClick={() => {
           dispatch(setBurgerPanel("main"));
         }}

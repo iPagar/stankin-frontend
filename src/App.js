@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import { Epic, View, Root, Tabbar, TabbarItem } from "@vkontakte/vkui";
+import React, { useEffect, useRef, useState } from "react";
+import { Epic, View, Root, Tabbar, TabbarItem, Panel } from "@vkontakte/vkui";
 import { useDispatch, useSelector } from "react-redux";
+import { usePopper } from "react-popper";
 import {
   setStory,
   loadSchedule,
@@ -13,7 +14,6 @@ import { api } from "./services";
 
 import "@vkontakte/vkui/dist/vkui.css";
 import "./app.css";
-
 import Icon28CalendarOutline from "@vkontakte/icons/dist/28/calendar_outline";
 import Icon20EducationOutline from "@vkontakte/icons/dist/20/education_outline";
 import Icon28Menu from "@vkontakte/icons/dist/28/menu";
@@ -24,8 +24,10 @@ import ScheduleView from "./views/ScheduleView";
 import StgroupsView from "./views/StgroupsView";
 import GroupsView from "./views/GroupsView";
 import BurgerView from "./views/BurgerView";
+import bridge from "@vkontakte/vk-bridge";
+import { useClickAway } from "react-use";
 
-const App = () => {
+export function App() {
   const dispatch = useDispatch();
   const activeView = useSelector((state) => state.config.activeView);
   const activeStory = useSelector((state) => state.config.activeStory);
@@ -51,6 +53,9 @@ const App = () => {
       case "burgerView":
         dispatch(setStory(story));
         break;
+      case "topView":
+        dispatch(setStory(story));
+        break;
       default:
         break;
     }
@@ -62,6 +67,28 @@ const App = () => {
 
   useEffect(() => {
     onAppLoad();
+
+    const sub = bridge.subscribe((e) => {
+      if (e.detail.type === "VKWebAppViewRestore") {
+        // reload window
+        window.location.reload();
+      }
+    });
+
+    async function getTopLaunch() {
+      const data = await bridge.send("VKWebAppStorageGet", {
+        keys: ["student-top"],
+      });
+
+      if (data.keys[0].value !== "true") {
+        setPopperOpened(true);
+      }
+    }
+    getTopLaunch();
+
+    return () => {
+      sub.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -76,7 +103,28 @@ const App = () => {
     changeStory(story);
   }, [student.hasOwnProperty("student")]);
 
-  const withTeachers = true;
+  const [referenceElement, setReferenceElement] = useState(null);
+  const popperElementRef = useRef(null);
+  const [arrowElement, setArrowElement] = useState(null);
+  const { styles, attributes } = usePopper(
+    referenceElement,
+    popperElementRef.current,
+    {
+      modifiers: [
+        {
+          name: "arrow",
+          options: { element: arrowElement },
+        },
+        {
+          name: "offset",
+          options: {
+            offset: [-50, 20],
+          },
+        },
+      ],
+      placement: "top",
+    }
+  );
 
   return (
     <Epic
@@ -97,15 +145,15 @@ const App = () => {
           >
             <Icon20EducationOutline width={28} height={28} />
           </TabbarItem>
-          {withTeachers && (
-            <TabbarItem
-              onClick={onStoryChange}
-              selected={activeStory === "burgerView"}
-              data-story="burgerView"
-            >
+          <TabbarItem
+            onClick={onStoryChange}
+            selected={activeStory === "burgerView"}
+            data-story="burgerView"
+          >
+            <div ref={setReferenceElement}>
               <Icon28Menu />
-            </TabbarItem>
-          )}
+            </div>
+          </TabbarItem>
         </Tabbar>
       }
     >
@@ -117,6 +165,7 @@ const App = () => {
           <Marks id="marks" />
         </View>
       </Root>
+
       <Root id="scheduleRoot" activeView={activeView}>
         <ScheduleView id="scheduleView" />
         <StgroupsView
@@ -166,6 +215,4 @@ const App = () => {
       <BurgerView id="burgerView" />
     </Epic>
   );
-};
-
-export default App;
+}

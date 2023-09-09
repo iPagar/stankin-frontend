@@ -133,10 +133,6 @@ const ScheduleView = ({ id }) => {
     );
   };
 
-  const tabbarHeight = parseInt(
-    window.getComputedStyle(document.body).getPropertyValue("--tabbar_height")
-  );
-
   return (
     <View id={id} activePanel={activePanel} modal={modal}>
       <Panel id="main">
@@ -145,8 +141,8 @@ const ScheduleView = ({ id }) => {
             <React.Fragment>
               <PanelHeaderButton onClick={onHeaderButtonClick}>
                 <Icon28Settings />
-              </PanelHeaderButton>
-              {!isMobile && (
+              </PanelHeaderButton>{" "}
+              {!bridge.isWebView() && (
                 <PanelHeaderButton onClick={onHeaderScheduleClick}>
                   <Icon28ArticleOutline />
                 </PanelHeaderButton>

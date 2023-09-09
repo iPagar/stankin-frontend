@@ -3,10 +3,15 @@ import React, { useEffect } from "react";
 
 export const Banner = () => {
   useEffect(() => {
-    bridge.send("VKWebAppShowBannerAd", {
-      banner_location: "bottom",
-    });
+    bridge
+      .send("VKWebAppShowBannerAd")
+      .then((bannerInfo) => {
+        console.log(bannerInfo, 4);
+      })
+      .catch((error) => {
+        console.log(error, 5);
+      });
   }, []);
 
-  return <></>;
+  return null;
 };

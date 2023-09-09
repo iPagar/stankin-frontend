@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const sign = window.location.search;
+const sign = process.env.REACT_APP_TEST_SIGN ?? window.location.search;
 
 export const api = axios.create({
   baseURL: "https://ipagar.ddns.net",
