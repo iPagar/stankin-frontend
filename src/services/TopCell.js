@@ -1,6 +1,5 @@
 import React from "react";
 import { Cell, Avatar } from "@vkontakte/vkui";
-import "./table.css";
 
 class TopCell extends React.Component {
   render() {

@@ -3,15 +3,8 @@ import { Cell, Avatar } from "@vkontakte/vkui";
 
 class TopCell extends React.Component {
   render() {
-    const {
-      stgroup,
-      id,
-      rating,
-      first_name,
-      last_name,
-      photo_50,
-      number
-    } = this.props;
+    const { stgroup, id, rating, first_name, last_name, photo_50, number } =
+      this.props;
 
     return (
       <Cell

@@ -25,7 +25,6 @@ import StgroupsView from "./views/StgroupsView";
 import GroupsView from "./views/GroupsView";
 import BurgerView from "./views/BurgerView";
 import bridge from "@vkontakte/vk-bridge";
-import { useClickAway } from "react-use";
 
 export function App() {
   const dispatch = useDispatch();

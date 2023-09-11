@@ -1,5 +1,5 @@
 import bridge from "@vkontakte/vk-bridge";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 export const Banner = () => {
   useEffect(() => {
