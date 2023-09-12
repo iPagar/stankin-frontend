@@ -6,10 +6,11 @@
   "homepage": "./",
   "scripts": {
     "start": "cross-env PORT=10888 react-scripts start",
-    "tunnel": "vk-tunnel --insecure=1 --http-protocol=http --host=localhost --port=10888 --timeout=5000",
+    "tunnel": "vk-tunnel --insecure=1 --http-pronpm install @reduxjs/toolkitcol=http --host=localhost --port=10888 --timeout=5000",
     "build": "react-scripts build",
     "predeploy": "npm run build",
-    "deploy": "vk-miniapps-deploy"
+    "deploy": "vk-miniapps-deploy",
+    "codegen": "npx @rtk-query/codegen-openapi openapi-config.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,13 +20,16 @@
     "cross-env": "^5.2.1",
     "eslint-config-next": "^13.2.4",
     "gh-pages": "^2.2.0",
-    "react-hot-loader": "^4.13.0"
+    "react-hot-loader": "^4.13.0",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@material-table/core": "^6.1.13",
     "@material-ui/core": "^4.12.4",
     "@popperjs/core": "^2.11.6",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@rtk-query/codegen-openapi": "^1.0.0",
     "@types/react": "^17.0.65",
     "@types/react-dom": "^18.2.7",
     "@vkontakte/icons": "^1.1.3",

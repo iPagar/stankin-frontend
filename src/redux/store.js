@@ -1,8 +1,10 @@
-import { createStore, compose, applyMiddleware } from "redux";
+import { compose, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
 import rootReducer from "./reducers";
+import { api } from "../api/api";
+import { legacy_createStore as createStore } from "redux";
 
-function logger({ getState }) {
+export function logger({ getState }) {
   return (next) => (action) => {
     // Call the next dispatch method in the middleware chain.
     const returnValue = next(action);
@@ -13,7 +15,7 @@ function logger({ getState }) {
   };
 }
 
-function callAPIMiddleware({ dispatch, getState }) {
+export function callAPIMiddleware({ dispatch, getState }) {
   return (next) => (action) => {
     const { request, callAPI, payload = {} } = action;
 
@@ -63,6 +65,7 @@ const middlewares = [
   applyMiddleware(callAPIMiddleware),
   process.env.NODE_ENV === "development" && applyMiddleware(logger),
   applyMiddleware(thunkMiddleware),
+  applyMiddleware(api.middleware),
 ].filter(Boolean);
 
 export default createStore(rootReducer, compose(...middlewares));

@@ -33,6 +33,7 @@ import ReactionsCard from "../cells/ReactionsCard";
 import { differenceInMonths } from "date-fns";
 import Lottie from "lottie-react";
 import gearsAnimation from "../assets/gears.json";
+import { setStory, setView, exit } from "../redux/actions";
 
 import Icon28Users from "@vkontakte/icons/dist/28/users";
 import Icon28UserCircleOutline from "@vkontakte/icons/dist/28/user_circle_outline";
@@ -294,8 +295,15 @@ const BurgerView = ({ id }) => {
       />
       <Profile
         id="profile"
-        onCancelClick={() => {
+        onBack={() => {
           dispatch(setBurgerPanel("main"));
+        }}
+        onExit={() => {
+          dispatch(exit());
+        }}
+        onEnter={() => {
+          dispatch(setView("loginView"));
+          dispatch(setStory("marksRoot"));
         }}
       />
       <TopView
