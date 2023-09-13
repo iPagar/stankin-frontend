@@ -44,6 +44,24 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["Students"],
       }),
+      studentsControllerLogin: build.mutation<
+        StudentsControllerLoginApiResponse,
+        StudentsControllerLoginApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/students/login`,
+          method: "POST",
+          body: queryArg.loginDto,
+        }),
+        invalidatesTags: ["Students"],
+      }),
+      studentsControllerLogout: build.mutation<
+        StudentsControllerLogoutApiResponse,
+        StudentsControllerLogoutApiArg
+      >({
+        query: () => ({ url: `/api/students/logout`, method: "POST" }),
+        invalidatesTags: ["Students"],
+      }),
     }),
     overrideExisting: false,
   });
@@ -65,6 +83,13 @@ export type StudentsControllerRemoveApiResponse = unknown;
 export type StudentsControllerRemoveApiArg = {
   id: number;
 };
+export type StudentsControllerLoginApiResponse = unknown;
+export type StudentsControllerLoginApiArg = {
+  /** Student's id and password */
+  loginDto: LoginDto;
+};
+export type StudentsControllerLogoutApiResponse = unknown;
+export type StudentsControllerLogoutApiArg = void;
 export type GetStudentDto = {
   id: number;
   student: number;
@@ -73,6 +98,10 @@ export type GetStudentDto = {
   stgroup: string;
   notify: boolean;
   is_deleted: boolean;
+};
+export type LoginDto = {
+  studentId: string;
+  password: string;
 };
 export const {
   useStudentsControllerGetMeQuery,
@@ -83,4 +112,6 @@ export const {
   useStudentsControllerGetOneQuery,
   useLazyStudentsControllerGetOneQuery,
   useStudentsControllerRemoveMutation,
+  useStudentsControllerLoginMutation,
+  useStudentsControllerLogoutMutation,
 } = injectedRtkApi;

@@ -17,11 +17,25 @@ import { Icon56UserCircleOutline } from "@vkontakte/icons";
 import {
   GetStudentDto,
   useStudentsControllerGetMeQuery,
+  useStudentsControllerLogoutMutation,
 } from "../api/slices/students.slice";
+import { api } from "../api/api";
+import { useAppDispatch } from "../api/store";
 
-function Exit(props: { onExit: () => void }) {
+function Exit() {
+  const [logout, { isLoading: isLogoutLoading }] =
+    useStudentsControllerLogoutMutation();
+  const dispatch = useAppDispatch();
+
   return (
-    <CellButton mode={"danger"} onClick={props.onExit}>
+    <CellButton
+      mode={"danger"}
+      onClick={async () => {
+        await logout().unwrap();
+        dispatch(api.util.resetApiState());
+      }}
+      disabled={isLogoutLoading}
+    >
       Выйти
     </CellButton>
   );
@@ -54,20 +68,21 @@ function Profile(props: {
   onEnter: () => void;
   onBack: () => void;
 }) {
-  const { data: student, error, isLoading } = useStudentsControllerGetMeQuery();
+  const { data: student, isLoading } = useStudentsControllerGetMeQuery();
 
   return (
     <Panel id={props.id} separator={false}>
       <PanelHeaderSimple left={<PanelHeaderBack onClick={props.onBack} />}>
         Профиль
       </PanelHeaderSimple>
+
       {isLoading && <Spinner size="large" />}
       {!isLoading &&
         (student ? (
           <React.Fragment>
             <ProfileData student={student} />
             <List>
-              <Exit onExit={props.onExit} />
+              <Exit />
             </List>
           </React.Fragment>
         ) : (

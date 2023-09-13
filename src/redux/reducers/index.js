@@ -6,9 +6,9 @@ import burger from "./burger";
 import { api } from "../../api/api";
 
 export default combineReducers({
+  [api.reducerPath]: api.reducer,
   config,
   init,
   schedule,
   burger,
-  [api.reducerPath]: api.reducer,
 });

@@ -62,10 +62,13 @@ export function callAPIMiddleware({ dispatch, getState }) {
 }
 
 const middlewares = [
-  applyMiddleware(callAPIMiddleware),
-  process.env.NODE_ENV === "development" && applyMiddleware(logger),
-  applyMiddleware(thunkMiddleware),
-  applyMiddleware(api.middleware),
+  callAPIMiddleware,
+  process.env.NODE_ENV === "development" && logger,
+  thunkMiddleware,
+  api.middleware,
 ].filter(Boolean);
 
-export default createStore(rootReducer, compose(...middlewares));
+export default createStore(
+  rootReducer,
+  compose(applyMiddleware(...middlewares))
+);

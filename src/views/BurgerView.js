@@ -298,9 +298,6 @@ const BurgerView = ({ id }) => {
         onBack={() => {
           dispatch(setBurgerPanel("main"));
         }}
-        onExit={() => {
-          dispatch(exit());
-        }}
         onEnter={() => {
           dispatch(setView("loginView"));
           dispatch(setStory("marksRoot"));
