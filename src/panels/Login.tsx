@@ -10,7 +10,7 @@ import {
   Link,
 } from "@vkontakte/vkui";
 import { Spring } from "react-spring/renderprops";
-import { setView } from "../redux/actions";
+import { fetchInit, setView } from "../redux/actions";
 
 import { Icon24Error } from "@vkontakte/icons";
 
@@ -92,9 +92,15 @@ export function Login({ id }: { id: string }) {
   const [login, { isLoading }] = useStudentsControllerLoginMutation();
 
   useEffect(() => {
-    if (me) {
-      dispatch(setView("mainView"));
+    async function start() {
+      if (me) {
+        await dispatch(fetchInit());
+
+        dispatch(setView("mainView"));
+      }
     }
+
+    start();
   }, [me]);
 
   async function onSubmit(values: { login: string; password: string }) {
