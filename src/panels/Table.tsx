@@ -348,6 +348,8 @@ const MarkHeader = ({ text }: { text: string }) => {
         paddingLeft: 4,
         paddingRight: 4,
         width: 20,
+        paddingBottom: 8,
+        fontWeight: 500,
       }}
     >
       {text}
