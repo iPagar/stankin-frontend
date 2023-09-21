@@ -7,6 +7,7 @@ import {
   List,
   Cell,
   PanelHeaderButton,
+  Spinner,
 } from "@vkontakte/vkui";
 import bridge from "@vkontakte/vk-bridge";
 
@@ -209,22 +210,25 @@ function Marks() {
           </PanelHeaderButton>
         }
       >
-        {data.panel === "marks" && (
-          <PanelHeaderContent
-            aside={
-              <Icon16Dropdown
-                style={{
-                  transform: `rotate(${data.contextOpened ? "180deg" : "0"})`,
-                }}
-              />
-            }
-            onClick={toggleContext}
-            before={undefined}
-            status={undefined}
-          >
-            {semester}
-          </PanelHeaderContent>
-        )}
+        {data.panel === "marks" &&
+          (semester ? (
+            <PanelHeaderContent
+              aside={
+                <Icon16Dropdown
+                  style={{
+                    transform: `rotate(${data.contextOpened ? "180deg" : "0"})`,
+                  }}
+                />
+              }
+              onClick={toggleContext}
+              before={undefined}
+              status={undefined}
+            >
+              {semester}
+            </PanelHeaderContent>
+          ) : (
+            <Spinner />
+          ))}
         {data.panel === "marks_history" && (
           <PanelHeaderContent
             aside={undefined}
@@ -237,7 +241,7 @@ function Marks() {
       </PanelHeaderSimple>
 
       {renderPanelHeaderContext()}
-      {data.panel === "marks" && marksTable}
+      {data.panel === "marks" && marks ? marksTable : <Spinner size="large" />}
       {data.panel === "marks_history" && <MarksHistory />}
     </Panel>
   );

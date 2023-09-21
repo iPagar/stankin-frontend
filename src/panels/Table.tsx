@@ -179,12 +179,42 @@ function Table({ data }: { data: MarkEntity[] }) {
                   <MarkHeader text="Э" />
                 </>
               )}
-              <Divider />
-              <Divider />
-              <Divider />
-              <Divider />
-              <Divider />
-              <Divider />
+              <Divider
+                style={{
+                  backgroundColor: "var(--header_text)",
+                  opacity: 0.2,
+                }}
+              />
+              <Divider
+                style={{
+                  backgroundColor: "var(--header_text)",
+                  opacity: 0.2,
+                }}
+              />
+              <Divider
+                style={{
+                  backgroundColor: "var(--header_text)",
+                  opacity: 0.2,
+                }}
+              />
+              <Divider
+                style={{
+                  backgroundColor: "var(--header_text)",
+                  opacity: 0.2,
+                }}
+              />
+              <Divider
+                style={{
+                  backgroundColor: "var(--header_text)",
+                  opacity: 0.2,
+                }}
+              />
+              <Divider
+                style={{
+                  backgroundColor: "var(--header_text)",
+                  opacity: 0.2,
+                }}
+              />
               <div>{row.subject}</div>
 
               {getDefaultValue("М1", row.subject) >= 0 ? (
@@ -365,6 +395,8 @@ const MarkInput: React.FC<MarkInputProps> = ({
         width: "100%",
         outline: "none",
         padding: 0,
+        color: "var(--header_text)",
+        background: "transparent",
       }}
       type="number"
       value={value}
