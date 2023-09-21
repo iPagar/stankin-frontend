@@ -20,29 +20,12 @@ const injectedRtkApi = api
         query: () => ({ url: `/api/students` }),
         providesTags: ["Students"],
       }),
-      studentsControllerPost: build.mutation<
-        StudentsControllerPostApiResponse,
-        StudentsControllerPostApiArg
-      >({
-        query: () => ({ url: `/api/students`, method: "POST" }),
-        invalidatesTags: ["Students"],
-      }),
       studentsControllerGetOne: build.query<
         StudentsControllerGetOneApiResponse,
         StudentsControllerGetOneApiArg
       >({
         query: (queryArg) => ({ url: `/api/students/${queryArg.id}` }),
         providesTags: ["Students"],
-      }),
-      studentsControllerRemove: build.mutation<
-        StudentsControllerRemoveApiResponse,
-        StudentsControllerRemoveApiArg
-      >({
-        query: (queryArg) => ({
-          url: `/api/students/${queryArg.id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["Students"],
       }),
       studentsControllerLogin: build.mutation<
         StudentsControllerLoginApiResponse,
@@ -62,6 +45,13 @@ const injectedRtkApi = api
         query: () => ({ url: `/api/students/logout`, method: "POST" }),
         invalidatesTags: ["Students"],
       }),
+      studentsControllerGetStudentSemesters: build.query<
+        StudentsControllerGetStudentSemestersApiResponse,
+        StudentsControllerGetStudentSemestersApiArg
+      >({
+        query: () => ({ url: `/api/students/semesters` }),
+        providesTags: ["Students"],
+      }),
     }),
     overrideExisting: false,
   });
@@ -72,15 +62,9 @@ export type StudentsControllerGetMeApiArg = void;
 export type StudentsControllerGetAllApiResponse =
   /** status 200 Students retrieved successfully */ GetStudentDto[];
 export type StudentsControllerGetAllApiArg = void;
-export type StudentsControllerPostApiResponse = unknown;
-export type StudentsControllerPostApiArg = void;
 export type StudentsControllerGetOneApiResponse =
   /** status 200 Student retrieved successfully */ GetStudentDto;
 export type StudentsControllerGetOneApiArg = {
-  id: number;
-};
-export type StudentsControllerRemoveApiResponse = unknown;
-export type StudentsControllerRemoveApiArg = {
   id: number;
 };
 export type StudentsControllerLoginApiResponse = unknown;
@@ -90,6 +74,9 @@ export type StudentsControllerLoginApiArg = {
 };
 export type StudentsControllerLogoutApiResponse = unknown;
 export type StudentsControllerLogoutApiArg = void;
+export type StudentsControllerGetStudentSemestersApiResponse =
+  /** status 200 Student's semesters retrieved successfully */ string[];
+export type StudentsControllerGetStudentSemestersApiArg = void;
 export type GetStudentDto = {
   id: number;
   student: number;
@@ -108,10 +95,10 @@ export const {
   useLazyStudentsControllerGetMeQuery,
   useStudentsControllerGetAllQuery,
   useLazyStudentsControllerGetAllQuery,
-  useStudentsControllerPostMutation,
   useStudentsControllerGetOneQuery,
   useLazyStudentsControllerGetOneQuery,
-  useStudentsControllerRemoveMutation,
   useStudentsControllerLoginMutation,
   useStudentsControllerLogoutMutation,
+  useStudentsControllerGetStudentSemestersQuery,
+  useLazyStudentsControllerGetStudentSemestersQuery,
 } = injectedRtkApi;

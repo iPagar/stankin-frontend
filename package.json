@@ -30,6 +30,7 @@
     "@popperjs/core": "^2.11.6",
     "@reduxjs/toolkit": "^1.9.5",
     "@rtk-query/codegen-openapi": "^1.0.0",
+    "@tanstack/react-table": "^8.9.9",
     "@types/react": "^17.0.65",
     "@types/react-dom": "^18.2.7",
     "@vkontakte/icons": "^1.1.3",
@@ -59,7 +60,8 @@
     "redux-thunk": "^2.3.0",
     "typescript": "^4.9.5",
     "vkui-horizontal-calendar": "^1.1.0",
-    "webpack": "4.42.0"
+    "webpack": "4.42.0",
+    "zustand": "^4.4.1"
   },
   "browserslist": {
     "production": [
