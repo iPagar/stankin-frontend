@@ -367,7 +367,7 @@ const MarkNotExist = () => {
         width: "100%",
       }}
     >
-      <Icon16Cancel />
+      <Icon16Cancel width={18} height={18} />
     </div>
   );
 };
@@ -399,6 +399,7 @@ const MarkInput: React.FC<MarkInputProps> = ({
         padding: 0,
         color: "var(--header_text)",
         background: "transparent",
+        fontSize: 18,
       }}
       type="number"
       value={value}
