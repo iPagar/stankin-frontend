@@ -171,7 +171,7 @@ function Table({ data }: { data: MarkEntity[] }) {
             <Fragment key={i}>
               {i === 0 && (
                 <>
-                  <div>Предмет</div>
+                  <div>ПРЕДМЕТ</div>
                   <MarkHeader text="М1" />
                   <MarkHeader text="М2" />
                   <MarkHeader text="К" />
@@ -215,7 +215,14 @@ function Table({ data }: { data: MarkEntity[] }) {
                   opacity: 0.2,
                 }}
               />
-              <div>{row.subject}</div>
+              <div
+                style={{
+                  paddingRight: 8,
+                  fontSize: 13,
+                }}
+              >
+                {row.subject}
+              </div>
 
               {getDefaultValue("М1", row.subject) >= 0 ? (
                 <MarkInput
@@ -399,7 +406,7 @@ const MarkInput: React.FC<MarkInputProps> = ({
         padding: 0,
         color: "var(--header_text)",
         background: "transparent",
-        fontSize: 18,
+        fontSize: 13,
       }}
       type="number"
       value={value}

@@ -1,6 +1,8 @@
 import type { ConfigFile } from "@rtk-query/codegen-openapi";
 import * as dotenv from "dotenv";
-dotenv.config();
+dotenv.config({
+  path: ".env.development",
+});
 
 const config: ConfigFile = {
   schemaFile: `${process.env.REACT_APP_API_URL}/api/docs-json`,
@@ -14,6 +16,10 @@ const config: ConfigFile = {
     "./src/api/slices/marks.slice.ts": {
       exportName: "marks",
       filterEndpoints: /marks/i,
+    },
+    "./src/api/slices/app.slice.ts": {
+      exportName: "app",
+      filterEndpoints: /app/i,
     },
   },
   tag: true,

@@ -17,14 +17,7 @@ const injectedRtkApi = api
         StudentsControllerGetAllApiResponse,
         StudentsControllerGetAllApiArg
       >({
-        query: () => ({ url: `/api/students` }),
-        providesTags: ["Students"],
-      }),
-      studentsControllerGetOne: build.query<
-        StudentsControllerGetOneApiResponse,
-        StudentsControllerGetOneApiArg
-      >({
-        query: (queryArg) => ({ url: `/api/students/${queryArg.id}` }),
+        query: (queryArg) => ({ url: `/api/students` }),
         providesTags: ["Students"],
       }),
       studentsControllerLogin: build.mutation<
@@ -52,6 +45,13 @@ const injectedRtkApi = api
         query: () => ({ url: `/api/students/semesters` }),
         providesTags: ["Students"],
       }),
+      studentsControllerGetOne: build.query<
+        StudentsControllerGetOneApiResponse,
+        StudentsControllerGetOneApiArg
+      >({
+        query: (queryArg) => ({ url: `/api/students/${queryArg.id}` }),
+        providesTags: ["Students"],
+      }),
     }),
     overrideExisting: false,
   });
@@ -61,11 +61,9 @@ export type StudentsControllerGetMeApiResponse =
 export type StudentsControllerGetMeApiArg = void;
 export type StudentsControllerGetAllApiResponse =
   /** status 200 Students retrieved successfully */ GetStudentDto[];
-export type StudentsControllerGetAllApiArg = void;
-export type StudentsControllerGetOneApiResponse =
-  /** status 200 Student retrieved successfully */ GetStudentDto;
-export type StudentsControllerGetOneApiArg = {
-  id: number;
+export type StudentsControllerGetAllApiArg = {
+  /** Semester to filter by */
+  semester?: string;
 };
 export type StudentsControllerLoginApiResponse = unknown;
 export type StudentsControllerLoginApiArg = {
@@ -77,6 +75,11 @@ export type StudentsControllerLogoutApiArg = void;
 export type StudentsControllerGetStudentSemestersApiResponse =
   /** status 200 Student's semesters retrieved successfully */ string[];
 export type StudentsControllerGetStudentSemestersApiArg = void;
+export type StudentsControllerGetOneApiResponse =
+  /** status 200 Student retrieved successfully */ GetStudentDto;
+export type StudentsControllerGetOneApiArg = {
+  id: number;
+};
 export type GetStudentDto = {
   id: number;
   student: number;
@@ -95,10 +98,10 @@ export const {
   useLazyStudentsControllerGetMeQuery,
   useStudentsControllerGetAllQuery,
   useLazyStudentsControllerGetAllQuery,
-  useStudentsControllerGetOneQuery,
-  useLazyStudentsControllerGetOneQuery,
   useStudentsControllerLoginMutation,
   useStudentsControllerLogoutMutation,
   useStudentsControllerGetStudentSemestersQuery,
   useLazyStudentsControllerGetStudentSemestersQuery,
+  useStudentsControllerGetOneQuery,
+  useLazyStudentsControllerGetOneQuery,
 } = injectedRtkApi;

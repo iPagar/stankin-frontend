@@ -19,8 +19,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import { api } from "../services";
 import { setActiveBottomTab } from "../redux/actions";
 import vkc from "@vkontakte/vk-bridge";
-import Icon24Done from "@vkontakte/icons/dist/24/done";
-import Icon16Dropdown from "@vkontakte/icons/dist/16/dropdown";
+import { Icon24Done, Icon16Dropdown } from "@vkontakte/icons";
 
 import TopCell from "./TopCell";
 import Empty from "./Empty";
