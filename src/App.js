@@ -157,9 +157,7 @@ export function App() {
       }
     >
       <Root id="marksRoot" activeView={activeView}>
-        <View id="loginView" activePanel="login" header={false}>
-          <Login id="login" />
-        </View>
+        <Login id="loginView" />
         <View id="mainView" activePanel="marks" header={false}>
           <Marks id="marks" />
         </View>

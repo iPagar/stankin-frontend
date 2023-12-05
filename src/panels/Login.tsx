@@ -8,6 +8,14 @@ import {
   Snackbar,
   Avatar,
   Link,
+  Text,
+  ModalPage,
+  View,
+  ModalRoot,
+  ModalPageHeader,
+  ModalCard,
+  Caption,
+  Title,
 } from "@vkontakte/vkui";
 import { Spring } from "react-spring/renderprops";
 import { fetchInit, setView } from "../redux/actions";
@@ -119,6 +127,7 @@ export function Login({ id }: { id: string }) {
   const [snackbar, setSnackbar] = React.useState<React.ReactElement | null>(
     null
   );
+  const [modal, setModal] = React.useState<boolean>(false);
 
   function openSnackbar(support = true) {
     if (snackbar) return;
@@ -144,15 +153,53 @@ export function Login({ id }: { id: string }) {
   }
 
   return (
-    <Panel id={id} separator={false} centered>
-      <PanelHeaderSimple>Модульный журнал</PanelHeaderSimple>
-      {!isLoadingMe ? (
-        <Form isFetching={isLoading} onSubmit={onSubmit} />
-      ) : (
-        <Logo />
-      )}
-      {snackbar}
-    </Panel>
+    <View
+      id={id}
+      activePanel="login"
+      header={false}
+      modal={
+        <ModalRoot
+          activeModal={modal ? "modal" : null}
+          onClose={() => {
+            setModal(false);
+          }}
+        >
+          <ModalCard
+            id="modal"
+            header={<ModalPageHeader>Как войти?</ModalPageHeader>}
+            onClose={() => {
+              setModal(false);
+            }}
+          >
+            <Text weight="regular" style={{ marginBottom: 16, marginTop: 16 }}>
+              Чтобы войти в аккаунт, вам необходимо ввести свой логин и пароль.
+              Обычно, логин и пароль - это номер вашего студенческого билета.
+            </Text>
+          </ModalCard>
+        </ModalRoot>
+      }
+    >
+      <Panel id="login" separator={false} centered>
+        <PanelHeaderSimple>Модульный журнал</PanelHeaderSimple>
+        {!isLoadingMe ? (
+          <Form isFetching={isLoading} onSubmit={onSubmit} />
+        ) : (
+          <Logo />
+        )}
+        {!isLoadingMe && (
+          <Button
+            mode="tertiary"
+            style={{ marginTop: 16 }}
+            onClick={() => {
+              setModal(true);
+            }}
+          >
+            Как войти?
+          </Button>
+        )}
+        {snackbar}
+      </Panel>
+    </View>
   );
 }
 
