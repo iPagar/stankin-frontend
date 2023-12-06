@@ -259,31 +259,6 @@ const BurgerView = ({ id }) => {
               }
             />
           )}
-          <Div>
-            <Text
-              style={{
-                color: "var(--text_secondary)",
-              }}
-            >
-              На поддержку приложения за всё время было потрачено{" "}
-              <b>
-                {
-                  // old server
-                  differenceInMonths(
-                    new Date("23 September 2022"),
-                    new Date("19 June 2019")
-                  ) *
-                    5 +
-                    differenceInMonths(
-                      new Date(),
-                      new Date("23 September 2022")
-                    ) *
-                      15
-                }{" "}
-              </b>
-              долларов
-            </Text>
-          </Div>
         </List>
         {snackbar}
       </Panel>
