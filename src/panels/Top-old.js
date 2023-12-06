@@ -62,7 +62,7 @@ const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
-class Top extends React.Component {
+class TopOld extends React.Component {
   state = {
     isFetching: true,
     top: [],
@@ -417,4 +417,4 @@ class Top extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Top);
+export default connect(mapStateToProps, mapDispatchToProps)(TopOld);

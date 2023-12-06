@@ -15,7 +15,7 @@ import {
 
 import { Icon56UserCircleOutline } from "@vkontakte/icons";
 import {
-  GetStudentDto,
+  StudentDto,
   useStudentsControllerGetMeQuery,
   useStudentsControllerLogoutMutation,
 } from "../api/slices/students.slice";
@@ -41,7 +41,7 @@ function Exit() {
   );
 }
 
-function ProfileData(props: { student: GetStudentDto }) {
+function ProfileData(props: { student: StudentDto }) {
   return (
     <div>
       <Header>Информация о студенте</Header>

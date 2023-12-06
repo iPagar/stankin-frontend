@@ -8,7 +8,10 @@ import {
 } from "@vkontakte/vkui";
 import { useEffect, useState } from "react";
 import { useAppControllerGetSemestersQuery } from "../api/slices/app.slice";
-import { useStudentsControllerGetAllQuery } from "../api/slices/students.slice";
+import {
+  useStudentsControllerGetAllQuery,
+  useStudentsControllerGetRatingQuery,
+} from "../api/slices/students.slice";
 import TopCell from "./TopCell";
 
 const semesterFormat = (semester: string) => {
@@ -21,7 +24,7 @@ export default function TopList(props: { onCancelClick: () => void }) {
   const [contextOpened, setContextOpened] = useState(false);
   const [selectedSemester, setSelectedSemester] = useState("");
   const { data: semesters } = useAppControllerGetSemestersQuery();
-  const { data: students } = useStudentsControllerGetAllQuery({
+  const { data: students } = useStudentsControllerGetRatingQuery({
     semester: selectedSemester,
   });
 
@@ -30,8 +33,6 @@ export default function TopList(props: { onCancelClick: () => void }) {
       setSelectedSemester(semesters[semesters.length - 1]);
     }
   }, [semesters]);
-
-  console.log(semesters && semesters[0], students);
 
   return (
     <>
@@ -57,7 +58,7 @@ export default function TopList(props: { onCancelClick: () => void }) {
         </PanelHeaderContent>
       </PanelHeaderSimple>
       <List>
-        {students?.map((student) => (
+        {students?.data.map((student) => (
           <TopCell key={student.id} {...student} />
         ))}
       </List>
