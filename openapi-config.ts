@@ -17,6 +17,11 @@ const config: ConfigFile = {
       exportName: "marks",
       filterEndpoints: /marks/i,
     },
+    "./src/api/slices/teachers.slice.ts": {
+      exportName: "teachers",
+      filterEndpoints: /teachers/i,
+      hooks: false,
+    },
     "./src/api/slices/app.slice.ts": {
       exportName: "app",
       filterEndpoints: /app/i,

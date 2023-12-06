@@ -16,7 +16,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@vkontakte/vk-miniapps-deploy": "0.0.17",
+    "@types/react-infinite-scroller": "^1.2.5",
+    "@vkontakte/vk-miniapps-deploy": "^0.1.6",
     "cross-env": "^5.2.1",
     "eslint-config-next": "^13.2.4",
     "gh-pages": "^2.2.0",
@@ -29,7 +30,7 @@
     "@material-ui/core": "^4.12.4",
     "@popperjs/core": "^2.11.6",
     "@reduxjs/toolkit": "^1.9.5",
-    "@rtk-query/codegen-openapi": "^1.0.0",
+    "@rtk-query/codegen-openapi": "^1.2.0",
     "@tanstack/react-table": "^8.9.9",
     "@types/react": "^17.0.65",
     "@types/react-dom": "^18.2.7",

@@ -2,11 +2,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 
 import { api } from "./api";
+import burger from "./slices/burger.slice";
 
 export function makeStore() {
   return configureStore({
     reducer: {
       [api.reducerPath]: api.reducer,
+      burger,
     },
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware().concat(api.middleware);

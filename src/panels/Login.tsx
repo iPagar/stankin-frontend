@@ -186,7 +186,7 @@ export function Login({ id }: { id: string }) {
         ) : (
           <Logo />
         )}
-        {!isLoadingMe && (
+        {!isLoadingMe && !isLoading && (
           <Button
             mode="tertiary"
             style={{ marginTop: 16 }}
