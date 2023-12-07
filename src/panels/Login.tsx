@@ -102,8 +102,6 @@ export function Login({ id }: { id: string }) {
   useEffect(() => {
     async function start() {
       if (me) {
-        await dispatch(fetchInit());
-
         dispatch(setView("mainView"));
       }
     }
@@ -181,8 +179,8 @@ export function Login({ id }: { id: string }) {
     >
       <Panel id="login" separator={false} centered>
         <PanelHeaderSimple>Модульный журнал</PanelHeaderSimple>
-        {!isLoadingMe ? (
-          <Form isFetching={isLoading} onSubmit={onSubmit} />
+        {!(isLoading || isLoadingMe) ? (
+          <Form isFetching={isLoading || isLoadingMe} onSubmit={onSubmit} />
         ) : (
           <Logo />
         )}

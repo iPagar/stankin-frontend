@@ -31,7 +31,12 @@ import {
   useMarksControllerSwitchNotifyMutation,
 } from "../api/slices/marks.slice";
 import { create } from "zustand";
-import { useStudentsControllerGetStudentSemestersQuery } from "../api/slices/students.slice";
+import {
+  useStudentsControllerGetMeQuery,
+  useStudentsControllerGetStudentSemestersQuery,
+} from "../api/slices/students.slice";
+import { useAppDispatch } from "../api/store";
+import { setView } from "../redux/actions";
 
 export type MarksStore = {
   contextOpened: boolean;
@@ -63,6 +68,15 @@ const marksStore = create<{
 }));
 
 function Marks() {
+  const { data: me } = useStudentsControllerGetMeQuery();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!me) {
+      dispatch(setView("loginView"));
+    }
+  }, [me]);
+
   const { data, setData } = marksStore();
 
   const toggleContext = () => {
@@ -85,7 +99,8 @@ function Marks() {
   }
 
   function renderPanelHeaderContext() {
-    const { data: semesters } = useStudentsControllerGetStudentSemestersQuery();
+    const { data: semesters, error } =
+      useStudentsControllerGetStudentSemestersQuery();
 
     return (
       <PanelHeaderContext
