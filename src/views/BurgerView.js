@@ -46,6 +46,7 @@ import TopView from "./TopView";
 import Icon24Education from "@vkontakte/icons/dist/24/education";
 import telegram from "../img/telegram.png";
 import { Icon20Users3 } from "@vkontakte/icons";
+import { useStudentsControllerGetMeQuery } from "../api/slices/students.slice";
 
 const BurgerView = ({ id }) => {
   const activePanel = useSelector((state) => state.burger.activePanel);
@@ -55,6 +56,7 @@ const BurgerView = ({ id }) => {
   const [snackbar, setSnackbar] = useState(null);
   const dispatch = useDispatch();
   const [additional, setAdditional] = useState(null);
+  const { data: me } = useStudentsControllerGetMeQuery();
 
   useEffect(() => {
     updateAdditional();
@@ -98,7 +100,7 @@ const BurgerView = ({ id }) => {
       <Panel id="main">
         <PanelHeader>Меню</PanelHeader>
         <List>
-          {
+          {me && (
             <SimpleCell
               expandable
               before={<Icon28User />}
@@ -108,7 +110,7 @@ const BurgerView = ({ id }) => {
             >
               Профиль
             </SimpleCell>
-          }
+          )}
           <SimpleCell
             expandable
             before={<Icon20Users3 width={28} height={28} />}
@@ -118,15 +120,17 @@ const BurgerView = ({ id }) => {
           >
             Преподаватели
           </SimpleCell>
-          <SimpleCell
-            expandable
-            before={<Icon24Education width={28} height={28} />}
-            onClick={() => {
-              dispatch(setBurgerPanel("top"));
-            }}
-          >
-            Студенты
-          </SimpleCell>
+          {false && me && (
+            <SimpleCell
+              expandable
+              before={<Icon24Education width={28} height={28} />}
+              onClick={() => {
+                dispatch(setBurgerPanel("top"));
+              }}
+            >
+              Студенты
+            </SimpleCell>
+          )}
 
           <Banner
             before={
