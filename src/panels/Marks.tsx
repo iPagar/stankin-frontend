@@ -102,6 +102,21 @@ function Marks() {
     const { data: semesters, error } =
       useStudentsControllerGetStudentSemestersQuery();
 
+    useEffect(() => {
+      // if context is opened, scroll to the selected semester
+      if (data.contextOpened && data.selectedSemester) {
+        const element = document.querySelector(
+          `[data-tag="${data.selectedSemester}"]`
+        );
+
+        if (element) {
+          element.scrollIntoView({
+            block: "center",
+          });
+        }
+      }
+    }, [data]);
+
     return (
       <PanelHeaderContext
         opened={data.contextOpened}
@@ -114,8 +129,18 @@ function Marks() {
           style={{
             marginTop: 0,
           }}
+          onClick={() => {
+            setData({
+              contextOpened: false,
+            });
+          }}
         >
-          <List>
+          <List
+            style={{
+              height: 300,
+              overflow: "auto",
+            }}
+          >
             {semesters?.map((semester, i) => (
               <Cell
                 key={i}

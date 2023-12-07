@@ -23,6 +23,26 @@ const injectedRtkApi = api
         }),
         providesTags: ["Students"],
       }),
+      studentsControllerGetMeRating: build.query<
+        StudentsControllerGetMeRatingApiResponse,
+        StudentsControllerGetMeRatingApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/students/me/rating`,
+          params: { semester: queryArg.semester },
+        }),
+        providesTags: ["Students"],
+      }),
+      studentsControllerGetRatingst: build.query<
+        StudentsControllerGetRatingstApiResponse,
+        StudentsControllerGetRatingstApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/students/ratingst`,
+          params: { semester: queryArg.semester },
+        }),
+        providesTags: ["Students"],
+      }),
       studentsControllerGetRating: build.query<
         StudentsControllerGetRatingApiResponse,
         StudentsControllerGetRatingApiArg
@@ -90,6 +110,18 @@ export type StudentsControllerGetAllApiArg = {
   /** Items per page */
   limit?: number;
 };
+export type StudentsControllerGetMeRatingApiResponse =
+  /** status 200 Student's rating retrieved successfully */ PersonalStudentRatingDto;
+export type StudentsControllerGetMeRatingApiArg = {
+  /** Semester to filter by */
+  semester: string;
+};
+export type StudentsControllerGetRatingstApiResponse =
+  /** status 200 Students retrieved successfully */ StudentRatingDto[];
+export type StudentsControllerGetRatingstApiArg = {
+  /** Semester to filter by */
+  semester?: string;
+};
 export type StudentsControllerGetRatingApiResponse =
   /** status 200 Students retrieved successfully */ {
     data: StudentRatingDto[];
@@ -129,14 +161,18 @@ export type StudentDto = {
   notify: object | null;
   is_deleted: boolean;
 };
+export type PersonalStudentRatingDto = {
+  number: string | null;
+  photo: string | null;
+};
 export type StudentRatingDto = {
   number: string;
-  id: string;
-  stgroup: string;
-  rating: number;
-  photo: object;
-  firstName: object;
-  lastName: object;
+  id: number;
+  stgroup: string | null;
+  rating: string | null;
+  photo: string | null;
+  firstName: string | null;
+  lastName: string | null;
 };
 export type LoginDto = {
   studentId: string;
@@ -147,6 +183,10 @@ export const {
   useLazyStudentsControllerGetMeQuery,
   useStudentsControllerGetAllQuery,
   useLazyStudentsControllerGetAllQuery,
+  useStudentsControllerGetMeRatingQuery,
+  useLazyStudentsControllerGetMeRatingQuery,
+  useStudentsControllerGetRatingstQuery,
+  useLazyStudentsControllerGetRatingstQuery,
   useStudentsControllerGetRatingQuery,
   useLazyStudentsControllerGetRatingQuery,
   useStudentsControllerLoginMutation,

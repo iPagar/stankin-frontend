@@ -1,6 +1,5 @@
 import { Panel } from "@vkontakte/vkui";
 import Top from "../panels/Top";
-import TopOld from "../panels/Top-old";
 
 const TopView = ({
   id,
@@ -11,7 +10,7 @@ const TopView = ({
 }) => {
   return (
     <Panel id={id} separator={false}>
-      <TopOld onCancelClick={onCancelClick} />
+      <Top onCancelClick={onCancelClick} />
     </Panel>
   );
 };

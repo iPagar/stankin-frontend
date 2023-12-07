@@ -120,7 +120,7 @@ const BurgerView = ({ id }) => {
           >
             Преподаватели
           </SimpleCell>
-          {false && me && (
+          {me && (
             <SimpleCell
               expandable
               before={<Icon24Education width={28} height={28} />}
