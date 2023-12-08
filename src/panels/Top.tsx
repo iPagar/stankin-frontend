@@ -213,7 +213,6 @@ export default function TopList(props: { onCancelClick: () => void }) {
                 setStudents([...students, ...data.data]);
               }}
               hasMore={hasMore}
-              loader={<Spinner size={"large"} />}
             >
               {students.map((student) => (
                 <TopCell
@@ -224,6 +223,7 @@ export default function TopList(props: { onCancelClick: () => void }) {
                 />
               ))}
             </InfiniteScroll>
+            {(isFetching || isLoading) && <Spinner size={"large"} />}
             {!(isFetching || isLoading) && !hasInitialStudents && <Empty />}
             {!(isFetching || isLoading) &&
               hasInitialStudents &&
@@ -248,6 +248,7 @@ export default function TopList(props: { onCancelClick: () => void }) {
               />
             ))}
           </List>
+          {(ratingstFetching || ratingstLoading) && <Spinner size={"large"} />}
           {!(ratingstFetching || ratingstLoading) && ratingst?.length === 0 && (
             <Empty />
           )}
