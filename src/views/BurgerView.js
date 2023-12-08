@@ -124,17 +124,16 @@ const BurgerView = ({ id }) => {
         <Panel id="main">
           <PanelHeader>Меню</PanelHeader>
           <List>
-            {me && (
-              <SimpleCell
-                expandable
-                before={<Icon28User />}
-                onClick={() => {
-                  goForward("profile");
-                }}
-              >
-                Профиль
-              </SimpleCell>
-            )}
+            <SimpleCell
+              expandable
+              before={<Icon28User />}
+              onClick={() => {
+                goForward("profile");
+              }}
+              disabled={!me}
+            >
+              Профиль
+            </SimpleCell>
             <SimpleCell
               expandable
               before={<Icon20Users3 width={28} height={28} />}
@@ -144,17 +143,17 @@ const BurgerView = ({ id }) => {
             >
               Преподаватели
             </SimpleCell>
-            {me && (
-              <SimpleCell
-                expandable
-                before={<Icon24Education width={28} height={28} />}
-                onClick={() => {
-                  goForward("top");
-                }}
-              >
-                Студенты
-              </SimpleCell>
-            )}
+
+            <SimpleCell
+              expandable
+              before={<Icon24Education width={28} height={28} />}
+              onClick={() => {
+                goForward("top");
+              }}
+              disabled={!me}
+            >
+              Студенты
+            </SimpleCell>
 
             <Banner
               before={
