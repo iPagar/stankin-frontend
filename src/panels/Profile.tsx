@@ -22,7 +22,7 @@ import {
 import { api } from "../api/api";
 import { useAppDispatch } from "../api/store";
 
-function Exit() {
+function Exit(props: { onExit: () => void }) {
   const [logout, { isLoading: isLogoutLoading }] =
     useStudentsControllerLogoutMutation();
   const dispatch = useAppDispatch();
@@ -31,6 +31,7 @@ function Exit() {
     <CellButton
       mode={"danger"}
       onClick={async () => {
+        props.onExit();
         await logout().unwrap();
         dispatch(api.util.resetApiState());
       }}
@@ -77,25 +78,14 @@ function Profile(props: {
       </PanelHeaderSimple>
 
       {isLoading && <Spinner size="large" />}
-      {!isLoading &&
-        (student ? (
-          <React.Fragment>
-            <ProfileData student={student} />
-            <List>
-              <Exit />
-            </List>
-          </React.Fragment>
-        ) : (
-          <Placeholder
-            action={
-              <Button size="l" onClick={props.onEnter}>
-                Войти
-              </Button>
-            }
-            icon={<Icon56UserCircleOutline />}
-            stretched
-          />
-        ))}
+      {student && (
+        <React.Fragment>
+          <ProfileData student={student} />
+          <List>
+            <Exit onExit={props.onBack} />
+          </List>
+        </React.Fragment>
+      )}
     </Panel>
   );
 }

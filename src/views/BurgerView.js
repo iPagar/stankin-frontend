@@ -12,6 +12,7 @@ import {
   Link,
   Div,
   ConfigProvider,
+  Spinner,
 } from "@vkontakte/vkui";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -49,7 +50,7 @@ const BurgerView = ({ id }) => {
   const [snackbar, setSnackbar] = useState(null);
   const dispatch = useDispatch();
   const [additional, setAdditional] = useState(null);
-  const { data: me } = useStudentsControllerGetMeQuery();
+  const { data: me, isLoading: meLoading } = useStudentsControllerGetMeQuery();
   const [history, setHistory] = useState(["main"]);
 
   useEffect(() => {
@@ -130,7 +131,20 @@ const BurgerView = ({ id }) => {
               onClick={() => {
                 goForward("profile");
               }}
-              disabled={!me}
+              style={
+                meLoading
+                  ? {
+                      pointerEvents: "none",
+                      opacity: 0.5,
+                    }
+                  : !me
+                  ? {
+                      pointerEvents: "none",
+                      opacity: 0.5,
+                    }
+                  : {}
+              }
+              indicator={meLoading ? <Spinner size="small" /> : null}
             >
               Профиль
             </SimpleCell>
@@ -150,7 +164,20 @@ const BurgerView = ({ id }) => {
               onClick={() => {
                 goForward("top");
               }}
-              disabled={!me}
+              indicator={meLoading ? <Spinner size="small" /> : null}
+              style={
+                meLoading
+                  ? {
+                      pointerEvents: "none",
+                      opacity: 0.5,
+                    }
+                  : !me
+                  ? {
+                      pointerEvents: "none",
+                      opacity: 0.5,
+                    }
+                  : {}
+              }
             >
               Студенты
             </SimpleCell>
