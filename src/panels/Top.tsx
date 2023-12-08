@@ -14,7 +14,7 @@ import {
   TabsItem,
   UsersStack,
 } from "@vkontakte/vkui";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useAppControllerGetSemestersQuery } from "../api/slices/app.slice";
 import {
   StudentRatingDto,
@@ -58,6 +58,11 @@ export default function TopList(props: { onCancelClick: () => void }) {
   } = useStudentsControllerGetRatingstQuery({
     semester: selectedSemester,
   });
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const saveScrollPosition = () => {
+    setScrollPosition(window.scrollY);
+  };
 
   useEffect(() => {
     setPage(1);
@@ -93,6 +98,12 @@ export default function TopList(props: { onCancelClick: () => void }) {
   const [activeBottomTab, setActiveBottomTab] = useState<"rating" | "ratingst">(
     "rating"
   );
+
+  useEffect(() => {
+    if (activeBottomTab === "rating") {
+      window.scrollTo(0, scrollPosition);
+    }
+  }, [activeBottomTab]);
 
   return (
     <>
@@ -183,6 +194,7 @@ export default function TopList(props: { onCancelClick: () => void }) {
               />
             </FixedLayout>
           )}
+
           <List
             style={{
               paddingTop: 60,
@@ -282,22 +294,19 @@ export default function TopList(props: { onCancelClick: () => void }) {
           {me && (
             <Tabs>
               <TabsItem
-                onClick={
-                  activeBottomTab === "rating"
-                    ? () => setActiveBottomTab("ratingst")
-                    : () => setActiveBottomTab("rating")
-                }
+                onClick={() => {
+                  setActiveBottomTab("rating");
+                }}
                 selected={activeBottomTab === "rating"}
               >
                 Станкин
               </TabsItem>
 
               <TabsItem
-                onClick={
-                  activeBottomTab === "ratingst"
-                    ? () => setActiveBottomTab("rating")
-                    : () => setActiveBottomTab("ratingst")
-                }
+                onClick={() => {
+                  saveScrollPosition();
+                  setActiveBottomTab("ratingst");
+                }}
                 selected={activeBottomTab === "ratingst"}
               >
                 {`${me.stgroup}`}

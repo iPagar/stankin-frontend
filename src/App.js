@@ -69,8 +69,6 @@ export function App() {
 
     const sub = bridge.subscribe((e) => {
       if (e.detail.type === "VKWebAppViewRestore") {
-        // reload window
-        window.location.reload();
       }
     });
 
