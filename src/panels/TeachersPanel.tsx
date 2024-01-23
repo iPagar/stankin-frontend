@@ -11,12 +11,12 @@ import {
   PullToRefresh,
 } from "@vkontakte/vkui";
 import useDebounce from "../services/useDebounce";
-import { setSearchTeacher } from "../redux/actions";
 import TeacherCard from "../cells/TeacherCard";
 import InfiniteScroll from "react-infinite-scroller";
 import { useAppDispatch, useAppSelector } from "../api/store";
 import { useLazyTeachersControllerGetTeachersQuery } from "../api/slices/teachers.enhanced";
 import { TeacherDto } from "../api/slices/teachers.slice";
+import { setSearchTeacher } from "../api/slices/burger.slice";
 
 const TeachersPanel = ({
   id,

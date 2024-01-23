@@ -10,11 +10,10 @@ import {
   SelectMimicry,
   FormLayout,
 } from "@vkontakte/vkui";
-import { useDispatch } from "react-redux";
 import { api } from "../services";
-import { setView } from "../redux/actions";
 import { Icon24Cancel, Icon24Done } from "@vkontakte/icons";
-import { useAppSelector } from "../api/store";
+import { useAppDispatch, useAppSelector } from "../api/store";
+import { setView } from "../api/slices/config.slice";
 
 const ScheduleSettings = ({
   onSettingsClose,
@@ -26,7 +25,7 @@ const ScheduleSettings = ({
   const platform = usePlatform();
   const stgroup = useAppSelector((state) => state.schedule.stgroup);
   const group = useAppSelector((state) => state.schedule.group);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onSuccess = async () => {
     if (stgroup && group) {

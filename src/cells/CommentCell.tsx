@@ -1,21 +1,20 @@
 import { Cell, Link, Snackbar, Card } from "@vkontakte/vkui";
-import { useDispatch } from "react-redux";
-import { setBurgerModal, setSnackbar } from "../redux/actions";
 
 import { Icon20Info } from "@vkontakte/icons";
 import {
   PrivateCommentDto,
   PublicCommentDto,
 } from "../api/slices/teachers.slice";
-import { useAppSelector } from "../api/store";
+import { useAppDispatch, useAppSelector } from "../api/store";
 import { useTeachersControllerDeleteCommentMutation } from "../api/slices/teachers.enhanced";
+import { setActiveModal, setSnackbar } from "../api/slices/burger.slice";
 
 const CommentCell = ({
   comment,
 }: {
   comment: PublicCommentDto | PrivateCommentDto;
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [deleteComment] = useTeachersControllerDeleteCommentMutation();
   const teacherId = useAppSelector((state) => state.burger.teacher);
 
@@ -49,7 +48,7 @@ const CommentCell = ({
       );
     }
 
-    dispatch(setBurgerModal(null));
+    dispatch(setActiveModal(null));
   };
 
   return (

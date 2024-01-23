@@ -4,10 +4,10 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import connect from "@vkontakte/vk-bridge";
 import { App } from "./App";
-import store from "./redux/store";
 import eruda from "eruda";
 import { Banner } from "./views/banner";
 import { ConfigProvider } from "@vkontakte/vkui";
+import store from "./api/store";
 
 // Init VK  Mini App
 connect.send("VKWebAppInit", {});

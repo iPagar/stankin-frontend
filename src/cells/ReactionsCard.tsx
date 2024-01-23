@@ -1,6 +1,4 @@
 import { ModalCard, Div, Snackbar } from "@vkontakte/vkui";
-import { setBurgerModal, setSnackbar } from "../redux/actions";
-import { useDispatch } from "react-redux";
 
 import { Icon20Info } from "@vkontakte/icons";
 
@@ -11,15 +9,16 @@ import think from "../img/reactions/think.png";
 import yaw from "../img/reactions/yaw.png";
 import angry from "../img/reactions/angry.svg";
 import dislike from "../img/reactions/dislike.svg";
-import { useAppSelector } from "../api/store";
+import { useAppDispatch, useAppSelector } from "../api/store";
 import { useTeachersControllerPutReactionMutation } from "../api/slices/teachers.enhanced";
+import { setActiveModal, setSnackbar } from "../api/slices/burger.slice";
 
 const ReactionsCard = ({ id }: { id: string }) => {
   const teacherId = useAppSelector((state) => state.burger.teacher);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onClose = () => {
-    dispatch(setBurgerModal(null));
+    dispatch(setActiveModal(null));
   };
 
   const [putReaction] = useTeachersControllerPutReactionMutation();

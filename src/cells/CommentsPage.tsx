@@ -12,8 +12,6 @@ import {
   Button,
   CardGrid,
 } from "@vkontakte/vkui";
-import { useDispatch } from "react-redux";
-import { setBurgerModal } from "../redux/actions";
 import {
   Icon24Cancel,
   Icon24Done,
@@ -21,9 +19,10 @@ import {
 } from "@vkontakte/icons";
 
 import CommentCell from "./CommentCell";
-import { useAppSelector } from "../api/store";
+import { useAppDispatch, useAppSelector } from "../api/store";
 import { useStudentsControllerGetMeQuery } from "../api/slices/students.slice";
 import { useTeachersControllerGetCommentsQuery } from "../api/slices/teachers.enhanced";
+import { setActiveModal } from "../api/slices/burger.slice";
 
 const CommentsPage = ({
   id,
@@ -38,14 +37,14 @@ const CommentsPage = ({
     teacherId,
   });
   const platform = usePlatform();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onClose = () => {
-    dispatch(setBurgerModal(null));
+    dispatch(setActiveModal(null));
   };
 
   const onWriteClick = () => {
-    dispatch(setBurgerModal("text"));
+    dispatch(setActiveModal("text"));
   };
 
   return (

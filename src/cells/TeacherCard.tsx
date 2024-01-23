@@ -11,8 +11,6 @@ import {
 } from "@vkontakte/vkui";
 import bridge from "@vkontakte/vk-bridge";
 import { findNumbers } from "libphonenumber-js";
-import { useDispatch } from "react-redux";
-import { setBurgerModal, setTeacher, setSnackbar } from "../redux/actions";
 
 import {
   Icon28CommentCircleFillGreen,
@@ -36,14 +34,20 @@ import dislike from "../img/reactions/dislike.svg";
 import { TeacherDto } from "../api/slices/teachers.slice";
 import { useStudentsControllerGetMeQuery } from "../api/slices/students.slice";
 import { useTeachersControllerDeleteReactionMutation } from "../api/slices/teachers.enhanced";
+import {
+  setTeacher,
+  setSnackbar,
+  setActiveModal,
+} from "../api/slices/burger.slice";
+import { useAppDispatch } from "../api/store";
 
 const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
   const { data: student } = useStudentsControllerGetMeQuery();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onCommentClick = () => {
     dispatch(setTeacher(teacher.id));
-    dispatch(setBurgerModal("comments"));
+    dispatch(setActiveModal("comments"));
   };
 
   const phone: string | null =
@@ -71,7 +75,7 @@ const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
   const onEmoClick = async () => {
     if (!teacher.reactions.my) {
       dispatch(setTeacher(teacher.id));
-      dispatch(setBurgerModal("reactions"));
+      dispatch(setActiveModal("reactions"));
     } else {
       try {
         await deleteReaction({

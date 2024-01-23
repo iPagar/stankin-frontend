@@ -7,21 +7,20 @@ import {
   Snackbar,
   FormStatus,
 } from "@vkontakte/vkui";
-import { setBurgerModal, setSnackbar } from "../redux/actions";
-import { useDispatch } from "react-redux";
 import { Icon20Info } from "@vkontakte/icons";
-import { useAppSelector } from "../api/store";
+import { useAppDispatch, useAppSelector } from "../api/store";
 import { useTeachersControllerPutCommentMutation } from "../api/slices/teachers.enhanced";
+import { setActiveModal, setSnackbar } from "../api/slices/burger.slice";
 
 const WriteCommentCard = ({ id }: { id: string }) => {
   const teacherId = useAppSelector((state) => state.burger.teacher);
   const [formStatus, setFormStatus] = useState<React.ReactNode>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const textRef = useRef<HTMLTextAreaElement>();
   const checkboxRef = useRef<HTMLInputElement>();
 
   const onClose = () => {
-    dispatch(setBurgerModal(null));
+    dispatch(setActiveModal(null));
   };
 
   const [putComment] = useTeachersControllerPutCommentMutation();
@@ -66,7 +65,7 @@ const WriteCommentCard = ({ id }: { id: string }) => {
         );
       }
 
-      dispatch(setBurgerModal(null));
+      dispatch(setActiveModal(null));
     } else {
       setFormStatus(
         <FormStatus mode="default">

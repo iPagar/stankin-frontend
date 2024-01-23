@@ -11,16 +11,8 @@ import {
   Snackbar,
   Link,
   Div,
-  ConfigProvider,
   Spinner,
 } from "@vkontakte/vkui";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  setBurgerPanel,
-  setBurgerModal,
-  setSearchTeacher,
-  notify,
-} from "../redux/actions";
 import bridge from "@vkontakte/vk-bridge";
 import { api } from "../services";
 import Profile from "../panels/Profile";
@@ -30,26 +22,34 @@ import WriteCommentCard from "../cells/WriteCommentCard";
 import ReactionsCard from "../cells/ReactionsCard";
 import Lottie from "lottie-react";
 import gearsAnimation from "../assets/gears.json";
-import { setStory, setView } from "../redux/actions";
+import { setStory, setView } from "../api/slices/config.slice";
 
-import Icon20Info from "@vkontakte/icons/dist/20/info";
-import Icon24UserAdd from "@vkontakte/icons/dist/24/user_add";
-import { Icon28User } from "@vkontakte/icons";
-import Icon28NotificationCircleFillGray from "@vkontakte/icons/dist/28/notification_circle_fill_gray";
+import {
+  Icon28User,
+  Icon24Education,
+  Icon24UserAdd,
+  Icon20Info,
+  Icon28NotificationCircleFillGray,
+} from "@vkontakte/icons";
 import TopView from "./TopView";
-import Icon24Education from "@vkontakte/icons/dist/24/education";
 import telegram from "../img/telegram.png";
 import { Icon20Users3 } from "@vkontakte/icons";
 import { useStudentsControllerGetMeQuery } from "../api/slices/students.slice";
+import { useAppDispatch, useAppSelector } from "../api/store";
+import { setActivePanel, setSearchTeacher } from "../api/slices/burger.slice";
+import { useMarksControllerSwitchNotifyMutation } from "../api/slices/marks.slice";
 
-const BurgerView = ({ id }) => {
-  const activePanel = useSelector((state) => state.burger.activePanel);
-  const activeModal = useSelector((state) => state.burger.activeModal);
-  const student = useSelector((state) => state.init.student);
-  const popout = useSelector((state) => state.burger.popout);
-  const [snackbar, setSnackbar] = useState(null);
-  const dispatch = useDispatch();
-  const [additional, setAdditional] = useState(null);
+const BurgerView = ({ id }: { id: string }) => {
+  const activePanel = useAppSelector((state) => state.burger.activePanel);
+  const activeModal = useAppSelector((state) => state.burger.activeModal);
+  const student = useAppSelector((state) => state.init.student);
+  const popout = useAppSelector((state) => state.burger.popout);
+  const [snackbar, setSnackbar] = useState<React.ReactNode>(null);
+  const dispatch = useAppDispatch();
+  const [additional, setAdditional] = useState<{
+    isMemberGroup: boolean;
+    isNotify: boolean;
+  } | null>(null);
   const { data: me, isLoading: meLoading } = useStudentsControllerGetMeQuery();
   const [history, setHistory] = useState(["main"]);
 
@@ -62,11 +62,11 @@ const BurgerView = ({ id }) => {
 
     if (hash.includes("teachers")) {
       burgerPanel = "teachers";
-      dispatch(setBurgerPanel(burgerPanel));
+      dispatch(setActivePanel(burgerPanel));
       setHistory(["main", "teachers"]);
 
-      if (hash.match(/\?.*/) && hash.match(/\?.*/)[0].slice(1)) {
-        teacherName = decodeURI(hash.match(/\?.*/)[0].slice(1));
+      if (hash.match(/\?.*/) && hash.match(/\?.*/)![0].slice(1)) {
+        teacherName = decodeURI(hash.match(/\?.*/)![0].slice(1));
         dispatch(setSearchTeacher(teacherName));
       }
     }
@@ -82,7 +82,7 @@ const BurgerView = ({ id }) => {
     <ModalRoot
       activeModal={activeModal}
       onClose={() => {
-        dispatch(setBurgerModal(null));
+        dispatch(setActivePanel(null));
       }}
     >
       <CommentsPage id="comments" dynamicContentHeight />
@@ -99,18 +99,20 @@ const BurgerView = ({ id }) => {
       bridge.send("VKWebAppDisableSwipeBack");
     }
     setHistory(newHistory);
-    dispatch(setBurgerPanel(newActivePanel));
+    dispatch(setActivePanel(newActivePanel));
   };
 
-  const goForward = (activePanel) => {
+  const goForward = (activePanel: string) => {
     const newHistory = [...history];
     newHistory.push(activePanel);
     if (activePanel === "main") {
       bridge.send("VKWebAppEnableSwipeBack");
     }
     setHistory(newHistory);
-    dispatch(setBurgerPanel(activePanel));
+    dispatch(setActivePanel(activePanel));
   };
+
+  const [notify] = useMarksControllerSwitchNotifyMutation();
 
   return (
     <View
@@ -263,7 +265,7 @@ const BurgerView = ({ id }) => {
                       );
 
                       if (drPr.result === true) {
-                        dispatch(notify());
+                        await notify().unwrap();
                         setSnackbar(
                           <Snackbar
                             before={<Icon20Info width={48} height={48} />}
@@ -322,6 +324,7 @@ const BurgerView = ({ id }) => {
         }}
       />
       <Profile
+        onExit={() => {}}
         id="profile"
         onBack={() => {
           goBack();

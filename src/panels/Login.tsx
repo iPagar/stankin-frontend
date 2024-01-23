@@ -18,7 +18,6 @@ import {
   Title,
 } from "@vkontakte/vkui";
 import { Spring } from "react-spring/renderprops";
-import { fetchInit, setView } from "../redux/actions";
 
 import { Icon24Error } from "@vkontakte/icons";
 
@@ -28,6 +27,7 @@ import {
   useStudentsControllerLoginMutation,
 } from "../api/slices/students.slice";
 import { useAppDispatch } from "../api/store";
+import { setView } from "../api/slices/config.slice";
 
 const orangeBackground = {
   backgroundImage: "linear-gradient(135deg, #ffb73d, #ffa000)",

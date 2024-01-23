@@ -36,7 +36,7 @@ import {
   useStudentsControllerGetStudentSemestersQuery,
 } from "../api/slices/students.slice";
 import { useAppDispatch } from "../api/store";
-import { setView } from "../redux/actions";
+import { setView } from "../api/slices/config.slice";
 
 export type MarksStore = {
   contextOpened: boolean;
@@ -67,7 +67,7 @@ const marksStore = create<{
   },
 }));
 
-function Marks() {
+function Marks({ id }: { id: string }) {
   const { data: me } = useStudentsControllerGetMeQuery();
   const dispatch = useAppDispatch();
 
@@ -197,7 +197,7 @@ function Marks() {
   }, [marks]);
 
   return (
-    <Panel id="marks" centered separator={false}>
+    <Panel id={id} centered separator={false}>
       <PanelHeaderSimple
         separator={false}
         left={

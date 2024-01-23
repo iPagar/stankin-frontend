@@ -1,22 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Epic, View, Root, Tabbar, TabbarItem, Panel } from "@vkontakte/vkui";
-import { useDispatch, useSelector } from "react-redux";
-import { usePopper } from "react-popper";
-import {
-  setStory,
-  loadSchedule,
-  setView,
-  setStgroup,
-  fetchInit,
-  setBurgerPanel,
-} from "./redux/actions";
+import { useEffect } from "react";
+import { Epic, View, Root, Tabbar, TabbarItem } from "@vkontakte/vkui";
 import { api } from "./services";
 
 import "@vkontakte/vkui/dist/vkui.css";
 import "./app.css";
-import Icon28CalendarOutline from "@vkontakte/icons/dist/28/calendar_outline";
-import Icon20EducationOutline from "@vkontakte/icons/dist/20/education_outline";
-import Icon28Menu from "@vkontakte/icons/dist/28/menu";
+import {
+  Icon28CalendarOutline,
+  Icon20EducationOutline,
+  Icon28Menu,
+} from "@vkontakte/icons";
 
 import Login from "./panels/Login";
 import Marks from "./panels/Marks";
@@ -24,24 +16,32 @@ import ScheduleView from "./views/ScheduleView";
 import StgroupsView from "./views/StgroupsView";
 import GroupsView from "./views/GroupsView";
 import BurgerView from "./views/BurgerView";
-import bridge from "@vkontakte/vk-bridge";
+import { useAppDispatch, useAppSelector } from "./api/store";
+import { setStory, setView } from "./api/slices/config.slice";
+import {
+  setGroup,
+  setGroupAndStgroup,
+  setIsFetching,
+  setStgroup,
+} from "./api/slices/schedule.slice";
+import { useStudentsControllerGetMeQuery } from "./api/slices/students.slice";
 
 export function App() {
-  const dispatch = useDispatch();
-  const activeView = useSelector((state) => state.config.activeView);
-  const activeStory = useSelector((state) => state.config.activeStory);
-  const student = useSelector((state) => state.init.student);
+  const dispatch = useAppDispatch();
+  const activeView = useAppSelector((state) => state.config.activeView);
+  const activeStory = useAppSelector((state) => state.config.activeStory);
+  const { data: me } = useStudentsControllerGetMeQuery();
 
-  const onStoryChange = (e) => {
+  const onStoryChange = (e: any) => {
     const story = e.currentTarget.dataset.story;
 
     changeStory(story);
   };
 
-  const changeStory = (story) => {
+  const changeStory = (story: string) => {
     switch (story) {
       case "marksRoot":
-        if (!student.hasOwnProperty("student")) dispatch(setView("loginView"));
+        if (!me) dispatch(setView("loginView"));
         else dispatch(setView("mainView"));
         dispatch(setStory(story));
         break;
@@ -59,33 +59,35 @@ export function App() {
         break;
     }
   };
-  const onAppLoad = () => {
-    dispatch(loadSchedule());
-    dispatch(fetchInit());
+
+  async function loadSchedule() {
+    dispatch(setIsFetching(true));
+    await api
+      .get(`/schedule/favourite`)
+      .then(
+        async ({
+          data,
+        }: {
+          data: { _id: string; id: string; group: string; stgroup: string };
+        }) => {
+          dispatch(
+            setGroupAndStgroup({
+              group: data.group,
+              stgroup: data.stgroup,
+            })
+          );
+        }
+      );
+    dispatch(setIsFetching(false));
+  }
+
+  const onAppLoad = async () => {
+    await loadSchedule();
+    // dispatch(fetchInit());
   };
 
   useEffect(() => {
     onAppLoad();
-
-    const sub = bridge.subscribe((e) => {
-      if (e.detail.type === "VKWebAppViewRestore") {
-      }
-    });
-
-    async function getTopLaunch() {
-      const data = await bridge.send("VKWebAppStorageGet", {
-        keys: ["student-top"],
-      });
-
-      if (data.keys[0].value !== "true") {
-        setPopperOpened(true);
-      }
-    }
-    getTopLaunch();
-
-    return () => {
-      sub.unsubscribe();
-    };
   }, []);
 
   useEffect(() => {
@@ -98,30 +100,7 @@ export function App() {
       story = "burgerView";
     }
     changeStory(story);
-  }, [student.hasOwnProperty("student")]);
-
-  const [referenceElement, setReferenceElement] = useState(null);
-  const popperElementRef = useRef(null);
-  const [arrowElement, setArrowElement] = useState(null);
-  const { styles, attributes } = usePopper(
-    referenceElement,
-    popperElementRef.current,
-    {
-      modifiers: [
-        {
-          name: "arrow",
-          options: { element: arrowElement },
-        },
-        {
-          name: "offset",
-          options: {
-            offset: [-50, 20],
-          },
-        },
-      ],
-      placement: "top",
-    }
-  );
+  }, [me]);
 
   return (
     <Epic
@@ -147,9 +126,7 @@ export function App() {
             selected={activeStory === "burgerView"}
             data-story="burgerView"
           >
-            <div ref={setReferenceElement}>
-              <Icon28Menu />
-            </div>
+            <Icon28Menu />
           </TabbarItem>
         </Tabbar>
       }
@@ -178,7 +155,7 @@ export function App() {
                     stgroup: stgroup,
                     group: data[0],
                   });
-                  await dispatch(loadSchedule());
+                  // await dispatch(loadSchedule());
                   dispatch(setView("scheduleView"));
                 } else {
                   await dispatch(setStgroup(stgroup));
@@ -201,7 +178,7 @@ export function App() {
               group,
             });
 
-            await dispatch(loadSchedule());
+            // await dispatch(loadSchedule());
             dispatch(setView("scheduleView"));
           }}
         />

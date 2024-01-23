@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { FixedLayout, Gallery, Div } from "@vkontakte/vkui";
 import ScheduleTableDay from "./ScheduleTableDay";
 import HorizontalCalendar from "vkui-horizontal-calendar";
-import { Banner } from "../views/banner";
 
 const Calendar = HorizontalCalendar.default
   ? HorizontalCalendar.default
   : HorizontalCalendar;
 
-const ScheduleTableWeek = ({ lessonsWeek, isTeacher, before }) => {
+const ScheduleTableWeek = ({
+  lessonsWeek,
+  isTeacher,
+  before,
+}: {
+  lessonsWeek: {
+    date: string;
+    lessons: {
+      start_date: string;
+      start_time: string;
+      end_time: string;
+      audience: string;
+      subject: string;
+      type: string;
+      teacher: string;
+    }[];
+  }[];
+  isTeacher?: boolean;
+  before?: ReactNode;
+}) => {
   const [choosed, setChoosed] = useState(1);
   const today = Date.now();
 
@@ -20,7 +38,13 @@ const ScheduleTableWeek = ({ lessonsWeek, isTeacher, before }) => {
             <Calendar
               date={today}
               choosed={choosed}
-              onClick={({ choosedDay, dayNumber }) => {
+              onClick={({
+                choosedDay,
+                dayNumber,
+              }: {
+                choosedDay: number;
+                dayNumber: number;
+              }) => {
                 setChoosed(dayNumber);
               }}
             />
@@ -40,7 +64,7 @@ const ScheduleTableWeek = ({ lessonsWeek, isTeacher, before }) => {
             {lessonsWeek.map((lessonsDay, i) => (
               <div key={i} style={{ width: 300 }}>
                 <ScheduleTableDay
-                  lessonsDay={lessonsDay}
+                  lessonsDay={lessonsDay.lessons}
                   number={i}
                   isTeacher={isTeacher}
                   withHeaders
@@ -69,7 +93,7 @@ const ScheduleTableWeek = ({ lessonsWeek, isTeacher, before }) => {
               {lessonsWeek.map((lessonsDay, i) => (
                 <ScheduleTableDay
                   key={i}
-                  lessonsDay={lessonsDay}
+                  lessonsDay={lessonsDay.lessons}
                   number={i}
                   isTeacher={isTeacher}
                 />

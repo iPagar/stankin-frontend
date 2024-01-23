@@ -23,7 +23,8 @@ import ScheduleSettings from "./ScheduleSettings";
 import bridge from "@vkontakte/vk-bridge";
 import { Document, pdfjs, Page } from "react-pdf";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { useAppSelector } from "../api/store";
+import { useAppDispatch, useAppSelector } from "../api/store";
+import { setIsFetching } from "../api/slices/schedule.slice";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ScheduleView = ({ id }: { id: string }) => {
@@ -31,19 +32,20 @@ const ScheduleView = ({ id }: { id: string }) => {
   const stgroup = useAppSelector((state) => state.schedule.stgroup);
   const group = useAppSelector((state) => state.schedule.group);
   const isFetching = useAppSelector((state) => state.schedule.isFetching);
-  const [isLoading, setIsLoading] = useState(true);
-  const [lessonsWeek, setLessonsWeek] = useState([]);
+  const [lessonsWeek, setLessonsWeek] = useState<any[]>([]);
   const [file, setFile] = useState<string | null>(null);
   const [activePanel, setActivePanel] = useState("main");
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
 
   const load = async () => {
-    setIsLoading(true);
-    let lessonsWeek: any = [];
+    let lessonsWeek: any[] = [];
 
     if (stgroup.length > 0 && group.length > 0) {
+      dispatch(setIsFetching(true));
       for (var i = 0; i < 7; i++) {
         const result = new Date(date);
+        result.setDate(result.getDate() - 60);
         result.setDate(result.getDate() + i);
         const parsedDate =
           result.getFullYear() +
@@ -52,22 +54,22 @@ const ScheduleView = ({ id }: { id: string }) => {
           "-" +
           result.getDate();
 
-        await api
-          .get(
-            `/schedule/lessons?stgroup=${stgroup}&group=${group}&day=${parsedDate}`
-          )
-          .then(({ data }) => {
-            lessonsWeek = lessonsWeek.concat([data]);
-          });
+        const response = await api.get(
+          `/schedule/lessons?stgroup=${stgroup}&group=${group}&day=${parsedDate}`
+        );
+
+        lessonsWeek.push({
+          date: parsedDate,
+          lessons: response.data,
+        });
       }
+      dispatch(setIsFetching(false));
 
       setLessonsWeek(lessonsWeek);
     }
     if (stgroup.length > 0 && group.length === 0) {
       setActiveModal("select");
     }
-
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -81,7 +83,7 @@ const ScheduleView = ({ id }: { id: string }) => {
 
   useEffect(() => {
     load();
-  }, [isFetching]);
+  }, [stgroup, group]);
 
   const onHeaderButtonClick = () => {
     setActiveModal("select");
@@ -121,7 +123,7 @@ const ScheduleView = ({ id }: { id: string }) => {
           Расписание
         </PanelHeader>
 
-        {!isLoading ? (
+        {!isFetching ? (
           !stgroup || !group ? (
             <Placeholder
               header="Группа не выбрана"

@@ -3,10 +3,8 @@ import { Header, CardGrid, Placeholder } from "@vkontakte/vkui";
 import moment from "moment";
 import "moment/locale/ru";
 import LessonCell from "../cells/LessonCell";
-import { Banner } from "../views/banner";
-import { RichCell, Caption, Card } from "@vkontakte/vkui";
 
-import Icon56GestureOutline from "@vkontakte/icons/dist/56/gesture_outline";
+import { Icon56GestureOutline } from "@vkontakte/icons";
 
 moment.locale("ru");
 
@@ -16,26 +14,68 @@ const ScheduleTableDay = ({
   isTeacher,
   number,
   style,
+}: {
+  lessonsDay: {
+    start_date: string;
+    start_time: string;
+    end_time: string;
+    audience: string;
+    subject: string;
+    type: string;
+    teacher: string;
+  }[];
+  withHeaders?: boolean;
+  isTeacher?: boolean;
+  number?: number;
+  style?: React.CSSProperties;
 }) => {
-  const [parsedLessons, setParsedLessons] = useState([]);
+  const [parsedLessons, setParsedLessons] = useState<
+    {
+      start_date: string;
+      start_time: string;
+      end_time: string;
+      audience: string;
+      subject: string;
+      type: string;
+      teacher: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     setParsedLessons(createTableData(lessonsDay));
   }, [lessonsDay]);
 
-  const createTableData = (data) => {
-    let lessonsDay = [];
+  const createTableData = (
+    data: {
+      start_date: string;
+      start_time: string;
+      end_time: string;
+      audience: string;
+      subject: string;
+      type: string;
+      teacher: string;
+    }[]
+  ) => {
+    let lessonsDay: {
+      start_date: string;
+      start_time: string;
+      end_time: string;
+      audience: string;
+      subject: string;
+      type: string;
+      teacher: string;
+    }[] = [];
     const groups = [[], [], [], [], [], [], [], []];
     data.forEach((lesson) => {
       const day = moment(lesson.start_date);
 
       lessonsDay.push({
+        ...lesson,
         start_time: day.format("H:mm"),
         end_time:
           moment.utc(lesson.start_date).hours() + 3 < 18
             ? day.add(100, "minutes").format("H:mm")
             : day.add(90, "minutes").format("H:mm"),
-        ...lesson,
       });
     });
 

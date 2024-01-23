@@ -4,6 +4,8 @@ import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { api } from "./api";
 import burger from "./slices/burger.slice";
 import schedule from "./slices/schedule.slice";
+import config from "./slices/config.slice";
+import init from "./slices/init.slice";
 
 export function makeStore() {
   return configureStore({
@@ -11,6 +13,8 @@ export function makeStore() {
       [api.reducerPath]: api.reducer,
       burger,
       schedule,
+      config,
+      init,
     },
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware().concat(api.middleware);
