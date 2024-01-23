@@ -71,6 +71,13 @@ const injectedRtkApi = api
         }),
         providesTags: ["Teachers"],
       }),
+      teachersControllerRequestUpdateTeachers: build.mutation<
+        TeachersControllerRequestUpdateTeachersApiResponse,
+        TeachersControllerRequestUpdateTeachersApiArg
+      >({
+        query: () => ({ url: `/api/teachers/update`, method: "POST" }),
+        invalidatesTags: ["Teachers"],
+      }),
     }),
     overrideExisting: false,
   });
@@ -111,6 +118,8 @@ export type TeachersControllerGetTeachersApiArg = {
   /** Items per page */
   limit?: number;
 };
+export type TeachersControllerRequestUpdateTeachersApiResponse = unknown;
+export type TeachersControllerRequestUpdateTeachersApiArg = void;
 export type PutReactionDto = {
   reaction: number;
 };
@@ -119,7 +128,7 @@ export type PublicCommentDto = {
   type: "public";
   my: boolean;
   createdAt: string;
-  vkId: number;
+  vkId: string;
 };
 export type PrivateCommentDto = {
   comment: string;

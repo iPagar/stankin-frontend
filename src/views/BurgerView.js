@@ -113,234 +113,231 @@ const BurgerView = ({ id }) => {
   };
 
   return (
-    <ConfigProvider isWebView>
-      <View
-        id={id}
-        activePanel={activePanel}
-        popout={popout}
-        modal={modal}
-        history={history}
-        onSwipeBack={goBack}
-      >
-        <Panel id="main">
-          <PanelHeader>Меню</PanelHeader>
-          <List>
-            <SimpleCell
-              expandable
-              before={<Icon28User />}
-              onClick={() => {
-                goForward("profile");
-              }}
-              style={
-                meLoading
-                  ? {
-                      pointerEvents: "none",
-                      opacity: 0.5,
-                    }
-                  : !me
-                  ? {
-                      pointerEvents: "none",
-                      opacity: 0.5,
-                    }
-                  : {}
-              }
-              indicator={meLoading ? <Spinner size="small" /> : null}
-            >
-              Профиль
-            </SimpleCell>
-            <SimpleCell
-              expandable
-              before={<Icon20Users3 width={28} height={28} />}
-              onClick={() => {
-                goForward("teachers");
-              }}
-            >
-              Преподаватели
-            </SimpleCell>
+    <View
+      id={id}
+      activePanel={activePanel}
+      popout={popout}
+      modal={modal}
+      history={history}
+      onSwipeBack={goBack}
+    >
+      <Panel id="main">
+        <PanelHeader>Меню</PanelHeader>
+        <List>
+          <SimpleCell
+            expandable
+            before={<Icon28User />}
+            onClick={() => {
+              goForward("profile");
+            }}
+            style={
+              meLoading
+                ? {
+                    pointerEvents: "none",
+                    opacity: 0.5,
+                  }
+                : !me
+                ? {
+                    pointerEvents: "none",
+                    opacity: 0.5,
+                  }
+                : {}
+            }
+            indicator={meLoading ? <Spinner size="small" /> : null}
+          >
+            Профиль
+          </SimpleCell>
+          <SimpleCell
+            expandable
+            before={<Icon20Users3 width={28} height={28} />}
+            onClick={() => {
+              goForward("teachers");
+            }}
+          >
+            Преподаватели
+          </SimpleCell>
 
-            <SimpleCell
-              expandable
-              before={<Icon24Education width={28} height={28} />}
-              onClick={() => {
-                goForward("top");
-              }}
-              indicator={meLoading ? <Spinner size="small" /> : null}
-              style={
-                meLoading
-                  ? {
-                      pointerEvents: "none",
-                      opacity: 0.5,
-                    }
-                  : !me
-                  ? {
-                      pointerEvents: "none",
-                      opacity: 0.5,
-                    }
-                  : {}
-              }
-            >
-              Студенты
-            </SimpleCell>
+          <SimpleCell
+            expandable
+            before={<Icon24Education width={28} height={28} />}
+            onClick={() => {
+              goForward("top");
+            }}
+            indicator={meLoading ? <Spinner size="small" /> : null}
+            style={
+              meLoading
+                ? {
+                    pointerEvents: "none",
+                    opacity: 0.5,
+                  }
+                : !me
+                ? {
+                    pointerEvents: "none",
+                    opacity: 0.5,
+                  }
+                : {}
+            }
+          >
+            Студенты
+          </SimpleCell>
 
+          <Banner
+            before={
+              <img
+                src={telegram}
+                style={{
+                  height: 64,
+                }}
+              />
+            }
+            text="Подписывайтесь на наш телеграм канал"
+            actions={
+              <React.Fragment>
+                <Button mode="secondary">
+                  <Link href="https://t.me/stankinmoduli" target="_blank">
+                    Перейти
+                  </Link>
+                </Button>
+              </React.Fragment>
+            }
+          />
+
+          {student.hasOwnProperty("student") && (
+            <Div>
+              <div
+                style={{
+                  padding: "12px 16px",
+                  background: "var(--content_tint_background)",
+                  boxShadow: "0 0 8px rgba(0, 0, 0, 0.15)",
+                  borderRadius: 8,
+                  border: "1px solid var(--image_border)",
+                  maxWidth: 600,
+                  position: "relative",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 500,
+                    marginBottom: 8,
+                    color: "var(--text_primary)",
+                    zIndex: 1,
+                    position: "relative",
+                  }}
+                >
+                  Участвуйте в тестировании приложения и влияйте на его развитие
+                </div>
+                <div
+                  style={{
+                    width: 64,
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    filter: "var(--gears)",
+                  }}
+                >
+                  <Lottie animationData={gearsAnimation} loop={true} />
+                </div>
+                <Link href="https://bit.ly/stankintesting" target="_blank">
+                  Перейти
+                </Link>
+              </div>
+            </Div>
+          )}
+          {student.hasOwnProperty("student") && !student.notify && (
             <Banner
               before={
-                <img
-                  src={telegram}
-                  style={{
-                    height: 64,
-                  }}
-                />
+                <Icon28NotificationCircleFillGray width={48} height={48} />
               }
-              text="Подписывайтесь на наш телеграм канал"
+              text="Хотите получать уведомления о модулях? Мы пришлем их сообщением от сообщества!"
               actions={
                 <React.Fragment>
-                  <Button mode="secondary">
-                    <Link href="https://t.me/stankinmoduli" target="_blank">
-                      Перейти
-                    </Link>
+                  <Button
+                    onClick={async () => {
+                      const drPr = await bridge.send(
+                        "VKWebAppAllowMessagesFromGroup",
+                        {
+                          group_id: 183639424,
+                          key: "dBuBKe1kFcdemzB",
+                        }
+                      );
+
+                      if (drPr.result === true) {
+                        dispatch(notify());
+                        setSnackbar(
+                          <Snackbar
+                            before={<Icon20Info width={48} height={48} />}
+                            layout="vertical"
+                            onClose={() => setSnackbar(null)}
+                          >
+                            Уведомления о модулях включены!
+                          </Snackbar>
+                        );
+                      }
+                    }}
+                  >
+                    Хочу!
                   </Button>
                 </React.Fragment>
               }
             />
+          )}
+          {additional && !additional.isMemberGroup && (
+            <Banner
+              before={<Icon24UserAdd width={48} height={48} />}
+              text="Будьте в курсе всех событий! Будьте с нами!"
+              actions={
+                <React.Fragment>
+                  <Button
+                    onClick={async () => {
+                      const result = await bridge.send("VKWebAppJoinGroup", {
+                        group_id: 183639424,
+                      });
 
-            {student.hasOwnProperty("student") && (
-              <Div>
-                <div
-                  style={{
-                    padding: "12px 16px",
-                    background: "var(--content_tint_background)",
-                    boxShadow: "0 0 8px rgba(0, 0, 0, 0.15)",
-                    borderRadius: 8,
-                    border: "1px solid var(--image_border)",
-                    maxWidth: 600,
-                    position: "relative",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 500,
-                      marginBottom: 8,
-                      color: "var(--text_primary)",
-                      zIndex: 1,
-                      position: "relative",
-                    }}
-                  >
-                    Участвуйте в тестировании приложения и влияйте на его
-                    развитие
-                  </div>
-                  <div
-                    style={{
-                      width: 64,
-                      position: "absolute",
-                      bottom: 0,
-                      right: 0,
-                      filter: "var(--gears)",
-                    }}
-                  >
-                    <Lottie animationData={gearsAnimation} loop={true} />
-                  </div>
-                  <Link href="https://bit.ly/stankintesting" target="_blank">
-                    Перейти
-                  </Link>
-                </div>
-              </Div>
-            )}
-            {student.hasOwnProperty("student") && !student.notify && (
-              <Banner
-                before={
-                  <Icon28NotificationCircleFillGray width={48} height={48} />
-                }
-                text="Хотите получать уведомления о модулях? Мы пришлем их сообщением от сообщества!"
-                actions={
-                  <React.Fragment>
-                    <Button
-                      onClick={async () => {
-                        const drPr = await bridge.send(
-                          "VKWebAppAllowMessagesFromGroup",
-                          {
-                            group_id: 183639424,
-                            key: "dBuBKe1kFcdemzB",
-                          }
+                      if (result && result.result === true)
+                        setSnackbar(
+                          <Snackbar
+                            before={<Icon24UserAdd width={20} />}
+                            layout="vertical"
+                            onClose={() => setSnackbar(null)}
+                          >
+                            Вы подписались на группу!
+                          </Snackbar>
                         );
-
-                        if (drPr.result === true) {
-                          dispatch(notify());
-                          setSnackbar(
-                            <Snackbar
-                              before={<Icon20Info width={48} height={48} />}
-                              layout="vertical"
-                              onClose={() => setSnackbar(null)}
-                            >
-                              Уведомления о модулях включены!
-                            </Snackbar>
-                          );
-                        }
-                      }}
-                    >
-                      Хочу!
-                    </Button>
-                  </React.Fragment>
-                }
-              />
-            )}
-            {additional && !additional.isMemberGroup && (
-              <Banner
-                before={<Icon24UserAdd width={48} height={48} />}
-                text="Будьте в курсе всех событий! Будьте с нами!"
-                actions={
-                  <React.Fragment>
-                    <Button
-                      onClick={async () => {
-                        const result = await bridge.send("VKWebAppJoinGroup", {
-                          group_id: 183639424,
-                        });
-
-                        if (result && result.result === true)
-                          setSnackbar(
-                            <Snackbar
-                              before={<Icon24UserAdd width={20} />}
-                              layout="vertical"
-                              onClose={() => setSnackbar(null)}
-                            >
-                              Вы подписались на группу!
-                            </Snackbar>
-                          );
-                      }}
-                    >
-                      Подписаться
-                    </Button>
-                  </React.Fragment>
-                }
-              />
-            )}
-          </List>
-          {snackbar}
-        </Panel>
-        <TeachersPanel
-          id="teachers"
-          onCancelClick={() => {
-            goBack();
-          }}
-        />
-        <Profile
-          id="profile"
-          onBack={() => {
-            goBack();
-          }}
-          onEnter={() => {
-            dispatch(setView("loginView"));
-            dispatch(setStory("marksRoot"));
-          }}
-        />
-        <TopView
-          id="top"
-          onCancelClick={() => {
-            goBack();
-          }}
-        />
-      </View>
-    </ConfigProvider>
+                    }}
+                  >
+                    Подписаться
+                  </Button>
+                </React.Fragment>
+              }
+            />
+          )}
+        </List>
+        {snackbar}
+      </Panel>
+      <TeachersPanel
+        id="teachers"
+        onCancelClick={() => {
+          goBack();
+        }}
+      />
+      <Profile
+        id="profile"
+        onBack={() => {
+          goBack();
+        }}
+        onEnter={() => {
+          dispatch(setView("loginView"));
+          dispatch(setStory("marksRoot"));
+        }}
+      />
+      <TopView
+        id="top"
+        onCancelClick={() => {
+          goBack();
+        }}
+      />
+    </View>
   );
 };
 

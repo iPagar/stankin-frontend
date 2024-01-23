@@ -154,7 +154,6 @@ export type StudentsControllerGetOneApiArg = {
 };
 export type StudentDto = {
   id: number;
-  student: number;
   surname: object | null;
   initials: object | null;
   stgroup: object | null;

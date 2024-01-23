@@ -7,6 +7,7 @@ import { App } from "./App";
 import store from "./redux/store";
 import eruda from "eruda";
 import { Banner } from "./views/banner";
+import { ConfigProvider } from "@vkontakte/vkui";
 
 // Init VK  Mini App
 connect.send("VKWebAppInit", {});
@@ -28,7 +29,9 @@ if (process.env.NODE_ENV === "development") {
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ConfigProvider>
+      <App />
+    </ConfigProvider>
     <Banner />
   </Provider>,
   document.getElementById("root")

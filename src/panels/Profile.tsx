@@ -53,7 +53,7 @@ function ProfileData(props: { student: StudentDto }) {
           </InfoRow>
         </Cell>
         <Cell>
-          <InfoRow header="Студенческий билет">{props.student.student}</InfoRow>
+          <InfoRow header="Студенческий билет">{props.student.id}</InfoRow>
         </Cell>
         <Cell>
           <InfoRow header="Группа">{props.student.stgroup}</InfoRow>
