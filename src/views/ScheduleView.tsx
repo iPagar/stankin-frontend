@@ -12,43 +12,34 @@ import {
   ScreenSpinner,
   Div,
 } from "@vkontakte/vkui";
-import { useSelector } from "react-redux";
-import Icon28Settings from "@vkontakte/icons/dist/28/settings";
-import Icon28ArticleOutline from "@vkontakte/icons/dist/28/article_outline";
+import {
+  Icon28Settings,
+  Icon28ArticleOutline,
+  Icon56Users3Outline,
+} from "@vkontakte/icons";
 import ScheduleTableWeek from "../services/ScheduleTableWeek";
 import { api } from "../services";
 import ScheduleSettings from "./ScheduleSettings";
-import Icon56Users3Outline from "@vkontakte/icons/dist/56/users_3_outline";
 import bridge from "@vkontakte/vk-bridge";
 import { Document, pdfjs, Page } from "react-pdf";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { useAppSelector } from "../api/store";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-const ScheduleView = ({ id }) => {
+const ScheduleView = ({ id }: { id: string }) => {
   const date = new Date();
-  const stgroup = useSelector((state) => state.schedule.stgroup);
-  const group = useSelector((state) => state.schedule.group);
-  const isFetching = useSelector((state) => state.schedule.isFetching);
+  const stgroup = useAppSelector((state) => state.schedule.stgroup);
+  const group = useAppSelector((state) => state.schedule.group);
+  const isFetching = useAppSelector((state) => state.schedule.isFetching);
   const [isLoading, setIsLoading] = useState(true);
   const [lessonsWeek, setLessonsWeek] = useState([]);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<string | null>(null);
   const [activePanel, setActivePanel] = useState("main");
-  const [activeModal, setActiveModal] = useState(null);
-  const [isMobile, setIsMobile] = useState(true);
-
-  useEffect(() => {
-    bridge.send("VKWebAppGetClientVersion").then((data) => {
-      if (data.platform === "android" || data.platform === "ios") {
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
-    });
-  }, []);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const load = async () => {
     setIsLoading(true);
-    let lessonsWeek = [];
+    let lessonsWeek: any = [];
 
     if (stgroup.length > 0 && group.length > 0) {
       for (var i = 0; i < 7; i++) {
@@ -57,7 +48,7 @@ const ScheduleView = ({ id }) => {
         const parsedDate =
           result.getFullYear() +
           "-" +
-          parseInt(result.getMonth() + 1) +
+          parseInt((result.getMonth() + 1).toString()) +
           "-" +
           result.getDate();
 
@@ -98,7 +89,6 @@ const ScheduleView = ({ id }) => {
 
   const modal = (
     <ScheduleSettings
-      id="scheduleSettings"
       activeModal={activeModal}
       onSettingsClose={() => {
         setActiveModal(null);
@@ -108,29 +98,6 @@ const ScheduleView = ({ id }) => {
 
   const onHeaderScheduleClick = () => {
     setActivePanel("pdf");
-  };
-
-  const checkSchedule = () => {
-    return (
-      <Div style={{ textAlign: "center" }}>
-        <span>Сверьтесь с</span>{" "}
-        <span
-          style={{
-            color: "var(--accent)",
-          }}
-          onClick={() => {
-            setActivePanel("pdf");
-          }}
-        >
-          оригиналом
-        </span>
-        .<br />
-        <Link href="https://vk.com/im?sel=-183639424" target="_blank">
-          Сообщите
-        </Link>
-        <span> об ошибке.</span>
-      </Div>
-    );
   };
 
   return (
@@ -163,6 +130,7 @@ const ScheduleView = ({ id }) => {
             />
           ) : (
             <ScheduleTableWeek
+              isTeacher={false}
               lessonsWeek={lessonsWeek}
               //check schedule
               before={null}
@@ -192,10 +160,10 @@ const ScheduleView = ({ id }) => {
               paddingBottom: "var(--tabbar_height)",
             }}
           >
-            <TransformWrapper options={{ limitToBounds: false }}>
+            <TransformWrapper>
               <TransformComponent>
                 <Document
-                  loading={<ScreenSpinner size="large" />}
+                  loading={<ScreenSpinner />}
                   options={{
                     cMapUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
                     cMapPacked: true,
@@ -203,7 +171,7 @@ const ScheduleView = ({ id }) => {
                   file={file}
                 >
                   <Page
-                    loading={<ScreenSpinner size="large" />}
+                    loading={<ScreenSpinner />}
                     pageNumber={1}
                     renderAnnotationLayer={false}
                   />

@@ -10,16 +10,22 @@ import {
   SelectMimicry,
   FormLayout,
 } from "@vkontakte/vkui";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { api } from "../services";
 import { setView } from "../redux/actions";
-import Icon24Cancel from "@vkontakte/icons/dist/24/cancel";
-import Icon24Done from "@vkontakte/icons/dist/24/done";
+import { Icon24Cancel, Icon24Done } from "@vkontakte/icons";
+import { useAppSelector } from "../api/store";
 
-const ScheduleSettings = ({ onSettingsClose, activeModal }) => {
+const ScheduleSettings = ({
+  onSettingsClose,
+  activeModal,
+}: {
+  onSettingsClose: () => void;
+  activeModal: string | null;
+}) => {
   const platform = usePlatform();
-  const stgroup = useSelector((state) => state.schedule.stgroup);
-  const group = useSelector((state) => state.schedule.group);
+  const stgroup = useAppSelector((state) => state.schedule.stgroup);
+  const group = useAppSelector((state) => state.schedule.group);
   const dispatch = useDispatch();
 
   const onSuccess = async () => {
@@ -31,12 +37,7 @@ const ScheduleSettings = ({ onSettingsClose, activeModal }) => {
   };
 
   return (
-    <ModalRoot
-      activeModal={activeModal}
-      onClose={onSuccess}
-      dynamicContentHeight
-      settlingHeight={100}
-    >
+    <ModalRoot activeModal={activeModal} onClose={onSuccess}>
       <ModalPage
         id="select"
         header={

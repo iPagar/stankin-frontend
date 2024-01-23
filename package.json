@@ -17,6 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/react-infinite-scroller": "^1.2.5",
+    "@types/react-pdf": "^5.0.0",
     "@vkontakte/vk-miniapps-deploy": "^0.1.6",
     "cross-env": "^5.2.1",
     "eslint-config-next": "^13.2.4",
