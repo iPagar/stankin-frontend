@@ -291,7 +291,11 @@ export default function TopList(props: { onCancelClick: () => void }) {
         filled
       >
         {activeBottomTab === "rating" && myRating && myRating.number && (
-          <Div>
+          <Div
+            style={{
+              zIndex: 1,
+            }}
+          >
             <UsersStack
               style={{
                 marginBottom: 10,

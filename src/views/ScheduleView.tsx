@@ -47,7 +47,6 @@ const ScheduleView = ({ id }: { id: string }) => {
       dispatch(setIsFetching(true));
       for (var i = 0; i < 7; i++) {
         const result = new Date(date);
-        result.setDate(result.getDate() - 60);
         result.setDate(result.getDate() + i);
         const parsedDate =
           result.getFullYear() +
@@ -114,7 +113,8 @@ const ScheduleView = ({ id }: { id: string }) => {
               <div
                 style={{
                   display: "flex",
-                  gap: 8,
+                  gap: 16,
+                  margin: 16,
                 }}
               >
                 <PanelHeaderButton onClick={onHeaderButtonClick}>

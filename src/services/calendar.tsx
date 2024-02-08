@@ -5,6 +5,7 @@ import {
   Headline,
   classNames,
   usePlatform,
+  useAppearance,
 } from "@vkontakte/vkui";
 import "@vkontakte/vkui/dist/vkui.css";
 
@@ -97,6 +98,8 @@ export const HorizontalCalendar = ({
   };
 
   const adays = mondayFirst ? daysMondayFirst() : days();
+  const appearence = useAppearance();
+  const light = appearence === "light";
 
   return (
     <HorizontalScroll
@@ -132,11 +135,15 @@ export const HorizontalCalendar = ({
                   ...itemStyle,
                   backgroundColor:
                     choosed - 1 === i
-                      ? "var(--vkui--color_text_primary)"
+                      ? light
+                        ? "var(--vkui--color_text_accent)"
+                        : "var(--vkui--color_text_primary)"
                       : "var(--vkui--color_background_secondary)",
                   color:
                     choosed - 1 === i
-                      ? "var(--vkui--color_separator_secondary)"
+                      ? light
+                        ? "white"
+                        : "var(--vkui--color_separator_secondary)"
                       : isDarkWeekend && (dayNumber === 0 || dayNumber === 6)
                       ? "var(--vkui--color_text_secondary)"
                       : "var(--vkui--color_text_primary)",

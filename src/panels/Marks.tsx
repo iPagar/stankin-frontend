@@ -207,7 +207,8 @@ function Marks({ id }: { id: string }) {
             style={{
               display: "flex",
               flexDirection: "row",
-              gap: 8,
+              gap: 16,
+              margin: 16,
             }}
           >
             {data.panel === "marks_history" && (
@@ -228,8 +229,8 @@ function Marks({ id }: { id: string }) {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
-                  gap: 8,
-                  marginRight: 8,
+                  gap: 16,
+                  marginRight: 16,
                 }}
               >
                 <PanelHeaderButton>

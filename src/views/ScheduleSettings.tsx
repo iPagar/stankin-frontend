@@ -41,32 +41,7 @@ const ScheduleSettings = ({
       <ModalPage
         id="select"
         header={
-          <ModalPageHeader
-            before={
-              <Fragment>
-                {platform === "android" && (
-                  <PanelHeaderButton onClick={onSuccess}>
-                    <Icon24Cancel />
-                  </PanelHeaderButton>
-                )}
-              </Fragment>
-            }
-            after={
-              <Fragment>
-                {platform === "android" && (
-                  <PanelHeaderButton onClick={onSuccess}>
-                    <Icon24Done />
-                  </PanelHeaderButton>
-                )}
-                {platform === "ios" && (
-                  <PanelHeaderButton onClick={onSuccess}>
-                    Готово
-                  </PanelHeaderButton>
-                )}
-              </Fragment>
-            }
-            onClick={onSuccess}
-          >
+          <ModalPageHeader onClick={onSuccess}>
             Выбор расписания
           </ModalPageHeader>
         }
