@@ -2,7 +2,7 @@ import React from "react";
 import {
   Panel,
   PanelHeaderBack,
-  PanelHeaderSimple,
+  PanelHeader,
   List,
   Cell,
   Header,
@@ -11,6 +11,8 @@ import {
   Placeholder,
   Button,
   Spinner,
+  Group,
+  Div,
 } from "@vkontakte/vkui";
 
 import { Icon56UserCircleOutline } from "@vkontakte/icons";
@@ -72,20 +74,31 @@ function Profile(props: {
   const { data: student, isLoading } = useStudentsControllerGetMeQuery();
 
   return (
-    <Panel id={props.id} separator={false}>
-      <PanelHeaderSimple left={<PanelHeaderBack onClick={props.onBack} />}>
+    <Panel
+      id={props.id}
+      style={{
+        background: "var(--vkui--color_background)",
+      }}
+    >
+      <PanelHeader
+        delimiter="spacing"
+        before={<PanelHeaderBack onClick={props.onBack} />}
+      >
         Профиль
-      </PanelHeaderSimple>
-
-      {isLoading && <Spinner size="large" />}
-      {student && (
-        <React.Fragment>
-          <ProfileData student={student} />
-          <List>
-            <Exit onExit={props.onBack} />
-          </List>
-        </React.Fragment>
-      )}
+      </PanelHeader>
+      <Div>
+        <Group>
+          {isLoading && <Spinner size="large" />}
+          {student && (
+            <React.Fragment>
+              <ProfileData student={student} />
+              <List>
+                <Exit onExit={props.onBack} />
+              </List>
+            </React.Fragment>
+          )}
+        </Group>
+      </Div>
     </Panel>
   );
 }

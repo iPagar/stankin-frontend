@@ -8,6 +8,9 @@ import {
   Group,
   UsersStack,
   Snackbar,
+  CardGrid,
+  RichCell,
+  Div,
 } from "@vkontakte/vkui";
 import bridge from "@vkontakte/vk-bridge";
 import { findNumbers } from "libphonenumber-js";
@@ -134,80 +137,80 @@ const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
   };
 
   return (
-    <Card size="l">
-      <Cell
-        style={{ paddingLeft: 0, paddingBottom: 5 }}
-        multiline
-        key={teacher.name}
-        size="l"
-        before={
-          <div
-            style={{
-              paddingTop: 12,
-              paddingRight: 12,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Avatar
-              size={80}
+    <Card>
+      <Div>
+        <RichCell
+          style={{ paddingLeft: 0, paddingBottom: 5 }}
+          multiline
+          key={teacher.name}
+          before={
+            <div
               style={{
+                paddingTop: 12,
+                paddingRight: 12,
                 display: "flex",
                 justifyContent: "center",
+                alignItems: "center",
                 flexDirection: "column",
-                objectFit: "cover",
               }}
-              src={avatar}
-              onClick={() => {
-                bridge.send("VKWebAppShowImages", {
-                  images: [avatar],
-                });
-              }}
-            />
-            {teacher.reactions.count > 0 && (
-              <UsersStack
-                style={{
-                  paddingBottom: 0,
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                  paddingTop: 5,
-                }}
-                visibleCount={3}
-                photos={reactionsPhotos()}
-              />
-            )}
-
-            {teacher.comments.count > 0 && (
-              <div
+            >
+              <Avatar
+                size={80}
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  flexDirection: "row",
+                  flexDirection: "column",
                   objectFit: "cover",
-                  paddingTop: 5,
                 }}
-              >
-                <Icon20CommentCircleFillGray width={24} height={24} />
-                <div
-                  className="UsersStack__photo UsersStack__photo--others"
+                src={avatar}
+                onClick={() => {
+                  bridge.send("VKWebAppShowImages", {
+                    images: [avatar],
+                  });
+                }}
+              />
+              {teacher.reactions.count > 0 && (
+                <UsersStack
                   style={{
-                    padding: 0,
-                    width: 24,
-                    height: 24,
-                    marginLeft: 5,
+                    paddingBottom: 0,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    paddingTop: 5,
+                  }}
+                  visibleCount={3}
+                  photos={reactionsPhotos()}
+                />
+              )}
+
+              {teacher.comments.count > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                    objectFit: "cover",
+                    paddingTop: 5,
                   }}
                 >
-                  {`+${teacher.comments.count}`}
+                  <Icon20CommentCircleFillGray width={24} height={24} />
+                  <div
+                    className="UsersStack__photo UsersStack__photo--others"
+                    style={{
+                      padding: 0,
+                      width: 24,
+                      height: 24,
+                      marginLeft: 5,
+                    }}
+                  >
+                    {`+${teacher.comments.count}`}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        }
-        indicator={
-          <div style={{ padding: 5 }}>
-            <Icon20ShareOutline
+              )}
+            </div>
+          }
+          after={
+            <CellButton
+              indicator={<Icon20ShareOutline />}
               onClick={() => {
                 bridge.send("VKWebAppShare", {
                   link: `https://vk.com/stankin.moduli#teachers?${encodeURI(
@@ -215,118 +218,123 @@ const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
                   )}`,
                 });
               }}
-            />
-          </div>
-        }
-        bottomContent={
-          <div>
-            <Group>
-              {(phone || formattedPhone) && (
-                <MiniInfoCell
-                  style={{ paddingLeft: 0 }}
-                  textWrap="full"
-                  before={<Icon20PhoneOutline />}
-                  after={
-                    <Icon24Copy
-                      width={20}
-                      height={20}
-                      onClick={async () => {
-                        try {
-                          await bridge.send("VKWebAppCopyText", {
-                            text: (formattedPhone || phone)!,
-                          });
-                          dispatch(
-                            setSnackbar(
-                              <Snackbar
-                                before={<Icon20PhoneOutline />}
-                                layout="vertical"
-                                onClose={() => dispatch(setSnackbar(null))}
-                              >
-                                Скопировано!
-                              </Snackbar>
-                            )
-                          );
-                        } catch (e) {
-                          dispatch(
-                            setSnackbar(
-                              <Snackbar
-                                before={<Icon20Info />}
-                                layout="vertical"
-                                onClose={() => dispatch(setSnackbar(null))}
-                              >
-                                Ошибка!
-                              </Snackbar>
-                            )
-                          );
-                        }
-                      }}
-                    />
-                  }
-                >
-                  {formattedPhone ? (
-                    <Link href={`tel:${formattedPhone}`} target="_blank">
-                      {formattedPhone}
-                    </Link>
-                  ) : (
-                    phone && (
-                      <div style={{ color: "var(--text_secondary)" }}>
-                        {phone}
-                      </div>
-                    )
+            >
+              Поделиться
+            </CellButton>
+          }
+          bottom={
+            <div>
+              {(phone || formattedPhone || email) && (
+                <Div>
+                  {(phone || formattedPhone) && (
+                    <MiniInfoCell
+                      style={{ paddingLeft: 0 }}
+                      textWrap="full"
+                      before={<Icon20PhoneOutline />}
+                      after={
+                        <Icon24Copy
+                          width={20}
+                          height={20}
+                          onClick={async () => {
+                            try {
+                              await bridge.send("VKWebAppCopyText", {
+                                text: (formattedPhone || phone)!,
+                              });
+                              dispatch(
+                                setSnackbar(
+                                  <Snackbar
+                                    before={<Icon20PhoneOutline />}
+                                    layout="vertical"
+                                    onClose={() => dispatch(setSnackbar(null))}
+                                  >
+                                    Скопировано!
+                                  </Snackbar>
+                                )
+                              );
+                            } catch (e) {
+                              dispatch(
+                                setSnackbar(
+                                  <Snackbar
+                                    before={<Icon20Info />}
+                                    layout="vertical"
+                                    onClose={() => dispatch(setSnackbar(null))}
+                                  >
+                                    Ошибка!
+                                  </Snackbar>
+                                )
+                              );
+                            }
+                          }}
+                        />
+                      }
+                    >
+                      {formattedPhone ? (
+                        <Link href={`tel:${formattedPhone}`} target="_blank">
+                          {formattedPhone}
+                        </Link>
+                      ) : (
+                        phone && (
+                          <div style={{ color: "var(--text_secondary)" }}>
+                            {phone}
+                          </div>
+                        )
+                      )}
+                    </MiniInfoCell>
                   )}
-                </MiniInfoCell>
+                  {email && (
+                    <MiniInfoCell
+                      style={{ paddingLeft: 0 }}
+                      textWrap="full"
+                      before={<Icon28MailOutline width={20} height={20} />}
+                      after={
+                        <Icon24Copy
+                          width={20}
+                          height={20}
+                          onClick={async () => {
+                            try {
+                              await bridge.send("VKWebAppCopyText", {
+                                text: email,
+                              });
+                              dispatch(
+                                setSnackbar(
+                                  <Snackbar
+                                    before={
+                                      <Icon28MailOutline
+                                        width={20}
+                                        height={20}
+                                      />
+                                    }
+                                    layout="vertical"
+                                    onClose={() => dispatch(setSnackbar(null))}
+                                  >
+                                    Скопировано!
+                                  </Snackbar>
+                                )
+                              );
+                            } catch (e) {
+                              dispatch(
+                                setSnackbar(
+                                  <Snackbar
+                                    before={<Icon20Info />}
+                                    layout="vertical"
+                                    onClose={() => dispatch(setSnackbar(null))}
+                                  >
+                                    Ошибка!
+                                  </Snackbar>
+                                )
+                              );
+                            }
+                          }}
+                        />
+                      }
+                    >
+                      <Link href={`mailto:${email}`} target="_blank">
+                        {email}
+                      </Link>
+                    </MiniInfoCell>
+                  )}
+                </Div>
               )}
-              {email && (
-                <MiniInfoCell
-                  style={{ paddingLeft: 0 }}
-                  textWrap="full"
-                  before={<Icon28MailOutline width={20} height={20} />}
-                  after={
-                    <Icon24Copy
-                      width={20}
-                      height={20}
-                      onClick={async () => {
-                        try {
-                          await bridge.send("VKWebAppCopyText", {
-                            text: email,
-                          });
-                          dispatch(
-                            setSnackbar(
-                              <Snackbar
-                                before={
-                                  <Icon28MailOutline width={20} height={20} />
-                                }
-                                layout="vertical"
-                                onClose={() => dispatch(setSnackbar(null))}
-                              >
-                                Скопировано!
-                              </Snackbar>
-                            )
-                          );
-                        } catch (e) {
-                          dispatch(
-                            setSnackbar(
-                              <Snackbar
-                                before={<Icon20Info />}
-                                layout="vertical"
-                                onClose={() => dispatch(setSnackbar(null))}
-                              >
-                                Ошибка!
-                              </Snackbar>
-                            )
-                          );
-                        }
-                      }}
-                    />
-                  }
-                >
-                  <Link href={`mailto:${email}`} target="_blank">
-                    {email}
-                  </Link>
-                </MiniInfoCell>
-              )}
-            </Group>
-            <Group>
               {student ? (
                 <CellButton
                   style={{ paddingLeft: 0 }}
@@ -359,13 +367,13 @@ const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
                   Комментарии
                 </CellButton>
               ) : null}
-            </Group>
-          </div>
-        }
-        description={teacher.position}
-      >
-        {teacher.name}
-      </Cell>
+            </div>
+          }
+          subhead={teacher.position}
+        >
+          {teacher.name}
+        </RichCell>
+      </Div>
     </Card>
   );
 };

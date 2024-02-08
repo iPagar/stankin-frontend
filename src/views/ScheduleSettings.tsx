@@ -2,13 +2,14 @@ import React, { Fragment } from "react";
 import {
   ModalRoot,
   ModalPageHeader,
-  ANDROID,
-  IOS,
   usePlatform,
   ModalPage,
   PanelHeaderButton,
   SelectMimicry,
-  FormLayout,
+  FormLayoutGroup,
+  Div,
+  Group,
+  FormItem,
 } from "@vkontakte/vkui";
 import { api } from "../services";
 import { Icon24Cancel, Icon24Done } from "@vkontakte/icons";
@@ -41,23 +42,23 @@ const ScheduleSettings = ({
         id="select"
         header={
           <ModalPageHeader
-            left={
+            before={
               <Fragment>
-                {platform === ANDROID && (
+                {platform === "android" && (
                   <PanelHeaderButton onClick={onSuccess}>
                     <Icon24Cancel />
                   </PanelHeaderButton>
                 )}
               </Fragment>
             }
-            right={
+            after={
               <Fragment>
-                {platform === ANDROID && (
+                {platform === "android" && (
                   <PanelHeaderButton onClick={onSuccess}>
                     <Icon24Done />
                   </PanelHeaderButton>
                 )}
-                {platform === IOS && (
+                {platform === "ios" && (
                   <PanelHeaderButton onClick={onSuccess}>
                     Готово
                   </PanelHeaderButton>
@@ -70,21 +71,23 @@ const ScheduleSettings = ({
           </ModalPageHeader>
         }
       >
-        {
-          <FormLayout>
-            <SelectMimicry
-              top="Выберите группу"
-              placeholder={!stgroup ? "Не выбрана" : stgroup}
-              onClick={() => dispatch(setView("stgroupsView"))}
-            />
-            <SelectMimicry
-              top="Выберите подгруппу"
-              placeholder={!group ? "Не выбрана" : group}
-              onClick={() => dispatch(setView("groupsView"))}
-              disabled={!stgroup ? true : false}
-            />
-          </FormLayout>
-        }
+        <Group>
+          <FormLayoutGroup>
+            <FormItem>
+              <SelectMimicry
+                placeholder={!stgroup ? "Не выбрана" : stgroup}
+                onClick={() => dispatch(setView("stgroupsView"))}
+              />
+            </FormItem>
+            <FormItem>
+              <SelectMimicry
+                placeholder={!group ? "Не выбрана" : group}
+                onClick={() => dispatch(setView("groupsView"))}
+                disabled={!stgroup ? true : false}
+              />
+            </FormItem>
+          </FormLayoutGroup>
+        </Group>
       </ModalPage>
     </ModalRoot>
   );

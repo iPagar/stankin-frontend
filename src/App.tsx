@@ -62,22 +62,18 @@ export function App() {
 
   async function loadSchedule() {
     dispatch(setIsFetching(true));
-    await api
-      .get(`/schedule/favourite`)
-      .then(
-        async ({
-          data,
-        }: {
-          data: { _id: string; id: string; group: string; stgroup: string };
-        }) => {
-          dispatch(
-            setGroupAndStgroup({
-              group: data.group,
-              stgroup: data.stgroup,
-            })
-          );
-        }
+    const response = (await api.get(`/schedule/favourite`)) as {
+      data: { _id: string; id: string; group: string; stgroup: string };
+    };
+    if (response.data) {
+      dispatch(
+        setGroupAndStgroup({
+          group: response.data.group,
+          stgroup: response.data.stgroup,
+        })
       );
+    }
+
     dispatch(setIsFetching(false));
   }
 
@@ -133,7 +129,7 @@ export function App() {
     >
       <Root id="marksRoot" activeView={activeView}>
         <Login id="loginView" />
-        <View id="mainView" activePanel="marks" header={false}>
+        <View id="mainView" activePanel="marks">
           <Marks id="marks" />
         </View>
       </Root>

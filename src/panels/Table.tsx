@@ -2,7 +2,6 @@ import React, { Fragment, useState } from "react";
 import { Cell, Tooltip, FixedLayout, List } from "@vkontakte/vkui";
 import { Icon16Cancel, Icon24Info } from "@vkontakte/icons";
 import { MarkEntity } from "../api/slices/marks.slice";
-import { Divider } from "@material-ui/core";
 
 function getFilteredMarks(marks: MarkEntity[]): FilteredMark[] {
   const groups = [];
@@ -70,6 +69,19 @@ function calcRating(marks: FilteredMark[]) {
 
 function isSemesterDone(marks: MarkEntity[]) {
   return marks.every((mark) => mark.value !== 0);
+}
+
+export function Divider({ style }: { style?: React.CSSProperties }) {
+  return (
+    <div
+      style={{
+        height: 1,
+        backgroundColor: "var(--header_text)",
+        opacity: 0.2,
+        ...style,
+      }}
+    />
+  );
 }
 
 export type FilteredMark = {
@@ -151,15 +163,20 @@ function Table({ data }: { data: MarkEntity[] }) {
   return (
     <div
       style={{
-        maxWidth: 500,
-        marginTop: 120,
         marginBottom: "calc(var(--tabbar_height) + 48px)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1,
       }}
     >
       <div
         style={{
-          backgroundColor: "var(--header_background)",
-          color: "var(--header_text)",
+          maxWidth: 500,
+          backgroundColor: "var(--vkui--color_background_content)",
+          borderRadius: 12,
+          padding: 8,
+          color: "var(--vkui--color_text_primary)",
           display: "grid",
           gridTemplateColumns: "18fr 1fr 1fr 1fr 1fr 1fr",
           rowGap: 4,
@@ -181,37 +198,37 @@ function Table({ data }: { data: MarkEntity[] }) {
               )}
               <Divider
                 style={{
-                  backgroundColor: "var(--header_text)",
+                  backgroundColor: "var(--vkui--color_separator_primary2x)",
                   opacity: 0.2,
                 }}
               />
               <Divider
                 style={{
-                  backgroundColor: "var(--header_text)",
+                  backgroundColor: "var(--vkui--color_separator_primary2x)",
                   opacity: 0.2,
                 }}
               />
               <Divider
                 style={{
-                  backgroundColor: "var(--header_text)",
+                  backgroundColor: "var(--vkui--color_separator_primary2x)",
                   opacity: 0.2,
                 }}
               />
               <Divider
                 style={{
-                  backgroundColor: "var(--header_text)",
+                  backgroundColor: "var(--vkui--color_separator_primary2x)",
                   opacity: 0.2,
                 }}
               />
               <Divider
                 style={{
-                  backgroundColor: "var(--header_text)",
+                  backgroundColor: "var(--vkui--color_separator_primary2x)",
                   opacity: 0.2,
                 }}
               />
               <Divider
                 style={{
-                  backgroundColor: "var(--header_text)",
+                  backgroundColor: "var(--vkui--color_separator_primary2x)",
                   opacity: 0.2,
                 }}
               />
@@ -289,34 +306,34 @@ function Table({ data }: { data: MarkEntity[] }) {
         })}
       </div>
       {calcRating(editedMarks) > 0 && (
-        <Tooltip
-          text="Модули без оценки считаются минимальными. Нажмите на оценку, чтобы изменить ее."
-          isShown={tooltip}
-          onClose={() => {
-            setTooltip(false);
-          }}
-          alignY={"top"}
-          alignX={"right"}
-        >
-          <FixedLayout vertical="bottom">
-            <List>
-              <Cell
-                style={{
-                  backgroundColor: "var(--header_background)",
-                }}
-                indicator={
-                  isEdited ? (
-                    <div
-                      onClick={() => {
-                        setEditedMarks(getFilteredMarks(marks));
-                        setIsEdited(false);
-                      }}
-                    >
-                      {"Сбросить"}
-                    </div>
-                  ) : null
-                }
-                asideContent={
+        <FixedLayout vertical="bottom">
+          <List>
+            <Cell
+              style={{
+                backgroundColor: "var(--vkui--color_background_content)",
+              }}
+              indicator={
+                isEdited ? (
+                  <div
+                    onClick={() => {
+                      setEditedMarks(getFilteredMarks(marks));
+                      setIsEdited(false);
+                    }}
+                    style={{
+                      marginRight: 8,
+                    }}
+                  >
+                    {"Сбросить"}
+                  </div>
+                ) : null
+              }
+              after={
+                <Tooltip
+                  placement="top-end"
+                  text="Модули без оценки считаются минимальными. Нажмите на оценку, чтобы изменить ее."
+                  shown={tooltip}
+                  onShownChange={(e) => setTooltip(e)}
+                >
                   <div>
                     {!rating && (
                       <div
@@ -330,14 +347,14 @@ function Table({ data }: { data: MarkEntity[] }) {
                       </div>
                     )}
                   </div>
-                }
-              >
-                {!rating && `Ожидаемый`} {`Рейтинг: `}
-                {calcRating(editedMarks)}
-              </Cell>
-            </List>
-          </FixedLayout>
-        </Tooltip>
+                </Tooltip>
+              }
+            >
+              {!rating && `Ожидаемый`} {`Рейтинг: `}
+              {calcRating(editedMarks)}
+            </Cell>
+          </List>
+        </FixedLayout>
       )}
     </div>
   );
@@ -388,14 +405,14 @@ type MarkInputProps = {
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
-const MarkInput: React.FC<MarkInputProps> = ({
+const MarkInput = ({
   markKey,
   subject,
   value,
   onChange,
   onBlur,
   onFocus,
-}) => {
+}: MarkInputProps) => {
   return (
     <input
       style={{
@@ -404,7 +421,7 @@ const MarkInput: React.FC<MarkInputProps> = ({
         width: "100%",
         outline: "none",
         padding: 0,
-        color: "var(--header_text)",
+        color: "var(--vkui--color_text_primary)",
         background: "transparent",
         fontSize: 13,
       }}

@@ -6,8 +6,9 @@ import connect from "@vkontakte/vk-bridge";
 import { App } from "./App";
 import eruda from "eruda";
 import { Banner } from "./views/banner";
-import { ConfigProvider } from "@vkontakte/vkui";
+import { AdaptivityProvider, AppRoot, ConfigProvider } from "@vkontakte/vkui";
 import store from "./api/store";
+import { createRoot } from "react-dom/client";
 
 // Init VK  Mini App
 connect.send("VKWebAppInit", {});
@@ -27,12 +28,17 @@ if (process.env.NODE_ENV === "development") {
   eruda.init();
 }
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(
   <Provider store={store}>
-    <ConfigProvider>
-      <App />
+    <ConfigProvider appearance="light" platform="android">
+      <AdaptivityProvider>
+        <AppRoot>
+          <App />
+        </AppRoot>
+      </AdaptivityProvider>
     </ConfigProvider>
     <Banner />
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
 );

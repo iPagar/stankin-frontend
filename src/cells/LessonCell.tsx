@@ -15,15 +15,15 @@ const LessonCell = ({
   isTeacher?: boolean;
 }) => {
   return (
-    <Card size="l">
+    <Card>
       <RichCell
         before={
           <div style={{ padding: 12 }}>
-            <Caption level="1" weight="semibold" caps>
+            <Caption level="1" weight="2" caps>
               {lesson.start_time}
             </Caption>
 
-            <Caption level="1" weight="semibold" caps>
+            <Caption level="1" weight="2" caps>
               {lesson.end_time}
             </Caption>
           </div>

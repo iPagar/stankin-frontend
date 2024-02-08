@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Header, CardGrid, Placeholder } from "@vkontakte/vkui";
+import { Header, CardGrid, Placeholder, Group } from "@vkontakte/vkui";
 import moment from "moment";
 import "moment/locale/ru";
 import LessonCell from "../cells/LessonCell";
@@ -94,11 +94,21 @@ const ScheduleTableDay = ({
       </Header>
 
       {(lessonsDay.length > 0 && (
-        <CardGrid>
+        <Group
+          style={{
+            margin: 0,
+            padding: "12px 0",
+            gap: 8,
+            display: "flex",
+            flexDirection: "column",
+            background: "transparent",
+          }}
+          mode="plain"
+        >
           {parsedLessons.map((lesson, i) => {
             return <LessonCell key={i} lesson={lesson} isTeacher={isTeacher} />;
           })}
-        </CardGrid>
+        </Group>
       )) || <Placeholder icon={<Icon56GestureOutline />} header="Нет пар" />}
     </div>
   );

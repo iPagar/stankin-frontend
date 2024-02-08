@@ -119,7 +119,13 @@ export function MarksHistory() {
           )}
         </div>
       ) : (
-        <div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
           {Object.keys(marks).map((date, index) => {
             return (
               <Group
@@ -139,7 +145,7 @@ export function MarksHistory() {
                         // check if date is today
                         new Date(date).toLocaleDateString("ru-RU") ===
                         new Date().toLocaleDateString("ru-RU") ? (
-                          <Text weight={"regular"}>Сегодня</Text>
+                          <Text weight="1">Сегодня</Text>
                         ) : (
                           new Date(date).toLocaleDateString("ru-RU", {
                             weekday: "long",
@@ -157,7 +163,7 @@ export function MarksHistory() {
                   {Object.keys(marks[date]).map((semester, index) => {
                     return (
                       <Div key={index + semester}>
-                        <Headline weight={"regular"}>
+                        <Headline weight="1">
                           {formatSemester(semester)}
                         </Headline>
                         <List>
@@ -165,72 +171,88 @@ export function MarksHistory() {
                             (subject, index) => {
                               return (
                                 <Cell key={index + semester + subject}>
-                                  <Subhead weight={"bold"}>
+                                  <Subhead weight="3">
                                     {marks[date][semester][index].subject}
                                   </Subhead>
-                                  {Object.entries(
-                                    marks[date][semester][index].modules
-                                  ).map(
-                                    ([
-                                      module,
-                                      { prev_value, next_value, operation },
-                                    ]) => {
-                                      const operationContent = () => {
-                                        switch (operation) {
-                                          case "UPDATE":
-                                            return (
-                                              <div
-                                                style={{
-                                                  display: "flex",
-                                                  alignItems: "center",
-                                                  gap: 8,
-                                                }}
-                                              >
-                                                <Text weight={"regular"}>
-                                                  {prev_value > 0 ? (
-                                                    <>
-                                                      {module}:{" "}
-                                                      <span
-                                                        style={{
-                                                          color: "red",
-                                                        }}
-                                                      >
-                                                        {prev_value}
-                                                      </span>{" "}
-                                                      →{" "}
-                                                      <span
-                                                        style={{
-                                                          color: "green",
-                                                        }}
-                                                      >
-                                                        {next_value}
-                                                      </span>
-                                                    </>
-                                                  ) : (
-                                                    <>
-                                                      {module}:{" "}
-                                                      <span
-                                                        style={{
-                                                          color: "green",
-                                                        }}
-                                                      >
-                                                        {next_value}
-                                                      </span>
-                                                    </>
-                                                  )}
-                                                </Text>
-                                              </div>
-                                            );
-                                          case "CREATE":
-                                            return null;
-                                          case "DELETE":
-                                            return null;
-                                        }
-                                      };
+                                  <div>
+                                    {Object.entries(
+                                      marks[date][semester][index].modules
+                                    ).map(
+                                      (
+                                        [
+                                          module,
+                                          { prev_value, next_value, operation },
+                                        ],
+                                        itemIndex
+                                      ) => {
+                                        const operationContent = () => {
+                                          switch (operation) {
+                                            case "UPDATE":
+                                              return (
+                                                <div
+                                                  style={{
+                                                    display: "inline-block",
+                                                  }}
+                                                >
+                                                  <Text weight="1">
+                                                    {prev_value > 0 ? (
+                                                      <>
+                                                        {module}:{" "}
+                                                        <span
+                                                          style={{
+                                                            color: "red",
+                                                          }}
+                                                        >
+                                                          {prev_value}
+                                                        </span>{" "}
+                                                        →{" "}
+                                                        <span
+                                                          style={{
+                                                            color: "green",
+                                                          }}
+                                                        >
+                                                          {next_value}
+                                                        </span>
+                                                      </>
+                                                    ) : (
+                                                      <>
+                                                        {module}:{" "}
+                                                        <span
+                                                          style={{
+                                                            color: "green",
+                                                          }}
+                                                        >
+                                                          {next_value}
+                                                        </span>
+                                                      </>
+                                                    )}
+                                                  </Text>
+                                                </div>
+                                              );
+                                            case "CREATE":
+                                              return null;
+                                            case "DELETE":
+                                              return null;
+                                          }
+                                        };
 
-                                      return operationContent();
-                                    }
-                                  )}
+                                        return (
+                                          <>
+                                            {operationContent()}
+                                            {/* comma if it is not the last */}
+
+                                            {itemIndex + 1 !==
+                                            Object.keys(
+                                              marks[date][semester][index]
+                                                .modules
+                                            ).length ? (
+                                              <span>, </span>
+                                            ) : null}
+                                          </>
+                                        );
+                                      }
+                                    )}
+                                  </div>
                                 </Cell>
                               );
                             }

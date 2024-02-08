@@ -7,6 +7,7 @@ import {
   PanelHeaderBack,
   Cell,
   Group,
+  Div,
 } from "@vkontakte/vkui";
 import { api } from "../services";
 import { useAppSelector } from "../api/store";
@@ -40,47 +41,49 @@ const GroupsView = ({
     <View id={id} activePanel="main">
       <Panel id="main">
         <PanelHeader
-          left={<PanelHeaderBack onClick={onBack} />}
-          separator={false}
+          delimiter="spacing"
+          before={<PanelHeaderBack onClick={onBack} />}
         >
           Выбор подгруппы
         </PanelHeader>
-        {!isLoading ? (
-          <Group>
-            {groups.length > 1 ? (
-              groups
-                .filter((group) => group !== "Без подгруппы")
-                .map((group) => (
-                  <Cell
-                    key={group}
-                    onClick={async (e) => {
-                      setIsLoading(true);
+        <Div>
+          {!isLoading ? (
+            <Group>
+              {groups.length > 1 ? (
+                groups
+                  .filter((group) => group !== "Без подгруппы")
+                  .map((group) => (
+                    <Cell
+                      key={group}
+                      onClick={async (e) => {
+                        setIsLoading(true);
 
-                      onCellClick(e);
-                    }}
-                    data-group={group}
-                    data-stgroup={stgroup}
-                  >
-                    {group}
-                  </Cell>
-                ))
-            ) : (
-              <Cell
-                onClick={async (e) => {
-                  setIsLoading(true);
+                        onCellClick(e);
+                      }}
+                      data-group={group}
+                      data-stgroup={stgroup}
+                    >
+                      {group}
+                    </Cell>
+                  ))
+              ) : (
+                <Cell
+                  onClick={async (e) => {
+                    setIsLoading(true);
 
-                  onCellClick(e);
-                }}
-                data-group={groups[0]}
-                data-stgroup={stgroup}
-              >
-                {groups[0]}
-              </Cell>
-            )}
-          </Group>
-        ) : (
-          <PanelSpinner size="large" />
-        )}
+                    onCellClick(e);
+                  }}
+                  data-group={groups[0]}
+                  data-stgroup={stgroup}
+                >
+                  {groups[0]}
+                </Cell>
+              )}
+            </Group>
+          ) : (
+            <PanelSpinner size="large" />
+          )}
+        </Div>
       </Panel>
     </View>
   );

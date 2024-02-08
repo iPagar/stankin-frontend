@@ -11,6 +11,8 @@ import {
   Link,
   ScreenSpinner,
   Div,
+  SplitLayout,
+  PanelHeaderContent,
 } from "@vkontakte/vkui";
 import {
   Icon28Settings,
@@ -103,97 +105,103 @@ const ScheduleView = ({ id }: { id: string }) => {
   };
 
   return (
-    <View id={id} activePanel={activePanel} modal={modal}>
-      <Panel id="main">
-        <PanelHeader
-          left={
-            <React.Fragment>
-              <PanelHeaderButton onClick={onHeaderButtonClick}>
-                <Icon28Settings />
-              </PanelHeaderButton>{" "}
-              {!bridge.isWebView() && (
-                <PanelHeaderButton onClick={onHeaderScheduleClick}>
-                  <Icon28ArticleOutline />
-                </PanelHeaderButton>
-              )}
-            </React.Fragment>
-          }
-          separator={false}
-        >
-          Расписание
-        </PanelHeader>
-
-        {!isFetching ? (
-          !stgroup || !group ? (
-            <Placeholder
-              header="Группа не выбрана"
-              icon={<Icon56Users3Outline />}
-              stretched
-            />
-          ) : (
-            <ScheduleTableWeek
-              isTeacher={false}
-              lessonsWeek={lessonsWeek}
-              //check schedule
-              before={null}
-            />
-          )
-        ) : (
-          <PanelSpinner size="large" />
-        )}
-      </Panel>
-      <Panel id="pdf" centered separator={false}>
-        <PanelHeader
-          separator={false}
-          left={
-            <PanelHeaderBack
-              onClick={() => {
-                setActivePanel("main");
-              }}
-            />
-          }
-        >
-          Расписание
-        </PanelHeader>
-
-        {file && (
-          <div
-            style={{
-              paddingBottom: "var(--tabbar_height)",
-            }}
+    <SplitLayout modal={modal}>
+      <View id={id} activePanel={activePanel}>
+        <Panel id="main">
+          <PanelHeader
+            delimiter="spacing"
+            before={
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                }}
+              >
+                <PanelHeaderButton onClick={onHeaderButtonClick}>
+                  <Icon28Settings />
+                </PanelHeaderButton>{" "}
+                {!bridge.isWebView() && (
+                  <PanelHeaderButton onClick={onHeaderScheduleClick}>
+                    <Icon28ArticleOutline />
+                  </PanelHeaderButton>
+                )}
+              </div>
+            }
           >
-            <TransformWrapper>
-              <TransformComponent>
-                <Document
-                  loading={<ScreenSpinner />}
-                  options={{
-                    cMapUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
-                    cMapPacked: true,
-                  }}
-                  file={file}
-                >
-                  <Page
-                    loading={<ScreenSpinner />}
-                    pageNumber={1}
-                    renderAnnotationLayer={false}
-                  />
-                </Document>{" "}
-              </TransformComponent>
-            </TransformWrapper>
-          </div>
-        )}
+            Расписание
+          </PanelHeader>
 
-        {file && (
-          <FixedLayout vertical="bottom" filled>
-            <Div style={{ textAlign: "center" }}>
-              <Link href={file} download>
-                Скачать
-              </Link>
-            </Div>
-          </FixedLayout>
-        )}
-      </Panel>
-    </View>
+          {!isFetching ? (
+            !stgroup || !group ? (
+              <Placeholder
+                header="Группа не выбрана"
+                icon={<Icon56Users3Outline />}
+                stretched
+              />
+            ) : (
+              <ScheduleTableWeek
+                isTeacher={false}
+                lessonsWeek={lessonsWeek}
+                //check schedule
+                before={null}
+              />
+            )
+          ) : (
+            <PanelSpinner size="large" />
+          )}
+        </Panel>
+        <Panel id="pdf" centered>
+          <PanelHeader
+            before={
+              <PanelHeaderBack
+                onClick={() => {
+                  setActivePanel("main");
+                }}
+              />
+            }
+          >
+            Расписание
+          </PanelHeader>
+
+          {file && (
+            <div
+              style={{
+                paddingBottom: "var(--tabbar_height)",
+              }}
+            >
+              <TransformWrapper>
+                <TransformComponent>
+                  <Document
+                    loading={<ScreenSpinner />}
+                    options={{
+                      cMapUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
+                      cMapPacked: true,
+                    }}
+                    file={file}
+                  >
+                    <Page
+                      loading={<ScreenSpinner />}
+                      pageNumber={1}
+                      renderAnnotationLayer={false}
+                    />
+                  </Document>{" "}
+                </TransformComponent>
+              </TransformWrapper>
+            </div>
+          )}
+
+          {file && (
+            <FixedLayout vertical="bottom" filled>
+              <Div style={{ textAlign: "center" }}>
+                <Link href={file} download>
+                  Скачать
+                </Link>
+              </Div>
+            </FixedLayout>
+          )}
+        </Panel>
+      </View>
+    </SplitLayout>
   );
 };
 

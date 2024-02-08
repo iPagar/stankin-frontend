@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import {
   Panel,
-  PanelHeaderSimple,
-  FormLayout,
+  PanelHeader,
+  FormLayoutGroup,
   Input,
   Button,
   Snackbar,
@@ -55,7 +55,7 @@ function Form({
         >
           {(props) => (
             <div style={props}>
-              <FormLayout
+              <FormLayoutGroup
                 onSubmit={() => {
                   onSubmit(values);
                 }}
@@ -82,8 +82,8 @@ function Form({
                   type="password"
                   placeholder="Пароль"
                 />
-                <Button size="xl">Войти</Button>
-              </FormLayout>
+                <Button size="l">Войти</Button>
+              </FormLayoutGroup>
             </div>
           )}
         </Spring>
@@ -151,53 +151,44 @@ export function Login({ id }: { id: string }) {
   }
 
   return (
-    <View
-      id={id}
-      activePanel="login"
-      header={false}
-      modal={
-        <ModalRoot
-          activeModal={modal ? "modal" : null}
+    <ModalRoot activeModal={modal ? "modal" : null}>
+      <ModalPage id="modal" onClose={() => setModal(false)}>
+        <ModalCard
+          id="modal"
+          header={<ModalPageHeader>Как войти?</ModalPageHeader>}
           onClose={() => {
             setModal(false);
           }}
         >
-          <ModalCard
-            id="modal"
-            header={<ModalPageHeader>Как войти?</ModalPageHeader>}
-            onClose={() => {
-              setModal(false);
-            }}
-          >
-            <Text weight="regular" style={{ marginBottom: 16, marginTop: 16 }}>
-              Чтобы войти в аккаунт, вам необходимо ввести свой логин и пароль.
-              Обычно, логин и пароль - это номер вашего студенческого билета.
-            </Text>
-          </ModalCard>
-        </ModalRoot>
-      }
-    >
-      <Panel id="login" separator={false} centered>
-        <PanelHeaderSimple>Модульный журнал</PanelHeaderSimple>
-        {!(isLoading || isLoadingMe) ? (
-          <Form isFetching={isLoading || isLoadingMe} onSubmit={onSubmit} />
-        ) : (
-          <Logo />
-        )}
-        {!isLoadingMe && !isLoading && (
-          <Button
-            mode="tertiary"
-            style={{ marginTop: 16 }}
-            onClick={() => {
-              setModal(true);
-            }}
-          >
-            Как войти?
-          </Button>
-        )}
-        {snackbar}
-      </Panel>
-    </View>
+          <Text weight="1" style={{ marginBottom: 16, marginTop: 16 }}>
+            Чтобы войти в аккаунт, вам необходимо ввести свой логин и пароль.
+            Обычно, логин и пароль - это номер вашего студенческого билета.
+          </Text>
+        </ModalCard>
+      </ModalPage>
+      <View id={id} activePanel="login">
+        <Panel id="login" centered>
+          <PanelHeader delimiter="spacing">Модульный журнал</PanelHeader>
+          {!(isLoading || isLoadingMe) ? (
+            <Form isFetching={isLoading || isLoadingMe} onSubmit={onSubmit} />
+          ) : (
+            <Logo />
+          )}
+          {!isLoadingMe && !isLoading && (
+            <Button
+              mode="tertiary"
+              style={{ marginTop: 16 }}
+              onClick={() => {
+                setModal(true);
+              }}
+            >
+              Как войти?
+            </Button>
+          )}
+          {snackbar}
+        </Panel>
+      </View>
+    </ModalRoot>
   );
 }
 

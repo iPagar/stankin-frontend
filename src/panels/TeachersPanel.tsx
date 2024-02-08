@@ -9,6 +9,9 @@ import {
   FixedLayout,
   Spinner,
   PullToRefresh,
+  Div,
+  Separator,
+  List,
 } from "@vkontakte/vkui";
 import useDebounce from "../services/useDebounce";
 import TeacherCard from "../cells/TeacherCard";
@@ -46,18 +49,19 @@ const TeachersPanel = ({
   return (
     <Panel id={id}>
       <PanelHeader
-        separator={false}
-        left={<PanelHeaderBack onClick={onCancelClick} />}
+        delimiter="spacing"
+        before={<PanelHeaderBack onClick={onCancelClick} />}
       >
         Преподаватели
       </PanelHeader>
-      <FixedLayout vertical="top">
+      <FixedLayout vertical="top" filled>
         <Search
           value={name}
           onChange={(e) => {
             dispatch(setSearchTeacher(e.target.value));
           }}
         />
+        <Separator wide />
       </FixedLayout>
 
       <PullToRefresh
@@ -75,55 +79,65 @@ const TeachersPanel = ({
         }}
         isFetching={isFetching}
       >
-        <Group separator="hide">
-          <CardGrid>
-            {!(isFetching || isLoading) && teachers.length === 0 && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  marginTop: 20,
-                }}
-              >
-                <div style={{ fontSize: 24, marginBottom: 10 }}>
-                  Ничего не найдено
-                </div>
-                <div style={{ fontSize: 16 }}>Попробуйте изменить запрос</div>
+        <Div>
+          {!(isFetching || isLoading) && teachers.length === 0 && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                marginTop: 20,
+              }}
+            >
+              <div style={{ fontSize: 24, marginBottom: 10 }}>
+                Ничего не найдено
               </div>
-            )}
-            {teachers && (
-              <InfiniteScroll
-                loadMore={async () => {
-                  if (isFetching || isLoading) return;
+              <div style={{ fontSize: 16 }}>Попробуйте изменить запрос</div>
+            </div>
+          )}
+          {teachers && (
+            <InfiniteScroll
+              loadMore={async () => {
+                if (isFetching || isLoading) return;
 
-                  const data = await getTeachers({
-                    page,
-                    name,
-                  }).unwrap();
+                const data = await getTeachers({
+                  page,
+                  name,
+                }).unwrap();
 
-                  if (teachers.length + data.data.length < data.total) {
-                    setPage(page + 1);
-                  } else {
-                    setHasMore(false);
-                  }
-
-                  setTeachers([...teachers, ...data.data]);
-                }}
-                hasMore={hasMore}
-                loader={
-                  <div key={0} style={{ paddingTop: 20 }}>
-                    <Spinner size={"large"} />
-                  </div>
+                if (teachers.length + data.data.length < data.total) {
+                  setPage(page + 1);
+                } else {
+                  setHasMore(false);
                 }
-              >
-                {teachers?.map((teacher) => (
-                  <TeacherCard key={teacher.name} teacher={teacher} />
-                ))}
-              </InfiniteScroll>
-            )}
-          </CardGrid>
-        </Group>
+
+                setTeachers([...teachers, ...data.data]);
+              }}
+              hasMore={hasMore}
+              loader={
+                <div
+                  key={0}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                >
+                  <Spinner size={"large"} />
+                </div>
+              }
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              {teachers?.map((teacher) => (
+                <TeacherCard key={teacher.name} teacher={teacher} />
+              ))}
+            </InfiniteScroll>
+          )}
+        </Div>
       </PullToRefresh>
       {snackbar}
     </Panel>

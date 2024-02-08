@@ -167,6 +167,7 @@ export type PersonalStudentRatingDto = {
 export type StudentRatingDto = {
   number: string;
   id: number;
+  vkUserId: string;
   stgroup: string | null;
   rating: string | null;
   photo: string | null;

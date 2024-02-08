@@ -1,4 +1,4 @@
-import { Cell, Link, Snackbar, Card } from "@vkontakte/vkui";
+import { Cell, Link, Snackbar, Card, CardGrid, Group } from "@vkontakte/vkui";
 
 import { Icon20Info } from "@vkontakte/icons";
 import {
@@ -52,9 +52,9 @@ const CommentCell = ({
   };
 
   return (
-    <Card size="l">
+    <Card>
       <Cell
-        description={
+        subtitle={
           <div>
             {comment.type === "public" ? (
               <Link
@@ -69,7 +69,6 @@ const CommentCell = ({
             {comment.my && <Link onClick={onDelClick}>Удалить</Link>}
           </div>
         }
-        size="l"
         multiline
       >
         <span style={{ whiteSpace: "pre-line" }}>{comment.comment}</span>

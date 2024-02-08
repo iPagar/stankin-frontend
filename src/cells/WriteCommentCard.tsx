@@ -1,11 +1,13 @@
 import React, { useState, useRef } from "react";
 import {
   ModalCard,
-  FormLayout,
+  FormLayoutGroup,
   Textarea,
   Checkbox,
   Snackbar,
   FormStatus,
+  FormItem,
+  Button,
 } from "@vkontakte/vkui";
 import { Icon20Info } from "@vkontakte/icons";
 import { useAppDispatch, useAppSelector } from "../api/store";
@@ -67,10 +69,10 @@ const WriteCommentCard = ({ id }: { id: string }) => {
 
       dispatch(setActiveModal(null));
     } else {
+      // no more than 700 characters and no less than 100
       setFormStatus(
         <FormStatus mode="default">
-          Напишите более 100 символов(и менее 700)! Дайте подробную и, в то же
-          время, компактную информацию!
+          Отзыв должен быть не менее 100 и не более 700 символов
         </FormStatus>
       );
     }
@@ -81,35 +83,37 @@ const WriteCommentCard = ({ id }: { id: string }) => {
       id={id}
       onClose={onClose}
       header="Отзыв преподавателю"
-      actions={[
-        {
-          title: "Написать отзыв",
-          mode: "primary",
-          action: onWriteClick,
-        },
-      ]}
+      actions={
+        <Button size="l" stretched mode="primary" onClick={onWriteClick}>
+          Написать отзыв
+        </Button>
+      }
     >
-      <FormLayout>
-        {formStatus}
-        <Textarea
-          getRef={(ref) => {
-            if (ref) {
-              textRef.current = ref;
-            }
-          }}
-          style={{ height: 200 }}
-          placeholder="Оцените отношение к студентам и стиль преподавания. Расскажите о сдаче семинаров и лаб, экзаменов и зачетов. Поделитесь о работе над курсовым проектом и другими учебными взаимодействиями."
-        />
-        <Checkbox
-          getRef={(ref) => {
-            if (ref) {
-              checkboxRef.current = ref;
-            }
-          }}
-        >
-          Анонимно
-        </Checkbox>
-      </FormLayout>
+      <FormLayoutGroup>
+        <FormItem>{formStatus}</FormItem>
+        <FormItem>
+          <Textarea
+            getRef={(ref) => {
+              if (ref) {
+                textRef.current = ref;
+              }
+            }}
+            style={{ height: 200 }}
+            placeholder="Оставьте отзыв о преподавателе"
+          />
+        </FormItem>
+        <FormItem>
+          <Checkbox
+            getRef={(ref) => {
+              if (ref) {
+                checkboxRef.current = ref;
+              }
+            }}
+          >
+            Анонимно
+          </Checkbox>
+        </FormItem>
+      </FormLayoutGroup>
     </ModalCard>
   );
 };

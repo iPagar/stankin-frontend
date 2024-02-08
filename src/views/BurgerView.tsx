@@ -12,6 +12,9 @@ import {
   Link,
   Div,
   Spinner,
+  ModalPage,
+  PopoutWrapper,
+  SplitLayout,
 } from "@vkontakte/vkui";
 import bridge from "@vkontakte/vk-bridge";
 import { api } from "../services";
@@ -36,7 +39,11 @@ import telegram from "../img/telegram.png";
 import { Icon20Users3 } from "@vkontakte/icons";
 import { useStudentsControllerGetMeQuery } from "../api/slices/students.slice";
 import { useAppDispatch, useAppSelector } from "../api/store";
-import { setActivePanel, setSearchTeacher } from "../api/slices/burger.slice";
+import {
+  setActiveModal,
+  setActivePanel,
+  setSearchTeacher,
+} from "../api/slices/burger.slice";
 import { useMarksControllerSwitchNotifyMutation } from "../api/slices/marks.slice";
 
 const BurgerView = ({ id }: { id: string }) => {
@@ -82,7 +89,7 @@ const BurgerView = ({ id }: { id: string }) => {
     <ModalRoot
       activeModal={activeModal}
       onClose={() => {
-        dispatch(setActivePanel(null));
+        dispatch(setActiveModal(null));
       }}
     >
       <CommentsPage id="comments" dynamicContentHeight />
@@ -115,232 +122,245 @@ const BurgerView = ({ id }: { id: string }) => {
   const [notify] = useMarksControllerSwitchNotifyMutation();
 
   return (
-    <View
-      id={id}
-      activePanel={activePanel}
-      popout={popout}
-      modal={modal}
-      history={history}
-      onSwipeBack={goBack}
-    >
-      <Panel id="main">
-        <PanelHeader>Меню</PanelHeader>
-        <List>
-          <SimpleCell
-            expandable
-            before={<Icon28User />}
-            onClick={() => {
-              goForward("profile");
-            }}
-            style={
-              meLoading
-                ? {
-                    pointerEvents: "none",
-                    opacity: 0.5,
-                  }
-                : !me
-                ? {
-                    pointerEvents: "none",
-                    opacity: 0.5,
-                  }
-                : {}
-            }
-            indicator={meLoading ? <Spinner size="small" /> : null}
-          >
-            Профиль
-          </SimpleCell>
-          <SimpleCell
-            expandable
-            before={<Icon20Users3 width={28} height={28} />}
-            onClick={() => {
-              goForward("teachers");
-            }}
-          >
-            Преподаватели
-          </SimpleCell>
-
-          <SimpleCell
-            expandable
-            before={<Icon24Education width={28} height={28} />}
-            onClick={() => {
-              goForward("top");
-            }}
-            indicator={meLoading ? <Spinner size="small" /> : null}
-            style={
-              meLoading
-                ? {
-                    pointerEvents: "none",
-                    opacity: 0.5,
-                  }
-                : !me
-                ? {
-                    pointerEvents: "none",
-                    opacity: 0.5,
-                  }
-                : {}
-            }
-          >
-            Студенты
-          </SimpleCell>
-
-          <Banner
-            before={
-              <img
-                src={telegram}
-                style={{
-                  height: 64,
+    <SplitLayout modal={modal}>
+      {popout && <PopoutWrapper>{popout}</PopoutWrapper>}
+      <View
+        id={id}
+        activePanel={activePanel}
+        history={history}
+        onSwipeBack={goBack}
+      >
+        <Panel id="main">
+          <PanelHeader>Меню</PanelHeader>
+          <Div>
+            <List
+              style={{
+                gap: 8,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <SimpleCell
+                expandable="always"
+                before={<Icon28User />}
+                onClick={() => {
+                  goForward("profile");
                 }}
-              />
-            }
-            text="Подписывайтесь на наш телеграм канал"
-            actions={
-              <React.Fragment>
-                <Button mode="secondary">
-                  <Link href="https://t.me/stankinmoduli" target="_blank">
-                    Перейти
-                  </Link>
-                </Button>
-              </React.Fragment>
-            }
-          />
-
-          {student.hasOwnProperty("student") && (
-            <Div>
-              <div
-                style={{
-                  padding: "12px 16px",
-                  background: "var(--content_tint_background)",
-                  boxShadow: "0 0 8px rgba(0, 0, 0, 0.15)",
-                  borderRadius: 8,
-                  border: "1px solid var(--image_border)",
-                  maxWidth: 600,
-                  position: "relative",
+                style={
+                  meLoading
+                    ? {
+                        pointerEvents: "none",
+                        opacity: 0.5,
+                      }
+                    : !me
+                    ? {
+                        pointerEvents: "none",
+                        opacity: 0.5,
+                      }
+                    : {}
+                }
+                indicator={meLoading ? <Spinner size="small" /> : null}
+              >
+                Профиль
+              </SimpleCell>
+              <SimpleCell
+                expandable="always"
+                before={<Icon20Users3 width={28} height={28} />}
+                onClick={() => {
+                  goForward("teachers");
                 }}
               >
-                <div
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 500,
-                    marginBottom: 8,
-                    color: "var(--text_primary)",
-                    zIndex: 1,
-                    position: "relative",
-                  }}
-                >
-                  Участвуйте в тестировании приложения и влияйте на его развитие
-                </div>
-                <div
-                  style={{
-                    width: 64,
-                    position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    filter: "var(--gears)",
-                  }}
-                >
-                  <Lottie animationData={gearsAnimation} loop={true} />
-                </div>
-                <Link href="https://bit.ly/stankintesting" target="_blank">
-                  Перейти
-                </Link>
-              </div>
-            </Div>
-          )}
-          {student.hasOwnProperty("student") && !student.notify && (
-            <Banner
-              before={
-                <Icon28NotificationCircleFillGray width={48} height={48} />
-              }
-              text="Хотите получать уведомления о модулях? Мы пришлем их сообщением от сообщества!"
-              actions={
-                <React.Fragment>
-                  <Button
-                    onClick={async () => {
-                      const drPr = await bridge.send(
-                        "VKWebAppAllowMessagesFromGroup",
-                        {
-                          group_id: 183639424,
-                          key: "dBuBKe1kFcdemzB",
-                        }
-                      );
+                Преподаватели
+              </SimpleCell>
 
-                      if (drPr.result === true) {
-                        await notify().unwrap();
-                        setSnackbar(
-                          <Snackbar
-                            before={<Icon20Info width={48} height={48} />}
-                            layout="vertical"
-                            onClose={() => setSnackbar(null)}
-                          >
-                            Уведомления о модулях включены!
-                          </Snackbar>
-                        );
+              <SimpleCell
+                expandable="always"
+                before={<Icon24Education width={28} height={28} />}
+                onClick={() => {
+                  goForward("top");
+                }}
+                indicator={meLoading ? <Spinner size="small" /> : null}
+                style={
+                  meLoading
+                    ? {
+                        pointerEvents: "none",
+                        opacity: 0.5,
                       }
-                    }}
-                  >
-                    Хочу!
-                  </Button>
-                </React.Fragment>
-              }
-            />
-          )}
-          {additional && !additional.isMemberGroup && (
-            <Banner
-              before={<Icon24UserAdd width={48} height={48} />}
-              text="Будьте в курсе всех событий! Будьте с нами!"
-              actions={
-                <React.Fragment>
-                  <Button
-                    onClick={async () => {
-                      const result = await bridge.send("VKWebAppJoinGroup", {
-                        group_id: 183639424,
-                      });
+                    : !me
+                    ? {
+                        pointerEvents: "none",
+                        opacity: 0.5,
+                      }
+                    : {}
+                }
+              >
+                Студенты
+              </SimpleCell>
 
-                      if (result && result.result === true)
-                        setSnackbar(
-                          <Snackbar
-                            before={<Icon24UserAdd width={20} />}
-                            layout="vertical"
-                            onClose={() => setSnackbar(null)}
-                          >
-                            Вы подписались на группу!
-                          </Snackbar>
-                        );
+              <Banner
+                before={
+                  <img
+                    src={telegram}
+                    style={{
+                      height: 64,
+                    }}
+                  />
+                }
+                header="Подписывайтесь на наш телеграм канал"
+                actions={
+                  <React.Fragment>
+                    <Button mode="secondary">
+                      <Link href="https://t.me/stankinmoduli" target="_blank">
+                        Перейти
+                      </Link>
+                    </Button>
+                  </React.Fragment>
+                }
+              />
+
+              {student.hasOwnProperty("student") && (
+                <Div>
+                  <div
+                    style={{
+                      padding: "12px 16px",
+                      background: "var(--content_tint_background)",
+                      boxShadow: "0 0 8px rgba(0, 0, 0, 0.15)",
+                      borderRadius: 8,
+                      border: "1px solid var(--image_border)",
+                      maxWidth: 600,
+                      position: "relative",
                     }}
                   >
-                    Подписаться
-                  </Button>
-                </React.Fragment>
-              }
-            />
-          )}
-        </List>
-        {snackbar}
-      </Panel>
-      <TeachersPanel
-        id="teachers"
-        onCancelClick={() => {
-          goBack();
-        }}
-      />
-      <Profile
-        onExit={() => {}}
-        id="profile"
-        onBack={() => {
-          goBack();
-        }}
-        onEnter={() => {
-          dispatch(setView("loginView"));
-          dispatch(setStory("marksRoot"));
-        }}
-      />
-      <TopView
-        id="top"
-        onCancelClick={() => {
-          goBack();
-        }}
-      />
-    </View>
+                    <div
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 500,
+                        marginBottom: 8,
+                        color: "var(--text_primary)",
+                        zIndex: 1,
+                        position: "relative",
+                      }}
+                    >
+                      Участвуйте в тестировании приложения и влияйте на его
+                      развитие
+                    </div>
+                    <div
+                      style={{
+                        width: 64,
+                        position: "absolute",
+                        bottom: 0,
+                        right: 0,
+                        filter: "var(--gears)",
+                      }}
+                    >
+                      <Lottie animationData={gearsAnimation} loop={true} />
+                    </div>
+                    <Link href="https://bit.ly/stankintesting" target="_blank">
+                      Перейти
+                    </Link>
+                  </div>
+                </Div>
+              )}
+              {student.hasOwnProperty("student") && !student.notify && (
+                <Banner
+                  before={
+                    <Icon28NotificationCircleFillGray width={48} height={48} />
+                  }
+                  header="Хотите получать уведомления о модулях? Мы пришлем их сообщением от сообщества!"
+                  actions={
+                    <React.Fragment>
+                      <Button
+                        onClick={async () => {
+                          const drPr = await bridge.send(
+                            "VKWebAppAllowMessagesFromGroup",
+                            {
+                              group_id: 183639424,
+                              key: "dBuBKe1kFcdemzB",
+                            }
+                          );
+
+                          if (drPr.result === true) {
+                            await notify().unwrap();
+                            setSnackbar(
+                              <Snackbar
+                                before={<Icon20Info width={48} height={48} />}
+                                layout="vertical"
+                                onClose={() => setSnackbar(null)}
+                              >
+                                Уведомления о модулях включены!
+                              </Snackbar>
+                            );
+                          }
+                        }}
+                      >
+                        Хочу!
+                      </Button>
+                    </React.Fragment>
+                  }
+                />
+              )}
+              {additional && !additional.isMemberGroup && (
+                <Banner
+                  before={<Icon24UserAdd width={48} height={48} />}
+                  header="Будьте в курсе всех событий! Будьте с нами!"
+                  actions={
+                    <React.Fragment>
+                      <Button
+                        onClick={async () => {
+                          const result = await bridge.send(
+                            "VKWebAppJoinGroup",
+                            {
+                              group_id: 183639424,
+                            }
+                          );
+
+                          if (result && result.result === true)
+                            setSnackbar(
+                              <Snackbar
+                                before={<Icon24UserAdd width={20} />}
+                                layout="vertical"
+                                onClose={() => setSnackbar(null)}
+                              >
+                                Вы подписались на группу!
+                              </Snackbar>
+                            );
+                        }}
+                      >
+                        Подписаться
+                      </Button>
+                    </React.Fragment>
+                  }
+                />
+              )}
+            </List>
+          </Div>
+          {snackbar}
+        </Panel>
+        <TeachersPanel
+          id="teachers"
+          onCancelClick={() => {
+            goBack();
+          }}
+        />
+        <Profile
+          onExit={() => {}}
+          id="profile"
+          onBack={() => {
+            goBack();
+          }}
+          onEnter={() => {
+            dispatch(setView("loginView"));
+            dispatch(setStory("marksRoot"));
+          }}
+        />
+        <TopView
+          id="top"
+          onCancelClick={() => {
+            goBack();
+          }}
+        />
+      </View>
+    </SplitLayout>
   );
 };
 

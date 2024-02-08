@@ -10,6 +10,8 @@ import {
   Search,
   Footer,
   FixedLayout,
+  Div,
+  Separator,
 } from "@vkontakte/vkui";
 import { api } from "../services";
 import { useAppSelector } from "../api/store";
@@ -33,7 +35,6 @@ const StgroupsView = ({
   >([]);
   const [groups] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [popout] = useState(null);
   const [activePanel, setActivePanel] = useState("stgroups");
 
   const getStgroups = async () => {
@@ -48,45 +49,44 @@ const StgroupsView = ({
     getStgroups();
   }, []);
 
-  const filterStgroups = () => {
-    return stgroups
-      .filter(
-        ({ name }) => name.toLowerCase().indexOf(search.toLowerCase()) > -1
-      )
-      .slice(0, 10);
-  };
+  const filterStgroups = stgroups
+    .filter(({ name }) => name.toLowerCase().indexOf(search.toLowerCase()) > -1)
+    .slice(0, 10);
 
   return (
-    <View id={id} activePanel={activePanel} popout={popout}>
+    <View id={id} activePanel={activePanel}>
       <Panel id="stgroups">
-        <PanelHeader
-          left={<PanelHeaderBack onClick={onBack} />}
-          separator={false}
-        >
+        <PanelHeader before={<PanelHeaderBack onClick={onBack} />}>
           Выбор группы
         </PanelHeader>
         {!isLoading ? (
           <Fragment>
-            <FixedLayout vertical="top">
+            <FixedLayout vertical="top" filled>
               <Search
                 value={search}
                 onChange={(e) => {
                   setSearch(e.currentTarget.value);
                 }}
               />
+              <Separator wide />
             </FixedLayout>
-
-            <Group style={{ marginTop: 60 }} separator="hide">
-              {filterStgroups().map((stgroup) => (
-                <Cell
-                  key={stgroup._id}
-                  onClick={onCellClick}
-                  data-stgroup={stgroup.name}
-                >
-                  {stgroup.name}
-                </Cell>
-              ))}
-            </Group>
+            <Div>
+              <Group style={{ marginTop: 60 }} separator="hide">
+                {filterStgroups.length > 0 ? (
+                  filterStgroups.map((stgroup) => (
+                    <Cell
+                      key={stgroup._id}
+                      onClick={onCellClick}
+                      data-stgroup={stgroup.name}
+                    >
+                      {stgroup.name}
+                    </Cell>
+                  ))
+                ) : (
+                  <Div>Ничего не найдено</Div>
+                )}
+              </Group>
+            </Div>
             {!search && <Footer>{stgroups.length} группы</Footer>}
           </Fragment>
         ) : (
@@ -96,17 +96,18 @@ const StgroupsView = ({
 
       <Panel id="groups">
         <PanelHeader
-          left={
+          delimiter="spacing"
+          before={
             <PanelHeaderBack
               onClick={() => {
                 setActivePanel("stgroups");
               }}
             />
           }
-          separator={false}
         >
           Выбор подгруппы
         </PanelHeader>
+
         {!isLoading ? (
           <Fragment>
             <Group separator="hide">
@@ -128,6 +129,7 @@ const StgroupsView = ({
                   </Cell>
                 ))}
             </Group>
+
             {!search && <Footer>{stgroups.length} группы</Footer>}
           </Fragment>
         ) : (

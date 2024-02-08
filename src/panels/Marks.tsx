@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import {
   Panel,
-  PanelHeaderSimple,
+  PanelHeader,
   PanelHeaderContext,
   PanelHeaderContent,
   List,
@@ -105,15 +105,17 @@ function Marks({ id }: { id: string }) {
     useEffect(() => {
       // if context is opened, scroll to the selected semester
       if (data.contextOpened && data.selectedSemester) {
-        const element = document.querySelector(
-          `[data-tag="${data.selectedSemester}"]`
-        );
+        setTimeout(() => {
+          const element = document.querySelector(
+            `[data-tag="${data.selectedSemester}"]`
+          );
 
-        if (element) {
-          element.scrollIntoView({
-            block: "center",
-          });
-        }
+          if (element) {
+            element.scrollIntoView({
+              block: "center",
+            });
+          }
+        }, 0);
       }
     }, [data]);
 
@@ -145,7 +147,7 @@ function Marks({ id }: { id: string }) {
               <Cell
                 key={i}
                 data-tag={semester}
-                asideContent={
+                after={
                   data.selectedSemester &&
                   data.selectedSemester === semester ? (
                     <Icon24Done fill="var(--accent)" />
@@ -197,57 +199,77 @@ function Marks({ id }: { id: string }) {
   }, [marks]);
 
   return (
-    <Panel id={id} centered separator={false}>
-      <PanelHeaderSimple
-        separator={false}
-        left={
-          <PanelHeaderButton>
-            {data.panel === "marks" && (
-              <>
-                <div
-                  onClick={async () => {
-                    if (!isNotify) {
-                      const drPr = await bridge.send(
-                        "VKWebAppAllowMessagesFromGroup",
-                        {
-                          group_id: 183639424,
-                          key: "dBuBKe1kFcdemzB",
-                        }
-                      );
-
-                      if (drPr.result === true) {
-                        await notify().unwrap();
-                      }
-                    } else {
-                      await notify().unwrap();
-                    }
-                  }}
-                >
-                  {isNotify ? (
-                    <Icon24NotificationDisable />
-                  ) : (
-                    <Icon24Notification />
-                  )}
-                </div>
-                <Icon24HistoryBackwardOutline
+    <Panel id={id}>
+      <PanelHeader
+        delimiter="spacing"
+        before={
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 8,
+            }}
+          >
+            {data.panel === "marks_history" && (
+              <PanelHeaderButton>
+                <Icon28ChevronBack
                   onClick={() => {
                     setData({
-                      panel: "marks_history",
+                      panel: "marks",
                     });
                   }}
                 />
-              </>
+              </PanelHeaderButton>
             )}
-            {data.panel === "marks_history" && (
-              <Icon28ChevronBack
-                onClick={() => {
-                  setData({
-                    panel: "marks",
-                  });
+
+            {data.panel === "marks" && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 8,
+                  marginRight: 8,
                 }}
-              />
+              >
+                <PanelHeaderButton>
+                  <div
+                    onClick={async () => {
+                      if (!isNotify) {
+                        const drPr = await bridge.send(
+                          "VKWebAppAllowMessagesFromGroup",
+                          {
+                            group_id: 183639424,
+                          }
+                        );
+
+                        if (drPr.result === true) {
+                          await notify().unwrap();
+                        }
+                      } else {
+                        await notify().unwrap();
+                      }
+                    }}
+                  >
+                    {isNotify ? (
+                      <Icon24NotificationDisable />
+                    ) : (
+                      <Icon24Notification />
+                    )}
+                  </div>
+                </PanelHeaderButton>
+                <PanelHeaderButton>
+                  <Icon24HistoryBackwardOutline
+                    onClick={() => {
+                      setData({
+                        panel: "marks_history",
+                      });
+                    }}
+                  />
+                </PanelHeaderButton>
+              </div>
             )}
-          </PanelHeaderButton>
+          </div>
         }
       >
         {data.panel === "marks" &&
@@ -278,10 +300,16 @@ function Marks({ id }: { id: string }) {
             История
           </PanelHeaderContent>
         )}
-      </PanelHeaderSimple>
+      </PanelHeader>
 
       {renderPanelHeaderContext()}
-      {data.panel === "marks" && marks ? marksTable : <Spinner size="large" />}
+      {data.panel === "marks" ? (
+        marks ? (
+          marksTable
+        ) : (
+          <Spinner size="large" />
+        )
+      ) : null}
       {data.panel === "marks_history" && <MarksHistory />}
     </Panel>
   );

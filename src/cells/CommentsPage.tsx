@@ -2,8 +2,6 @@ import React, { Fragment } from "react";
 import {
   ModalPage,
   ModalPageHeader,
-  ANDROID,
-  IOS,
   Div,
   usePlatform,
   PanelHeaderButton,
@@ -11,6 +9,8 @@ import {
   Placeholder,
   Button,
   CardGrid,
+  Group,
+  Cell,
 } from "@vkontakte/vkui";
 import {
   Icon24Cancel,
@@ -36,7 +36,6 @@ const CommentsPage = ({
   const { data: comments, isLoading } = useTeachersControllerGetCommentsQuery({
     teacherId,
   });
-  const platform = usePlatform();
   const dispatch = useAppDispatch();
 
   const onClose = () => {
@@ -46,45 +45,20 @@ const CommentsPage = ({
   const onWriteClick = () => {
     dispatch(setActiveModal("text"));
   };
+  const platform = usePlatform();
 
   return (
     <ModalPage
       dynamicContentHeight={dynamicContentHeight}
       id={id}
       onClose={onClose}
-      header={
-        <ModalPageHeader
-          left={
-            <Fragment>
-              {platform === ANDROID && (
-                <PanelHeaderButton onClick={onClose}>
-                  <Icon24Cancel />
-                </PanelHeaderButton>
-              )}
-            </Fragment>
-          }
-          right={
-            <Fragment>
-              {platform === ANDROID && (
-                <PanelHeaderButton onClick={onClose}>
-                  <Icon24Done />
-                </PanelHeaderButton>
-              )}
-              {platform === IOS && (
-                <PanelHeaderButton onClick={onClose}>Готово</PanelHeaderButton>
-              )}
-            </Fragment>
-          }
-        >
-          Комментарии
-        </ModalPageHeader>
-      }
+      header={<ModalPageHeader>Комментарии</ModalPageHeader>}
     >
       <Div style={{ minHeight: 300 }}>
         {!isLoading ? (
           (comments && comments.length > 0 && (
             <React.Fragment>
-              <CardGrid>
+              <CardGrid size="l">
                 {comments.map((comment, i) => {
                   return <CommentCell key={i} comment={comment} />;
                 })}
@@ -104,7 +78,7 @@ const CommentsPage = ({
               icon={<Icon56ArticleOutline />}
               action={
                 student && (
-                  <Button size="l" onClick={onWriteClick}>
+                  <Button size="l" stretched onClick={onWriteClick}>
                     Написать отзыв
                   </Button>
                 )

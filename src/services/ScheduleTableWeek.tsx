@@ -1,11 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import { FixedLayout, Gallery, Div } from "@vkontakte/vkui";
 import ScheduleTableDay from "./ScheduleTableDay";
-import HorizontalCalendar from "vkui-horizontal-calendar";
-
-const Calendar = HorizontalCalendar.default
-  ? HorizontalCalendar.default
-  : HorizontalCalendar;
+import { HorizontalCalendar } from "./calendar";
 
 const ScheduleTableWeek = ({
   lessonsWeek,
@@ -28,14 +24,14 @@ const ScheduleTableWeek = ({
   before?: ReactNode;
 }) => {
   const [choosed, setChoosed] = useState(1);
-  const today = Date.now();
+  const today = new Date();
 
   return (
     <React.Fragment>
       {window.innerWidth >= 768 || (
         <FixedLayout vertical="top" filled>
           <div style={{ margin: 0 }}>
-            <Calendar
+            <HorizontalCalendar
               date={today}
               choosed={choosed}
               onClick={({

@@ -9,7 +9,7 @@ const TopView = ({
   onCancelClick: () => void;
 }) => {
   return (
-    <Panel id={id} separator={false}>
+    <Panel id={id}>
       <Top onCancelClick={onCancelClick} />
     </Panel>
   );

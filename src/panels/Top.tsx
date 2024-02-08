@@ -6,13 +6,16 @@ import {
   PanelHeaderBack,
   PanelHeaderContent,
   PanelHeaderContext,
-  PanelHeaderSimple,
+  PanelHeader,
   Placeholder,
   Search,
   Spinner,
   Tabs,
   TabsItem,
   UsersStack,
+  Group,
+  Separator,
+  Div,
 } from "@vkontakte/vkui";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useAppControllerGetSemestersQuery } from "../api/slices/app.slice";
@@ -83,15 +86,17 @@ export default function TopList(props: { onCancelClick: () => void }) {
   useEffect(() => {
     // if context is opened, scroll to the selected semester
     if (contextOpened && selectedSemester) {
-      const element = document.querySelector(
-        `[data-tag="${selectedSemester}"]`
-      );
+      setTimeout(() => {
+        const element = document.querySelector(
+          `[data-tag="${selectedSemester}"]`
+        );
 
-      if (element) {
-        element.scrollIntoView({
-          block: "center",
-        });
-      }
+        if (element) {
+          element.scrollIntoView({
+            block: "center",
+          });
+        }
+      }, 0);
     }
   }, [contextOpened, selectedSemester]);
 
@@ -107,10 +112,7 @@ export default function TopList(props: { onCancelClick: () => void }) {
 
   return (
     <>
-      <PanelHeaderSimple
-        separator={false}
-        left={<PanelHeaderBack onClick={props.onCancelClick} />}
-      >
+      <PanelHeader before={<PanelHeaderBack onClick={props.onCancelClick} />}>
         <PanelHeaderContent
           aside={
             <Icon16Dropdown
@@ -132,7 +134,8 @@ export default function TopList(props: { onCancelClick: () => void }) {
           {semestersLoading && <Spinner size="small" />}
           {!semestersLoading && semesterFormat(selectedSemester)}
         </PanelHeaderContent>
-      </PanelHeaderSimple>
+      </PanelHeader>
+
       <PanelHeaderContext
         opened={contextOpened}
         onClose={() => {
@@ -162,7 +165,7 @@ export default function TopList(props: { onCancelClick: () => void }) {
               <Cell
                 key={i}
                 data-tag={semester}
-                asideContent={
+                after={
                   selectedSemester && selectedSemester === semester ? (
                     <Icon24Done fill="var(--accent)" />
                   ) : null
@@ -185,22 +188,18 @@ export default function TopList(props: { onCancelClick: () => void }) {
       {activeBottomTab === "rating" && (
         <>
           {hasInitialStudents && (
-            <FixedLayout vertical="top">
+            <FixedLayout vertical="top" filled>
               <Search
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
               />
+              <Separator wide />
             </FixedLayout>
           )}
 
-          <List
-            style={{
-              paddingTop: 60,
-              paddingBottom: 60,
-            }}
-          >
+          <Div>
             <InfiniteScroll
               loadMore={async () => {
                 if (isFetching || isLoading) return;
@@ -226,28 +225,42 @@ export default function TopList(props: { onCancelClick: () => void }) {
               }}
               hasMore={hasMore}
             >
-              {students.map((student) => (
-                <TopCell
-                  key={student.id}
-                  student={{
-                    ...student,
-                  }}
-                />
-              ))}
+              <List
+                style={{
+                  paddingTop: 60,
+                  paddingBottom: 60,
+                  gap: 8,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {students.map((student) => (
+                  <TopCell
+                    key={student.id}
+                    student={{
+                      ...student,
+                    }}
+                  />
+                ))}
+              </List>
             </InfiniteScroll>
             {(isFetching || isLoading) && <Spinner size={"large"} />}
             {!(isFetching || isLoading) && !hasInitialStudents && <Empty />}
             {!(isFetching || isLoading) &&
               hasInitialStudents &&
               students.length === 0 && <Placeholder>не найдено</Placeholder>}
-          </List>
+          </Div>
         </>
       )}
       {activeBottomTab === "ratingst" && (
         <>
           <List
             style={{
+              paddingTop: 60,
               paddingBottom: 60,
+              gap: 8,
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             {ratingst?.map((student) => (
@@ -269,52 +282,52 @@ export default function TopList(props: { onCancelClick: () => void }) {
           ) : null}
         </>
       )}
-      {hasInitialStudents && (
-        <FixedLayout
-          vertical="bottom"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            position: "relative",
-          }}
-        >
-          {activeBottomTab === "rating" && myRating && myRating.number && (
+      <FixedLayout
+        vertical="bottom"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+        filled
+      >
+        {activeBottomTab === "rating" && myRating && myRating.number && (
+          <Div>
             <UsersStack
               style={{
-                position: "fixed",
-                bottom: "calc(var(--tabbar_height) * 2)",
-                background: "var(--background_content)",
-                width: "100%",
+                marginBottom: 10,
               }}
               photos={[myRating.photo ? myRating.photo : ""]}
             >
               {`Вы на ${myRating.number} месте`}
             </UsersStack>
-          )}
-          {me && (
-            <Tabs>
-              <TabsItem
-                onClick={() => {
-                  setActiveBottomTab("rating");
-                }}
-                selected={activeBottomTab === "rating"}
-              >
-                Станкин
-              </TabsItem>
+            <Separator wide />
+          </Div>
+        )}
+        {me && me.stgroup && (
+          <Tabs>
+            <TabsItem
+              onClick={() => {
+                setActiveBottomTab("rating");
+              }}
+              selected={activeBottomTab === "rating"}
+              aria-label="Станкин"
+            >
+              Станкин
+            </TabsItem>
 
-              <TabsItem
-                onClick={() => {
-                  saveScrollPosition();
-                  setActiveBottomTab("ratingst");
-                }}
-                selected={activeBottomTab === "ratingst"}
-              >
-                {`${me.stgroup}`}
-              </TabsItem>
-            </Tabs>
-          )}
-        </FixedLayout>
-      )}
+            <TabsItem
+              onClick={() => {
+                saveScrollPosition();
+                setActiveBottomTab("ratingst");
+              }}
+              selected={activeBottomTab === "ratingst"}
+              aria-label={me.stgroup as unknown as string}
+            >
+              {`${me.stgroup}`}
+            </TabsItem>
+          </Tabs>
+        )}
+      </FixedLayout>
     </>
   );
 }

@@ -52,3 +52,11 @@ body[scheme="space_gray"] {
   --gears: invert(99%) sepia(1%) saturate(102%) hue-rotate(156deg)
     brightness(111%) contrast(80%);
 }
+
+.day {
+  margin: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
