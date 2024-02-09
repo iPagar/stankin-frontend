@@ -11,6 +11,8 @@ import {
   CardGrid,
   RichCell,
   Div,
+  useAdaptivityConditionalRender,
+  useAdaptivityWithJSMediaQueries,
 } from "@vkontakte/vkui";
 import bridge from "@vkontakte/vk-bridge";
 import { findNumbers } from "libphonenumber-js";
@@ -43,6 +45,7 @@ import {
   setActiveModal,
 } from "../api/slices/burger.slice";
 import { useAppDispatch } from "../api/store";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
   const { data: student } = useStudentsControllerGetMeQuery();
@@ -52,6 +55,7 @@ const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
     dispatch(setTeacher(teacher.id));
     dispatch(setActiveModal("comments"));
   };
+  const { viewWidth } = useAdaptivityWithJSMediaQueries();
 
   const phone: string | null =
     ("phone" in teacher.details &&
@@ -209,18 +213,20 @@ const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
             </div>
           }
           after={
-            <CellButton
-              indicator={<Icon20ShareOutline />}
-              onClick={() => {
-                bridge.send("VKWebAppShare", {
-                  link: `https://vk.com/stankin.moduli#teachers?${encodeURI(
-                    teacher.name
-                  )}`,
-                });
-              }}
-            >
-              Поделиться
-            </CellButton>
+            viewWidth === 3 ? (
+              <CellButton
+                indicator={<Icon20ShareOutline />}
+                onClick={() => {
+                  bridge.send("VKWebAppShare", {
+                    link: `https://vk.com/stankin.moduli#teachers?${encodeURI(
+                      teacher.name
+                    )}`,
+                  });
+                }}
+              >
+                Поделиться
+              </CellButton>
+            ) : null
           }
           bottom={
             <div>
@@ -366,6 +372,30 @@ const TeacherCard = ({ teacher }: { teacher: TeacherDto }) => {
                 >
                   Комментарии
                 </CellButton>
+              ) : null}
+              {viewWidth !== 3 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <CellButton
+                    indicator={<Icon20ShareOutline />}
+                    onClick={() => {
+                      bridge.send("VKWebAppShare", {
+                        link: `https://vk.com/stankin.moduli#teachers?${encodeURI(
+                          teacher.name
+                        )}`,
+                      });
+                    }}
+                    style={{
+                      width: 170,
+                    }}
+                  >
+                    Поделиться
+                  </CellButton>
+                </div>
               ) : null}
             </div>
           }
