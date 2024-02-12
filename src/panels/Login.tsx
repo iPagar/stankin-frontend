@@ -159,22 +159,21 @@ export function Login({ id }: { id: string }) {
       </Snackbar>
     );
   }
+  console.log(modal);
   const modalCode = (
     <ModalRoot activeModal={modal ? "modal" : null}>
-      <ModalPage id="modal" onClose={() => setModal(false)}>
-        <ModalCard
-          id="modal"
-          header={<ModalPageHeader>Как войти?</ModalPageHeader>}
-          onClose={() => {
-            setModal(false);
-          }}
-        >
-          <Text weight="1" style={{ marginBottom: 16, marginTop: 16 }}>
-            Чтобы войти в аккаунт, вам необходимо ввести свой логин и пароль.
-            Обычно, логин и пароль - это номер вашего студенческого билета.
-          </Text>
-        </ModalCard>
-      </ModalPage>
+      <ModalCard
+        id="modal"
+        header={<ModalPageHeader>Как войти?</ModalPageHeader>}
+        onClose={() => {
+          setModal(false);
+        }}
+      >
+        <Text style={{ marginBottom: 16, marginTop: 16 }}>
+          Чтобы войти в аккаунт, вам необходимо ввести свой логин и пароль.
+          Обычно, логин и пароль - это номер вашего студенческого билета.
+        </Text>
+      </ModalCard>
     </ModalRoot>
   );
 
