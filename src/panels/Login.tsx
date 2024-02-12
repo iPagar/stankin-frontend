@@ -57,11 +57,7 @@ function Form({
         >
           {(props) => (
             <div style={props}>
-              <FormLayoutGroup
-                onSubmit={() => {
-                  onSubmit(values);
-                }}
-              >
+              <FormLayoutGroup>
                 <FormItem>
                   <Input
                     value={values.login}
@@ -89,7 +85,13 @@ function Form({
                   />
                 </FormItem>
                 <FormItem>
-                  <Button stretched size="l">
+                  <Button
+                    stretched
+                    size="l"
+                    onClick={() => {
+                      onSubmit(values);
+                    }}
+                  >
                     Войти
                   </Button>
                 </FormItem>
@@ -159,7 +161,7 @@ export function Login({ id }: { id: string }) {
       </Snackbar>
     );
   }
-  console.log(modal);
+
   const modalCode = (
     <ModalRoot activeModal={modal ? "modal" : null}>
       <ModalCard
