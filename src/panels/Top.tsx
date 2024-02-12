@@ -49,7 +49,6 @@ export default function TopList(props: { onCancelClick: () => void }) {
   const [hasMore, setHasMore] = useState(true);
   const [name, setName] = useState("");
   const debouncedName = useDebounce(name, 500);
-  const [hasInitialStudents, setHasInitialStudents] = useState(false);
   const { data: myRating } = useStudentsControllerGetMeRatingQuery({
     semester: selectedSemester,
   });
@@ -79,7 +78,6 @@ export default function TopList(props: { onCancelClick: () => void }) {
       setPage(1);
       setStudents([]);
       setHasMore(true);
-      setHasInitialStudents(false);
     }
   }, [semesters]);
 
@@ -170,13 +168,12 @@ export default function TopList(props: { onCancelClick: () => void }) {
                     <Icon24Done fill="var(--accent)" />
                   ) : null
                 }
-                onClick={async () => {
+                onClick={() => {
                   setSelectedSemester(semester);
                   setContextOpened(false);
                   setPage(1);
                   setStudents([]);
                   setHasMore(true);
-                  setHasInitialStudents(false);
                 }}
               >
                 {semesterFormat(semester)}
@@ -187,7 +184,8 @@ export default function TopList(props: { onCancelClick: () => void }) {
       </PanelHeaderContext>
       {activeBottomTab === "rating" && (
         <>
-          {hasInitialStudents && (
+          {(students.length > 0 ||
+            (students.length === 0 && debouncedName !== "")) && (
             <FixedLayout vertical="top" filled>
               <Search
                 value={name}
@@ -202,7 +200,7 @@ export default function TopList(props: { onCancelClick: () => void }) {
           <Div>
             <InfiniteScroll
               loadMore={async () => {
-                if (isFetching || isLoading) return;
+                if (isFetching || isLoading || !selectedSemester) return;
 
                 const data = await getStudents({
                   page,
@@ -215,10 +213,6 @@ export default function TopList(props: { onCancelClick: () => void }) {
                   setPage(page + 1);
                 } else {
                   setHasMore(false);
-                }
-
-                if (page === 1 && data.data.length > 0 && name === "") {
-                  setHasInitialStudents(true);
                 }
 
                 setStudents([...students, ...data.data]);
@@ -245,10 +239,10 @@ export default function TopList(props: { onCancelClick: () => void }) {
               </List>
             </InfiniteScroll>
             {(isFetching || isLoading) && <Spinner size={"large"} />}
-            {!(isFetching || isLoading) && !hasInitialStudents && <Empty />}
-            {!(isFetching || isLoading) &&
-              hasInitialStudents &&
-              students.length === 0 && <Placeholder>не найдено</Placeholder>}
+            {!(isFetching || isLoading) && students.length === 0 && <Empty />}
+            {!(isFetching || isLoading) && students.length === 0 && (
+              <Placeholder>не найдено</Placeholder>
+            )}
           </Div>
         </>
       )}
