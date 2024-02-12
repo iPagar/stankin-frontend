@@ -16,6 +16,8 @@ import {
   ModalCard,
   Caption,
   Title,
+  FormItem,
+  SplitLayout,
 } from "@vkontakte/vkui";
 import { Spring } from "react-spring/renderprops";
 
@@ -60,29 +62,37 @@ function Form({
                   onSubmit(values);
                 }}
               >
-                <Input
-                  value={values.login}
-                  onChange={(e) => {
-                    setValues({
-                      ...values,
-                      login: e.target.value,
-                    });
-                  }}
-                  type="number"
-                  placeholder="Логин"
-                />
-                <Input
-                  value={values.password}
-                  onChange={(e) => {
-                    setValues({
-                      ...values,
-                      password: e.target.value,
-                    });
-                  }}
-                  type="password"
-                  placeholder="Пароль"
-                />
-                <Button size="l">Войти</Button>
+                <FormItem>
+                  <Input
+                    value={values.login}
+                    onChange={(e) => {
+                      setValues({
+                        ...values,
+                        login: e.target.value,
+                      });
+                    }}
+                    type="number"
+                    placeholder="Логин"
+                  />
+                </FormItem>
+                <FormItem>
+                  <Input
+                    value={values.password}
+                    onChange={(e) => {
+                      setValues({
+                        ...values,
+                        password: e.target.value,
+                      });
+                    }}
+                    type="password"
+                    placeholder="Пароль"
+                  />
+                </FormItem>
+                <FormItem>
+                  <Button stretched size="l">
+                    Войти
+                  </Button>
+                </FormItem>
               </FormLayoutGroup>
             </div>
           )}
@@ -149,8 +159,7 @@ export function Login({ id }: { id: string }) {
       </Snackbar>
     );
   }
-
-  return (
+  const modalCode = (
     <ModalRoot activeModal={modal ? "modal" : null}>
       <ModalPage id="modal" onClose={() => setModal(false)}>
         <ModalCard
@@ -166,6 +175,11 @@ export function Login({ id }: { id: string }) {
           </Text>
         </ModalCard>
       </ModalPage>
+    </ModalRoot>
+  );
+
+  return (
+    <SplitLayout modal={modalCode}>
       <View id={id} activePanel="login">
         <Panel id="login" centered>
           <PanelHeader delimiter="spacing">Модульный журнал</PanelHeader>
@@ -188,7 +202,7 @@ export function Login({ id }: { id: string }) {
           {snackbar}
         </Panel>
       </View>
-    </ModalRoot>
+    </SplitLayout>
   );
 }
 

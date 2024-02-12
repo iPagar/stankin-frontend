@@ -119,7 +119,7 @@ const ScheduleView = ({ id }: { id: string }) => {
               >
                 <PanelHeaderButton onClick={onHeaderButtonClick}>
                   <Icon28Settings />
-                </PanelHeaderButton>{" "}
+                </PanelHeaderButton>
                 {!bridge.isWebView() && (
                   <PanelHeaderButton onClick={onHeaderScheduleClick}>
                     <Icon28ArticleOutline />
