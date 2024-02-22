@@ -142,7 +142,6 @@ export default function TopList(props: { onCancelClick: () => void }) {
         style={{
           marginTop: 0,
           zIndex: 4,
-          paddingBottom: 100,
         }}
       >
         <div
@@ -240,40 +239,34 @@ export default function TopList(props: { onCancelClick: () => void }) {
             </InfiniteScroll>
             {(isFetching || isLoading) && <Spinner size={"large"} />}
             {!(isFetching || isLoading) && students.length === 0 && <Empty />}
-            {!(isFetching || isLoading) && students.length === 0 && (
-              <Placeholder>не найдено</Placeholder>
-            )}
           </Div>
         </>
       )}
       {activeBottomTab === "ratingst" && (
         <>
-          <List
-            style={{
-              paddingTop: 60,
-              paddingBottom: 60,
-              gap: 8,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            {ratingst?.map((student) => (
-              <TopCell
-                key={student.id}
-                student={{
-                  ...student,
-                  stgroup: null,
-                }}
-              />
-            ))}
-          </List>
-          {(ratingstFetching || ratingstLoading) && <Spinner size={"large"} />}
-          {!(ratingstFetching || ratingstLoading) && ratingst?.length === 0 && (
-            <Empty />
-          )}
-          {ratingstFetching || ratingstLoading ? (
-            <Spinner size={"large"} />
-          ) : null}
+          <Div>
+            <List
+              style={{
+                paddingTop: 60,
+                paddingBottom: 60,
+                gap: 8,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              {ratingst?.map((student) => (
+                <TopCell
+                  key={student.id}
+                  student={{
+                    ...student,
+                    stgroup: null,
+                  }}
+                />
+              ))}
+            </List>
+          </Div>
+          {(isFetching || isLoading) && <Spinner size={"large"} />}
+          {!(isFetching || isLoading) && ratingst?.length === 0 && <Empty />}
         </>
       )}
       <FixedLayout
