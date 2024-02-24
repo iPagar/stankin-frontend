@@ -114,16 +114,14 @@ export function TeacherSchedulePage({
     useStudentScheduleControllerGetTeacherLatestScheduleQuery({
       name,
     });
-  const groupedByDate = latest
-    ? [...latest, ...latest, ...latest, ...latest]?.reduce((acc, item) => {
-        const date = moment(item.start_date).format("L");
-        if (!acc[date]) {
-          acc[date] = [];
-        }
-        acc[date].push(item);
-        return acc;
-      }, {} as Record<string, SubjectDto[]>)
-    : [];
+  const groupedByDate = latest?.reduce((acc, item) => {
+    const date = moment(item.start_date).format("L");
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(item);
+    return acc;
+  }, {} as Record<string, SubjectDto[]>);
 
   return (
     <ModalPage
@@ -147,7 +145,7 @@ export function TeacherSchedulePage({
             >
               <Icon24Back />
             </div>
-            <Header mode="secondary" subtitle="Ближайшие занятия">
+            <Header mode="secondary" subtitle="Ближайшие занятия (14 дней)">
               Расписание преподавателя
             </Header>
           </div>

@@ -97,6 +97,15 @@ const injectedRtkApi = api
         query: () => ({ url: `/api/student-schedule/audiencies` }),
         providesTags: ["student-schedule"],
       }),
+      studentScheduleControllerGetAudienceSchedule: build.query<
+        StudentScheduleControllerGetAudienceScheduleApiResponse,
+        StudentScheduleControllerGetAudienceScheduleApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/student-schedule/audiencies/${queryArg.audience}`,
+        }),
+        providesTags: ["student-schedule"],
+      }),
       studentScheduleControllerGetTeacherSchedule: build.query<
         StudentScheduleControllerGetTeacherScheduleApiResponse,
         StudentScheduleControllerGetTeacherScheduleApiArg
@@ -191,6 +200,11 @@ export type StudentsControllerGetOneApiArg = {
 export type StudentScheduleControllerGetAudienciesApiResponse =
   /** status 200 Get audiencies */ string[];
 export type StudentScheduleControllerGetAudienciesApiArg = void;
+export type StudentScheduleControllerGetAudienceScheduleApiResponse =
+  /** status 200 Get audience schedule */ SubjectDto[];
+export type StudentScheduleControllerGetAudienceScheduleApiArg = {
+  audience: string;
+};
 export type StudentScheduleControllerGetTeacherScheduleApiResponse =
   /** status 200 Get teacher schedule */ SubjectDto[];
 export type StudentScheduleControllerGetTeacherScheduleApiArg = {
@@ -271,6 +285,8 @@ export const {
   useLazyStudentsControllerGetOneQuery,
   useStudentScheduleControllerGetAudienciesQuery,
   useLazyStudentScheduleControllerGetAudienciesQuery,
+  useStudentScheduleControllerGetAudienceScheduleQuery,
+  useLazyStudentScheduleControllerGetAudienceScheduleQuery,
   useStudentScheduleControllerGetTeacherScheduleQuery,
   useLazyStudentScheduleControllerGetTeacherScheduleQuery,
   useStudentScheduleControllerGetTeacherLatestScheduleQuery,
