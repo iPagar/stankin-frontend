@@ -1,11 +1,21 @@
 import { api } from "../api";
-export const addTagTypes = ["Teachers"] as const;
+export const addTagTypes = ["Teachers", "student-schedule"] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
     addTagTypes,
   })
   .injectEndpoints({
     endpoints: (build) => ({
+      teachersControllerFindByName: build.query<
+        TeachersControllerFindByNameApiResponse,
+        TeachersControllerFindByNameApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/teachers/find-by-name`,
+          params: { name: queryArg.name },
+        }),
+        providesTags: ["Teachers"],
+      }),
       teachersControllerPutReaction: build.mutation<
         TeachersControllerPutReactionApiResponse,
         TeachersControllerPutReactionApiArg
@@ -78,10 +88,25 @@ const injectedRtkApi = api
         query: () => ({ url: `/api/teachers/update`, method: "POST" }),
         invalidatesTags: ["Teachers"],
       }),
+      studentScheduleControllerGetTeacherSchedule: build.query<
+        StudentScheduleControllerGetTeacherScheduleApiResponse,
+        StudentScheduleControllerGetTeacherScheduleApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/student-schedule/teachers/${queryArg.name}`,
+        }),
+        providesTags: ["student-schedule"],
+      }),
     }),
     overrideExisting: false,
   });
 export { injectedRtkApi as teachers };
+export type TeachersControllerFindByNameApiResponse =
+  /** status 200 Teacher details */ TeacherDto;
+export type TeachersControllerFindByNameApiArg = {
+  /** Teacher name */
+  name: string;
+};
 export type TeachersControllerPutReactionApiResponse = unknown;
 export type TeachersControllerPutReactionApiArg = {
   teacherId: string;
@@ -120,25 +145,10 @@ export type TeachersControllerGetTeachersApiArg = {
 };
 export type TeachersControllerRequestUpdateTeachersApiResponse = unknown;
 export type TeachersControllerRequestUpdateTeachersApiArg = void;
-export type PutReactionDto = {
-  reaction: number;
-};
-export type PublicCommentDto = {
-  comment: string;
-  type: "public";
-  my: boolean;
-  createdAt: string;
-  vkId: string;
-};
-export type PrivateCommentDto = {
-  comment: string;
-  type: "private";
-  my: boolean;
-  createdAt: string;
-};
-export type PutCommentDto = {
-  comment: string;
-  isPublic: boolean;
+export type StudentScheduleControllerGetTeacherScheduleApiResponse =
+  /** status 200 Get teacher schedule */ SubjectDto[];
+export type StudentScheduleControllerGetTeacherScheduleApiArg = {
+  name: string;
 };
 export type ReactionsDto = {
   count: number;
@@ -161,4 +171,39 @@ export type TeacherDto = {
   reactions: ReactionsDto;
   comments: CommentsDto;
   details: object;
+};
+export type PutReactionDto = {
+  reaction: number;
+};
+export type PublicCommentDto = {
+  comment: string;
+  type: "public";
+  my: boolean;
+  createdAt: string;
+  vkId: string;
+};
+export type PrivateCommentDto = {
+  comment: string;
+  type: "private";
+  my: boolean;
+  createdAt: string;
+};
+export type PutCommentDto = {
+  comment: string;
+  isPublic: boolean;
+};
+export type SubjectDto = {
+  audience: string;
+  end_date: string;
+  fileId: string;
+  group: string;
+  repeat: string;
+  season: string;
+  start_date: string;
+  stgroup: string;
+  subject: string;
+  teacher: string;
+  type: string;
+  year: number;
+  _id: string;
 };

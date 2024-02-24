@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { TeacherDto } from "./teachers.slice";
+import { ReactNode } from "react";
 
 const initialState = {
   isFetching: true,
@@ -8,6 +10,18 @@ const initialState = {
   isTeacher: false,
   activeStgroup: "",
   activeGroup: "",
+  modal: null,
+} as {
+  isFetching: boolean;
+  didInvalidate: boolean;
+  stgroup: string;
+  group: string;
+  isTeacher: boolean;
+  activeStgroup: string;
+  activeGroup: string;
+  modal: string | null;
+  selectedTeacher?: TeacherDto;
+  snackbar: ReactNode;
 };
 
 const scheduleSlice = createSlice({
@@ -27,10 +41,26 @@ const scheduleSlice = createSlice({
       state.group = action.payload.group;
       state.stgroup = action.payload.stgroup;
     },
+    setScheduleModal: (state, action) => {
+      state.modal = action.payload;
+    },
+    setSelectedTeacher: (state, action) => {
+      state.selectedTeacher = action.payload;
+    },
+    setScheduleSnackbar: (state, action) => {
+      state.snackbar = action.payload;
+    },
   },
 });
 
-export const { setStgroup, setGroup, setIsFetching, setGroupAndStgroup } =
-  scheduleSlice.actions;
+export const {
+  setStgroup,
+  setGroup,
+  setIsFetching,
+  setGroupAndStgroup,
+  setScheduleModal,
+  setSelectedTeacher,
+  setScheduleSnackbar,
+} = scheduleSlice.actions;
 
 export default scheduleSlice.reducer;

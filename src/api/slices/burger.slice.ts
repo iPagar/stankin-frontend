@@ -1,12 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { SnackbarProps } from "@vkontakte/vkui";
+import React, { ReactNode } from "react";
 
 const initialState = {
   activePanel: "main",
   activeModal: null,
-  popout: null as any,
+  popout: null,
   teacher: "",
   snackbar: null,
   searchTeacher: "",
+} as {
+  activePanel: string;
+  activeModal: string | null;
+  popout: ReactNode;
+  teacher: string;
+  snackbar: SnackbarProps | null;
+  searchTeacher: string;
 };
 
 const burgerSlice = createSlice({

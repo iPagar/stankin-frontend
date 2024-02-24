@@ -11,4 +11,7 @@ export const {
   useTeachersControllerDeleteCommentMutation,
   useTeachersControllerGetTeachersQuery,
   useLazyTeachersControllerGetTeachersQuery,
+  useTeachersControllerFindByNameQuery,
+  useLazyStudentScheduleControllerGetTeacherScheduleQuery,
+  useLazyTeachersControllerFindByNameQuery,
 } = enhancedApi;

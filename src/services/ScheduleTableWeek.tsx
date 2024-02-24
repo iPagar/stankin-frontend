@@ -104,31 +104,32 @@ const ScheduleTableWeek = ({
           </div>
         </FixedLayout>
       )}
-      {opened && ref && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            position: "absolute",
-            zIndex: 100,
-            top: ref.current?.getBoundingClientRect().bottom,
-            marginTop: 80,
-            width: "100%",
-          }}
-        >
-          <LocaleProvider value={"ru"}>
-            <Calendar
-              getRootRef={calendarRef}
-              value={props.pickedDate}
-              onChange={(date) => {
-                props.onDateChange?.(date);
-                setOpened(false);
-                setChoosed(0);
-              }}
-            />
-          </LocaleProvider>
-        </div>
-      )}
+      {window.innerWidth >= 768 ||
+        (opened && ref && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              position: "absolute",
+              zIndex: 100,
+              top: ref.current?.getBoundingClientRect().bottom,
+              marginTop: 80,
+              width: "100%",
+            }}
+          >
+            <LocaleProvider value={"ru"}>
+              <Calendar
+                getRootRef={calendarRef}
+                value={props.pickedDate}
+                onChange={(date) => {
+                  props.onDateChange?.(date);
+                  setOpened(false);
+                  setChoosed(0);
+                }}
+              />
+            </LocaleProvider>
+          </div>
+        ))}
 
       <Div>
         {(window.innerWidth >= 768 && (

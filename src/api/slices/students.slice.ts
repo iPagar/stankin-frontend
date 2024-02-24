@@ -90,6 +90,22 @@ const injectedRtkApi = api
         query: (queryArg) => ({ url: `/api/students/${queryArg.id}` }),
         providesTags: ["Students"],
       }),
+      studentScheduleControllerGetAudiencies: build.query<
+        StudentScheduleControllerGetAudienciesApiResponse,
+        StudentScheduleControllerGetAudienciesApiArg
+      >({
+        query: () => ({ url: `/api/student-schedule/audiencies` }),
+        providesTags: ["student-schedule"],
+      }),
+      studentScheduleControllerGetTeacherSchedule: build.query<
+        StudentScheduleControllerGetTeacherScheduleApiResponse,
+        StudentScheduleControllerGetTeacherScheduleApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/student-schedule/teachers/${queryArg.name}`,
+        }),
+        providesTags: ["student-schedule"],
+      }),
       studentScheduleControllerGetStudentSchedule: build.query<
         StudentScheduleControllerGetStudentScheduleApiResponse,
         StudentScheduleControllerGetStudentScheduleApiArg
@@ -162,6 +178,14 @@ export type StudentsControllerGetOneApiResponse =
 export type StudentsControllerGetOneApiArg = {
   id: number;
 };
+export type StudentScheduleControllerGetAudienciesApiResponse =
+  /** status 200 Get audiencies */ string[];
+export type StudentScheduleControllerGetAudienciesApiArg = void;
+export type StudentScheduleControllerGetTeacherScheduleApiResponse =
+  /** status 200 Get teacher schedule */ SubjectDto[];
+export type StudentScheduleControllerGetTeacherScheduleApiArg = {
+  name: string;
+};
 export type StudentScheduleControllerGetStudentScheduleApiResponse =
   /** status 200 Get student schedule */ SubjectDto[];
 export type StudentScheduleControllerGetStudentScheduleApiArg = {
@@ -229,6 +253,10 @@ export const {
   useLazyStudentsControllerGetStudentSemestersQuery,
   useStudentsControllerGetOneQuery,
   useLazyStudentsControllerGetOneQuery,
+  useStudentScheduleControllerGetAudienciesQuery,
+  useLazyStudentScheduleControllerGetAudienciesQuery,
+  useStudentScheduleControllerGetTeacherScheduleQuery,
+  useLazyStudentScheduleControllerGetTeacherScheduleQuery,
   useStudentScheduleControllerGetStudentScheduleQuery,
   useLazyStudentScheduleControllerGetStudentScheduleQuery,
 } = injectedRtkApi;

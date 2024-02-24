@@ -6,6 +6,7 @@ import LessonCell from "../cells/LessonCell";
 
 import { Icon56GestureOutline } from "@vkontakte/icons";
 import { LessonBreak } from "../cells/lesson-break";
+import { useLazyTeachersControllerFindByNameQuery } from "../api/slices/teachers.enhanced";
 
 moment.locale("ru");
 

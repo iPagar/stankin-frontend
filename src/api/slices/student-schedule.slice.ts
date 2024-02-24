@@ -17,6 +17,22 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["App"],
       }),
+      studentScheduleControllerGetAudiencies: build.query<
+        StudentScheduleControllerGetAudienciesApiResponse,
+        StudentScheduleControllerGetAudienciesApiArg
+      >({
+        query: () => ({ url: `/api/student-schedule/audiencies` }),
+        providesTags: ["student-schedule"],
+      }),
+      studentScheduleControllerGetTeacherSchedule: build.query<
+        StudentScheduleControllerGetTeacherScheduleApiResponse,
+        StudentScheduleControllerGetTeacherScheduleApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/student-schedule/teachers/${queryArg.name}`,
+        }),
+        providesTags: ["student-schedule"],
+      }),
       studentScheduleControllerGetStudentSchedule: build.query<
         StudentScheduleControllerGetStudentScheduleApiResponse,
         StudentScheduleControllerGetStudentScheduleApiArg
@@ -35,6 +51,14 @@ export type AppControllerUpdateScheduleApiResponse = unknown;
 export type AppControllerUpdateScheduleApiArg = {
   /** Update schedule */
   updateScheduleDto: UpdateScheduleDto;
+};
+export type StudentScheduleControllerGetAudienciesApiResponse =
+  /** status 200 Get audiencies */ string[];
+export type StudentScheduleControllerGetAudienciesApiArg = void;
+export type StudentScheduleControllerGetTeacherScheduleApiResponse =
+  /** status 200 Get teacher schedule */ SubjectDto[];
+export type StudentScheduleControllerGetTeacherScheduleApiArg = {
+  name: string;
 };
 export type StudentScheduleControllerGetStudentScheduleApiResponse =
   /** status 200 Get student schedule */ SubjectDto[];
@@ -71,6 +95,10 @@ export type SubjectDto = {
 };
 export const {
   useAppControllerUpdateScheduleMutation,
+  useStudentScheduleControllerGetAudienciesQuery,
+  useLazyStudentScheduleControllerGetAudienciesQuery,
+  useStudentScheduleControllerGetTeacherScheduleQuery,
+  useLazyStudentScheduleControllerGetTeacherScheduleQuery,
   useStudentScheduleControllerGetStudentScheduleQuery,
   useLazyStudentScheduleControllerGetStudentScheduleQuery,
 } = injectedRtkApi;

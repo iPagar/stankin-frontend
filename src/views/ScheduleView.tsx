@@ -28,20 +28,20 @@ import bridge from "@vkontakte/vk-bridge";
 import { Document, pdfjs, Page } from "react-pdf";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useAppDispatch, useAppSelector } from "../api/store";
-import { setIsFetching } from "../api/slices/schedule.slice";
+import { setIsFetching, setScheduleModal } from "../api/slices/schedule.slice";
+import { TeacherModal } from "./teacher-modal";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ScheduleView = ({ id }: { id: string }) => {
   const stgroup = useAppSelector((state) => state.schedule.stgroup);
   const group = useAppSelector((state) => state.schedule.group);
   const isFetching = useAppSelector((state) => state.schedule.isFetching);
+  const activeModal = useAppSelector((state) => state.schedule.modal);
   const [file, setFile] = useState<string | null>(null);
   const [activePanel, setActivePanel] = useState("main");
-  const [activeModal, setActiveModal] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const today = new Date();
   const [date, setDate] = useState<Date | undefined>(today);
-
   const [lessonsWeek, setLessonsWeek] = useState<any[]>([]);
   const load = async () => {
     let lessonsWeek: any[] = [];
@@ -73,7 +73,7 @@ const ScheduleView = ({ id }: { id: string }) => {
       setLessonsWeek(lessonsWeek);
     }
     if (stgroup.length > 0 && group.length === 0) {
-      setActiveModal("select");
+      dispatch(setScheduleModal("select"));
     }
   };
 
@@ -91,26 +91,37 @@ const ScheduleView = ({ id }: { id: string }) => {
   }, [stgroup, group, date]);
 
   const onHeaderButtonClick = () => {
-    setActiveModal("select");
+    dispatch(setScheduleModal("select"));
   };
 
   const modal = (
-    <ScheduleSettings
-      activeModal={activeModal}
-      onSettingsClose={() => {
-        setActiveModal(null);
-      }}
-    />
+    <>
+      <ScheduleSettings
+        activeModal={activeModal}
+        onSettingsClose={() => {
+          dispatch(setScheduleModal(null));
+        }}
+      />
+      {activeModal === "teacher" && (
+        <TeacherModal
+          onClose={() => {
+            dispatch(setScheduleModal(null));
+          }}
+        />
+      )}
+    </>
   );
 
   const onHeaderScheduleClick = () => {
     setActivePanel("pdf");
   };
+  const snackbar = useAppSelector((state) => state.schedule.snackbar);
 
   return (
     <SplitLayout modal={modal}>
       <View id={id} activePanel={activePanel}>
         <Panel id="main">
+          {snackbar}
           <PanelHeader
             delimiter="spacing"
             before={
