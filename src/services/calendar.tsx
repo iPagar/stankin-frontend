@@ -8,6 +8,8 @@ import {
   useAppearance,
 } from "@vkontakte/vkui";
 import "@vkontakte/vkui/dist/vkui.css";
+import moment from "moment";
+import styles from "./calendar.module.scss";
 
 export const HorizontalCalendar = ({
   date = new Date(),
@@ -15,12 +17,14 @@ export const HorizontalCalendar = ({
   isDarkWeekend = true,
   mondayFirst = false,
   onClick,
+  daysWithLessons,
 }: {
   date?: Date;
   choosed?: number;
   isDarkWeekend?: boolean;
   mondayFirst?: boolean;
   onClick?: (e: { choosedDay: number; dayNumber: number }) => void;
+  daysWithLessons?: Date[];
 }) => {
   const platform = usePlatform();
   const baseClassNames = classNames("Card", platform);
@@ -103,25 +107,36 @@ export const HorizontalCalendar = ({
 
   return (
     <HorizontalScroll
+      className={styles.calendar}
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        width: "100%",
       }}
     >
       <div
         style={{
           display: "flex",
+          justifyContent: "space-between",
+          width: "90%",
         }}
       >
         {adays.map((day, i) => {
           const dayNumber = day.getDay();
+          const hasLessons = daysWithLessons?.some(
+            (lessonDay) =>
+              moment(lessonDay).format("DD.MM.YYYY") ===
+              moment(day).format("DD.MM.YYYY")
+          );
+          const isChoosed = choosed - 1 === i;
 
           return (
             <div
               key={day.toString()}
               className={"day"}
               style={{
+                margin: "0 8px",
                 color:
                   isDarkWeekend && (dayNumber === 0 || dayNumber === 6)
                     ? "var(--vkui--color_text_secondary)"
@@ -133,20 +148,26 @@ export const HorizontalCalendar = ({
               <div
                 style={{
                   ...itemStyle,
-                  backgroundColor:
-                    choosed - 1 === i
-                      ? light
-                        ? "var(--vkui--color_text_accent)"
-                        : "var(--vkui--color_text_primary)"
-                      : "var(--vkui--color_background_secondary)",
-                  color:
-                    choosed - 1 === i
-                      ? light
-                        ? "white"
-                        : "var(--vkui--color_separator_secondary)"
-                      : isDarkWeekend && (dayNumber === 0 || dayNumber === 6)
-                      ? "var(--vkui--color_text_secondary)"
-                      : "var(--vkui--color_text_primary)",
+                  backgroundColor: isChoosed
+                    ? light
+                      ? "var(--vkui--color_text_accent)"
+                      : "var(--vkui--color_text_primary)"
+                    : hasLessons
+                    ? light
+                      ? "#E4F1FF"
+                      : "#bdbdbd"
+                    : "var(--vkui--color_background_secondary)",
+                  color: isChoosed
+                    ? light
+                      ? "white"
+                      : "var(--vkui--color_separator_secondary)"
+                    : hasLessons
+                    ? light
+                      ? "var(--vkui--color_text_primary)"
+                      : "var(--vkui--color_separator_secondary)"
+                    : isDarkWeekend && (dayNumber === 0 || dayNumber === 6)
+                    ? "var(--vkui--color_text_secondary)"
+                    : "var(--vkui--color_text_primary)",
                 }}
                 className={baseClassNames}
               >

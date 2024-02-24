@@ -119,9 +119,9 @@ const ScheduleTableDay = ({
 
   return (
     <div style={{ maxWidth: 400, display: "contents", ...style }}>
-      <Header mode="secondary">
-        {withHeaders && moment(date).format("D MMMM, dddd")}
-      </Header>
+      {withHeaders && (
+        <Header mode="secondary">{moment(date).format("D MMMM, dddd")}</Header>
+      )}
 
       {(lessonsDay.length > 0 && (
         <Group

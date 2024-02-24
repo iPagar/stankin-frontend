@@ -10,7 +10,6 @@ import ScheduleTableDay from "./ScheduleTableDay";
 import { HorizontalCalendar } from "./calendar";
 import moment from "moment";
 import { Icon24CalendarOutline } from "@vkontakte/icons";
-import { setDate } from "date-fns";
 
 const ScheduleTableWeek = ({
   lessonsWeek,
@@ -36,7 +35,6 @@ const ScheduleTableWeek = ({
   onDateChange?: (date: Date | undefined) => void;
 }) => {
   const [choosed, setChoosed] = useState(1);
-  const today = new Date();
   const [opened, setOpened] = useState(false);
 
   return (
@@ -78,6 +76,11 @@ const ScheduleTableWeek = ({
             <HorizontalCalendar
               date={props.pickedDate}
               choosed={choosed}
+              daysWithLessons={lessonsWeek
+                .filter((day) => {
+                  return day.lessons.length > 0;
+                })
+                .map((day) => new Date(day.date))}
               onClick={({
                 choosedDay,
                 dayNumber,
@@ -96,6 +99,7 @@ const ScheduleTableWeek = ({
                   onChange={(date) => {
                     props.onDateChange?.(date);
                     setOpened(false);
+                    setChoosed(0);
                   }}
                 />
               </LocaleProvider>
