@@ -94,16 +94,23 @@ const ScheduleTableWeek = ({
             />
 
             {opened && (
-              <LocaleProvider value={"ru"}>
-                <Calendar
-                  value={props.pickedDate}
-                  onChange={(date) => {
-                    props.onDateChange?.(date);
-                    setOpened(false);
-                    setChoosed(0);
-                  }}
-                />
-              </LocaleProvider>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <LocaleProvider value={"ru"}>
+                  <Calendar
+                    value={props.pickedDate}
+                    onChange={(date) => {
+                      props.onDateChange?.(date);
+                      setOpened(false);
+                      setChoosed(0);
+                    }}
+                  />
+                </LocaleProvider>
+              </div>
             )}
           </div>
         </FixedLayout>
