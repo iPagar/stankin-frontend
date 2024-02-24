@@ -30,6 +30,7 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useAppDispatch, useAppSelector } from "../api/store";
 import { setIsFetching, setScheduleModal } from "../api/slices/schedule.slice";
 import { TeacherModal } from "./teacher-modal";
+import { SubjectDto } from "../api/slices/student-schedule.slice";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ScheduleView = ({ id }: { id: string }) => {
@@ -65,7 +66,11 @@ const ScheduleView = ({ id }: { id: string }) => {
 
         lessonsWeek.push({
           date: parsedDate,
-          lessons: response.data,
+          lessons: response.data.map((lesson: SubjectDto) => {
+            const { stgroup, ...rest } = lesson;
+
+            return { ...rest };
+          }),
         });
       }
       dispatch(setIsFetching(false));
