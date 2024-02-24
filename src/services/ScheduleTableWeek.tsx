@@ -10,6 +10,7 @@ import ScheduleTableDay from "./ScheduleTableDay";
 import { HorizontalCalendar } from "./calendar";
 import moment from "moment";
 import { Icon24CalendarOutline } from "@vkontakte/icons";
+import styles from "./ScheduleTableWeek.module.scss";
 
 const ScheduleTableWeek = ({
   lessonsWeek,
@@ -209,6 +210,7 @@ const ScheduleTableWeek = ({
               onChange={(slideIndex) => {
                 setChoosed(slideIndex + 1);
               }}
+              className={styles.gallery}
             >
               {lessonsWeek.map((lessonsDay, i) => (
                 <ScheduleTableDay

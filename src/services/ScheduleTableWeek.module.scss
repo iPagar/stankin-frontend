@@ -1,0 +1,11 @@
+.gallery {
+  > div > div {
+    gap: 8px;
+
+    > div {
+      &:last-child {
+        padding-right: calc(8px * 7);
+      }
+    }
+  }
+}
