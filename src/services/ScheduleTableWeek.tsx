@@ -130,6 +130,7 @@ const ScheduleTableWeek = ({
                     "var(--vkui--size_base_padding_vertical--regular) var(--vkui--size_base_padding_horizontal--regular)",
                   paddingTop: 0,
                   paddingBottom: 0,
+                  cursor: "pointer",
                 }}
                 onClick={() => {
                   setOpened(!opened);

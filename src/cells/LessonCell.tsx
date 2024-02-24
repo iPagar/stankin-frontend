@@ -1,4 +1,7 @@
-import { RichCell, Caption, Card } from "@vkontakte/vkui";
+import styles from "./LessonCell.module.scss";
+import moment from "moment";
+import { Icon16User } from "@vkontakte/icons";
+import clsx from "clsx";
 
 const LessonCell = ({
   lesson,
@@ -14,34 +17,40 @@ const LessonCell = ({
   };
   isTeacher?: boolean;
 }) => {
-  return (
-    <Card>
-      <RichCell
-        before={
-          <div style={{ padding: 12 }}>
-            <Caption level="1" weight="2" caps>
-              {lesson.start_time}
-            </Caption>
+  const isNow = moment().isBetween(
+    moment(lesson.start_time),
+    moment(lesson.end_time)
+  );
 
-            <Caption level="1" weight="2" caps>
-              {lesson.end_time}
-            </Caption>
-          </div>
-        }
-        caption={
-          !lesson.audience && lesson.subject ? "Онлайн" : lesson.audience
-        }
-        text={
-          lesson.subject &&
-          `${lesson.type} ${lesson.teacher && "ведет "} ${
-            lesson.teacher && lesson.teacher
-          }`
-        }
-        multiline
+  return (
+    <div className={styles.lessonCell__wrapper}>
+      {isNow && <div className={styles.lessonCell__line}></div>}
+      <div
+        className={clsx(
+          styles.lessonCell,
+          isNow ? styles.lessonCell__now : null
+        )}
       >
-        {lesson.subject}
-      </RichCell>
-    </Card>
+        <div className={styles.lessonCell__time}>
+          <span className={styles.lessonCell__time__time}>
+            {lesson.start_time} - {lesson.end_time}
+          </span>
+          <div className={styles.lessonCell__time__status}>
+            {!lesson.audience && lesson.subject ? "Онлайн" : lesson.audience}
+          </div>
+        </div>
+        <div className={styles.lessonCell__subject}>{lesson.subject}</div>
+        <div className={styles.lessonCell__type}>{lesson.type}</div>
+        {lesson.teacher && (
+          <div className={styles.lessonCell__teacher}>
+            <Icon16User fill="#99A2AD" />
+            <span className={styles.lessonCell__teacher__name}>
+              {lesson.teacher}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

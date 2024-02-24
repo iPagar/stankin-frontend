@@ -5,6 +5,7 @@ import "moment/locale/ru";
 import LessonCell from "../cells/LessonCell";
 
 import { Icon56GestureOutline } from "@vkontakte/icons";
+import { LessonBreak } from "../cells/lesson-break";
 
 moment.locale("ru");
 
@@ -30,15 +31,21 @@ const ScheduleTableDay = ({
   style?: React.CSSProperties;
 }) => {
   const [parsedLessons, setParsedLessons] = useState<
-    {
-      start_date: string;
-      start_time: string;
-      end_time: string;
-      audience: string;
-      subject: string;
-      type: string;
-      teacher: string;
-    }[]
+    (
+      | {
+          start_date: string;
+          start_time: string;
+          end_time: string;
+          audience: string;
+          subject: string;
+          type: string;
+          teacher: string;
+          lessonType: "lesson";
+        }
+      | {
+          lessonType: "break";
+        }
+    )[]
   >([]);
 
   useEffect(() => {
@@ -56,15 +63,21 @@ const ScheduleTableDay = ({
       teacher: string;
     }[]
   ) => {
-    let lessonsDay: {
-      start_date: string;
-      start_time: string;
-      end_time: string;
-      audience: string;
-      subject: string;
-      type: string;
-      teacher: string;
-    }[] = [];
+    let lessonsDay: (
+      | {
+          start_date: string;
+          start_time: string;
+          end_time: string;
+          audience: string;
+          subject: string;
+          type: string;
+          teacher: string;
+          lessonType: "lesson";
+        }
+      | {
+          lessonType: "break";
+        }
+    )[] = [];
     const groups = [[], [], [], [], [], [], [], []];
     data.forEach((lesson) => {
       const day = moment(lesson.start_date);
@@ -76,8 +89,25 @@ const ScheduleTableDay = ({
           moment.utc(lesson.start_date).hours() + 3 < 18
             ? day.add(100, "minutes").format("H:mm")
             : day.add(90, "minutes").format("H:mm"),
+        lessonType: "lesson",
       });
     });
+
+    // find and add the window between pairs
+    for (let i = 0; i < lessonsDay.length - 1; i++) {
+      const lesson = lessonsDay[i];
+      const nextLesson = lessonsDay[i + 1];
+      if (lesson.lessonType === "break" || nextLesson.lessonType === "break")
+        continue;
+      const start = moment(lesson.end_time, "HH:mm");
+      const end = moment(nextLesson.start_time, "HH:mm");
+
+      if (end.diff(start, "minutes") > 10) {
+        lessonsDay.splice(i + 1, 0, {
+          lessonType: "break",
+        });
+      }
+    }
 
     if (isTeacher)
       lessonsDay = lessonsDay.map((lesson, i) => {
@@ -106,7 +136,11 @@ const ScheduleTableDay = ({
           mode="plain"
         >
           {parsedLessons.map((lesson, i) => {
-            return <LessonCell key={i} lesson={lesson} isTeacher={isTeacher} />;
+            return lesson.lessonType === "lesson" ? (
+              <LessonCell key={i} lesson={lesson} isTeacher={isTeacher} />
+            ) : (
+              <LessonBreak key={i} />
+            );
           })}
         </Group>
       )) || <Placeholder icon={<Icon56GestureOutline />} header="Нет пар" />}

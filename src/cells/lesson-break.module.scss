@@ -1,0 +1,27 @@
+.break {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  align-self: stretch;
+
+  &__wrapper {
+    display: flex;
+    padding: 4px 16px;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  &__text {
+    color: var(--Light-Text-Subhead, #6d7885);
+    text-align: center;
+    font-feature-settings: "clig" off, "liga" off;
+    font-family: "SF Pro Text";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%; /* 19.5px */
+    letter-spacing: -0.408px;
+  }
+}
