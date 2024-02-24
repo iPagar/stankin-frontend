@@ -23,7 +23,7 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/student-schedule/${queryArg.stgroup}`,
-          params: { date: queryArg.date },
+          params: { date: queryArg.date, group: queryArg.group },
         }),
         providesTags: ["student-schedule"],
       }),
@@ -41,6 +41,8 @@ export type StudentScheduleControllerGetStudentScheduleApiResponse =
 export type StudentScheduleControllerGetStudentScheduleApiArg = {
   /** Date in format YYYY-MM-DD */
   date: string;
+  /** Student group */
+  group?: string;
   stgroup: string;
 };
 export type UpdateCourseDto = {

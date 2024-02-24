@@ -174,6 +174,8 @@ export function App() {
               group,
             });
 
+            dispatch(setGroupAndStgroup({ group, stgroup }));
+
             // await dispatch(loadSchedule());
             dispatch(setView("scheduleView"));
           }}
