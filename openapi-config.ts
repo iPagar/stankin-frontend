@@ -26,6 +26,10 @@ const config: ConfigFile = {
       exportName: "app",
       filterEndpoints: /app/i,
     },
+    "./src/api/slices/student-schedule.slice.ts": {
+      exportName: "studentSchedule",
+      filterEndpoints: /schedule/i,
+    },
   },
   tag: true,
   hooks: {

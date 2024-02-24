@@ -48,6 +48,17 @@ const injectedRtkApi = api
         query: () => ({ url: `/api/app/pg-restore`, method: "POST" }),
         invalidatesTags: ["App"],
       }),
+      appControllerUpdateSchedule: build.mutation<
+        AppControllerUpdateScheduleApiResponse,
+        AppControllerUpdateScheduleApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/app/update-schedule`,
+          method: "POST",
+          body: queryArg.updateScheduleDto,
+        }),
+        invalidatesTags: ["App"],
+      }),
     }),
     overrideExisting: false,
   });
@@ -66,9 +77,23 @@ export type AppControllerMongoRestoreApiResponse = unknown;
 export type AppControllerMongoRestoreApiArg = void;
 export type AppControllerMongoPgRestoreApiResponse = unknown;
 export type AppControllerMongoPgRestoreApiArg = void;
+export type AppControllerUpdateScheduleApiResponse = unknown;
+export type AppControllerUpdateScheduleApiArg = {
+  /** Update schedule */
+  updateScheduleDto: UpdateScheduleDto;
+};
 export type SchoolarshipDto = {
   files: string[];
   schoolarship: string[];
+};
+export type UpdateCourseDto = {
+  courseExp: string;
+  folderExp: string;
+};
+export type UpdateScheduleDto = {
+  steps: UpdateCourseDto[];
+  season: "spring" | "autumn";
+  year: number;
 };
 export const {
   useAppControllerGetSemestersQuery,
@@ -79,4 +104,5 @@ export const {
   useAppControllerMongoPgBackupMutation,
   useAppControllerMongoRestoreMutation,
   useAppControllerMongoPgRestoreMutation,
+  useAppControllerUpdateScheduleMutation,
 } = injectedRtkApi;

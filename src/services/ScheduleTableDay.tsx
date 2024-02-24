@@ -12,7 +12,7 @@ const ScheduleTableDay = ({
   lessonsDay,
   withHeaders,
   isTeacher,
-  number,
+  date,
   style,
 }: {
   lessonsDay: {
@@ -26,7 +26,7 @@ const ScheduleTableDay = ({
   }[];
   withHeaders?: boolean;
   isTeacher?: boolean;
-  number?: number;
+  date: Date;
   style?: React.CSSProperties;
 }) => {
   const [parsedLessons, setParsedLessons] = useState<
@@ -90,7 +90,7 @@ const ScheduleTableDay = ({
   return (
     <div style={{ maxWidth: 400, display: "contents", ...style }}>
       <Header mode="secondary">
-        {withHeaders && moment().add(number, "days").format("D MMMM, dddd")}
+        {withHeaders && moment(date).format("D MMMM, dddd")}
       </Header>
 
       {(lessonsDay.length > 0 && (

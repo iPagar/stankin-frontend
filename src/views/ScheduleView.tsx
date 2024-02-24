@@ -13,6 +13,8 @@ import {
   Div,
   SplitLayout,
   PanelHeaderContent,
+  LocaleProvider,
+  Calendar,
 } from "@vkontakte/vkui";
 import {
   Icon28Settings,
@@ -30,23 +32,25 @@ import { setIsFetching } from "../api/slices/schedule.slice";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ScheduleView = ({ id }: { id: string }) => {
-  const date = new Date();
   const stgroup = useAppSelector((state) => state.schedule.stgroup);
   const group = useAppSelector((state) => state.schedule.group);
   const isFetching = useAppSelector((state) => state.schedule.isFetching);
-  const [lessonsWeek, setLessonsWeek] = useState<any[]>([]);
   const [file, setFile] = useState<string | null>(null);
   const [activePanel, setActivePanel] = useState("main");
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const dispatch = useAppDispatch();
+  const today = new Date();
+  const [date, setDate] = useState<Date | undefined>(today);
 
+  const [lessonsWeek, setLessonsWeek] = useState<any[]>([]);
   const load = async () => {
     let lessonsWeek: any[] = [];
 
     if (stgroup.length > 0 && group.length > 0) {
       dispatch(setIsFetching(true));
+      setLessonsWeek([]);
       for (var i = 0; i < 7; i++) {
-        const result = new Date(date);
+        const result = new Date(date ?? today);
         result.setDate(result.getDate() + i);
         const parsedDate =
           result.getFullYear() +
@@ -56,7 +60,7 @@ const ScheduleView = ({ id }: { id: string }) => {
           result.getDate();
 
         const response = await api.get(
-          `/schedule/lessons?stgroup=${stgroup}&group=${group}&day=${parsedDate}`
+          `/api/student-schedule/${stgroup}?group=${group}&date=${parsedDate}`
         );
 
         lessonsWeek.push({
@@ -84,7 +88,7 @@ const ScheduleView = ({ id }: { id: string }) => {
 
   useEffect(() => {
     load();
-  }, [stgroup, group]);
+  }, [stgroup, group, date]);
 
   const onHeaderButtonClick = () => {
     setActiveModal("select");
@@ -131,23 +135,23 @@ const ScheduleView = ({ id }: { id: string }) => {
             Расписание
           </PanelHeader>
 
-          {!isFetching ? (
-            !stgroup || !group ? (
-              <Placeholder
-                header="Группа не выбрана"
-                icon={<Icon56Users3Outline />}
-                stretched
-              />
-            ) : (
-              <ScheduleTableWeek
-                isTeacher={false}
-                lessonsWeek={lessonsWeek}
-                //check schedule
-                before={null}
-              />
-            )
+          {!stgroup || !group ? (
+            <Placeholder
+              header="Группа не выбрана"
+              icon={<Icon56Users3Outline />}
+              stretched
+            />
           ) : (
-            <PanelSpinner size="large" />
+            <ScheduleTableWeek
+              isTeacher={false}
+              lessonsWeek={lessonsWeek}
+              pickedDate={date}
+              onDateChange={(date) => {
+                setDate(date);
+              }}
+              //check schedule
+              before={isFetching && <PanelSpinner size="large" />}
+            />
           )}
         </Panel>
         <Panel id="pdf" centered>

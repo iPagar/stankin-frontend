@@ -1,5 +1,5 @@
 import { api } from "../api";
-export const addTagTypes = ["Students"] as const;
+export const addTagTypes = ["Students", "student-schedule"] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
     addTagTypes,
@@ -90,6 +90,16 @@ const injectedRtkApi = api
         query: (queryArg) => ({ url: `/api/students/${queryArg.id}` }),
         providesTags: ["Students"],
       }),
+      studentScheduleControllerGetStudentSchedule: build.query<
+        StudentScheduleControllerGetStudentScheduleApiResponse,
+        StudentScheduleControllerGetStudentScheduleApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/student-schedule/${queryArg.stgroup}`,
+          params: { date: queryArg.date },
+        }),
+        providesTags: ["student-schedule"],
+      }),
     }),
     overrideExisting: false,
   });
@@ -152,6 +162,13 @@ export type StudentsControllerGetOneApiResponse =
 export type StudentsControllerGetOneApiArg = {
   id: number;
 };
+export type StudentScheduleControllerGetStudentScheduleApiResponse =
+  /** status 200 Get student schedule */ SubjectDto[];
+export type StudentScheduleControllerGetStudentScheduleApiArg = {
+  /** Date in format YYYY-MM-DD */
+  date: string;
+  stgroup: string;
+};
 export type StudentDto = {
   id: number;
   surname: object | null;
@@ -178,6 +195,21 @@ export type LoginDto = {
   studentId: string;
   password: string;
 };
+export type SubjectDto = {
+  audience: string;
+  end_date: string;
+  fileId: string;
+  group: string;
+  repeat: string;
+  season: string;
+  start_date: string;
+  stgroup: string;
+  subject: string;
+  teacher: string;
+  type: string;
+  year: number;
+  _id: string;
+};
 export const {
   useStudentsControllerGetMeQuery,
   useLazyStudentsControllerGetMeQuery,
@@ -195,4 +227,6 @@ export const {
   useLazyStudentsControllerGetStudentSemestersQuery,
   useStudentsControllerGetOneQuery,
   useLazyStudentsControllerGetOneQuery,
+  useStudentScheduleControllerGetStudentScheduleQuery,
+  useLazyStudentScheduleControllerGetStudentScheduleQuery,
 } = injectedRtkApi;
