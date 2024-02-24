@@ -40,7 +40,8 @@ const ScheduleTableWeek = ({
   const [opened, setOpened] = useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
   const calendarRef = React.useRef<HTMLDivElement>(null);
-  useClickAway(calendarRef, () => {
+  useClickAway(calendarRef, (e) => {
+    if (ref.current?.contains(e.target as Node)) return;
     setOpened(false);
   });
 
