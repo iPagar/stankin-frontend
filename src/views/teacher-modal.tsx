@@ -126,7 +126,7 @@ export function TeacherSchedulePage({
   return (
     <ModalPage
       id={id}
-      settlingHeight={100}
+      dynamicContentHeight
       header={
         <ModalPageHeader>
           <div
@@ -180,6 +180,7 @@ export function TeacherSchedulePage({
                       .add(100, "minute")
                       .format("LT"),
                     start_time: moment(item.start_date).format("LT"),
+                    stgroup: item.stgroup,
                   }}
                 />
               ))}
