@@ -15,6 +15,7 @@ import {
   ModalPage,
   PopoutWrapper,
   SplitLayout,
+  PanelHeaderBack,
 } from "@vkontakte/vkui";
 import bridge from "@vkontakte/vk-bridge";
 import { api } from "../services";
@@ -33,6 +34,7 @@ import {
   Icon24UserAdd,
   Icon20Info,
   Icon28NotificationCircleFillGray,
+  Icon16Location,
 } from "@vkontakte/icons";
 import TopView from "./TopView";
 import telegram from "../img/telegram.png";
@@ -45,6 +47,10 @@ import {
   setSearchTeacher,
 } from "../api/slices/burger.slice";
 import { useMarksControllerSwitchNotifyMutation } from "../api/slices/marks.slice";
+import { Audiences } from "../panels/audiences";
+import { Audience } from "../panels/audience";
+import { TeacherModal } from "./teacher-modal";
+import { setScheduleModal } from "../api/slices/schedule.slice";
 
 const BurgerView = ({ id }: { id: string }) => {
   const activePanel = useAppSelector((state) => state.burger.activePanel);
@@ -85,17 +91,31 @@ const BurgerView = ({ id }: { id: string }) => {
     });
   };
 
+  const scheduleModal = useAppSelector((state) => state.schedule.modal);
+  const scheduleSnackbar = useAppSelector((state) => state.schedule.snackbar);
+
   const modal = (
-    <ModalRoot
-      activeModal={activeModal}
-      onClose={() => {
-        dispatch(setActiveModal(null));
-      }}
-    >
-      <CommentsPage id="comments" dynamicContentHeight />
-      <WriteCommentCard id="text" />
-      <ReactionsCard id="reactions" />
-    </ModalRoot>
+    <>
+      <ModalRoot
+        activeModal={activeModal}
+        onClose={() => {
+          dispatch(setActiveModal(null));
+        }}
+      >
+        <CommentsPage id="comments" dynamicContentHeight />
+        <WriteCommentCard id="text" />
+        <ReactionsCard id="reactions" />
+      </ModalRoot>
+      <TeacherModal
+        activeModal={scheduleModal}
+        onActiveModalChange={(modal) => {
+          dispatch(setScheduleModal(modal));
+        }}
+        onClose={() => {
+          dispatch(setScheduleModal(null));
+        }}
+      />
+    </>
   );
 
   const goBack = () => {
@@ -120,6 +140,7 @@ const BurgerView = ({ id }: { id: string }) => {
   };
 
   const [notify] = useMarksControllerSwitchNotifyMutation();
+  const [audience, setAudience] = useState<string>("");
 
   return (
     <SplitLayout modal={modal}>
@@ -195,6 +216,15 @@ const BurgerView = ({ id }: { id: string }) => {
                 }
               >
                 Студенты
+              </SimpleCell>
+              <SimpleCell
+                expandable="always"
+                before={<Icon16Location width={28} height={28} />}
+                onClick={() => {
+                  goForward("audiences");
+                }}
+              >
+                Аудитории
               </SimpleCell>
 
               <Banner
@@ -342,6 +372,30 @@ const BurgerView = ({ id }: { id: string }) => {
             goBack();
           }}
         />
+        <Audiences
+          id="audiences"
+          onCancelClick={() => goBack()}
+          onAudienceClick={(audience) => {
+            setAudience(audience);
+            goForward("audience");
+          }}
+        />
+        <Panel id="audience">
+          <PanelHeader
+            delimiter="spacing"
+            before={
+              <PanelHeaderBack
+                onClick={() => {
+                  goBack();
+                }}
+              />
+            }
+          >
+            {audience}
+          </PanelHeader>
+          {audience && <Audience name={audience} />}
+          {scheduleSnackbar}
+        </Panel>
         <Profile
           onExit={() => {}}
           id="profile"
