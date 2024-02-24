@@ -30,6 +30,16 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/student-schedule/teachers/${queryArg.name}`,
+          params: { date: queryArg.date },
+        }),
+        providesTags: ["student-schedule"],
+      }),
+      studentScheduleControllerGetTeacherLatestSchedule: build.query<
+        StudentScheduleControllerGetTeacherLatestScheduleApiResponse,
+        StudentScheduleControllerGetTeacherLatestScheduleApiArg
+      >({
+        query: (queryArg) => ({
+          url: `/api/student-schedule/teachers/${queryArg.name}/latest`,
         }),
         providesTags: ["student-schedule"],
       }),
@@ -58,6 +68,12 @@ export type StudentScheduleControllerGetAudienciesApiArg = void;
 export type StudentScheduleControllerGetTeacherScheduleApiResponse =
   /** status 200 Get teacher schedule */ SubjectDto[];
 export type StudentScheduleControllerGetTeacherScheduleApiArg = {
+  name: string;
+  date: string;
+};
+export type StudentScheduleControllerGetTeacherLatestScheduleApiResponse =
+  /** status 200 Get latest teacher schedule */ SubjectDto[];
+export type StudentScheduleControllerGetTeacherLatestScheduleApiArg = {
   name: string;
 };
 export type StudentScheduleControllerGetStudentScheduleApiResponse =
@@ -99,6 +115,8 @@ export const {
   useLazyStudentScheduleControllerGetAudienciesQuery,
   useStudentScheduleControllerGetTeacherScheduleQuery,
   useLazyStudentScheduleControllerGetTeacherScheduleQuery,
+  useStudentScheduleControllerGetTeacherLatestScheduleQuery,
+  useLazyStudentScheduleControllerGetTeacherLatestScheduleQuery,
   useStudentScheduleControllerGetStudentScheduleQuery,
   useLazyStudentScheduleControllerGetStudentScheduleQuery,
 } = injectedRtkApi;

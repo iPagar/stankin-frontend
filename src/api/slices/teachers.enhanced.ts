@@ -14,4 +14,6 @@ export const {
   useTeachersControllerFindByNameQuery,
   useLazyStudentScheduleControllerGetTeacherScheduleQuery,
   useLazyTeachersControllerFindByNameQuery,
+  useStudentScheduleControllerGetTeacherScheduleQuery,
+  useTeachersControllerRequestUpdateTeachersMutation,
 } = enhancedApi;

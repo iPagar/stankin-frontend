@@ -22,7 +22,7 @@ const LessonCell = ({
     audience: string;
     subject: string;
     type: string;
-    teacher: string;
+    teacher?: string;
   };
   isTeacher?: boolean;
 }) => {
@@ -33,6 +33,7 @@ const LessonCell = ({
   const [findByName, { isLoading }] =
     useLazyTeachersControllerFindByNameQuery();
   const dispatch = useAppDispatch();
+  const teacherName = lesson.teacher;
 
   return (
     <div className={styles.lessonCell__wrapper}>
@@ -53,16 +54,16 @@ const LessonCell = ({
         </div>
         <div className={styles.lessonCell__subject}>{lesson.subject}</div>
         <div className={styles.lessonCell__type}>{lesson.type}</div>
-        {lesson.teacher && (
+        {teacherName && (
           <div
             className={styles.lessonCell__teacher}
             onClick={async () => {
               try {
                 const teacher = await findByName({
-                  name: lesson.teacher,
+                  name: teacherName,
                 }).unwrap();
 
-                dispatch(setSelectedTeacher(teacher));
+                dispatch(setSelectedTeacher({ ...teacher, fio: teacherName }));
                 dispatch(setScheduleModal("teacher"));
               } catch (e) {
                 dispatch(

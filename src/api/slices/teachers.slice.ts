@@ -94,6 +94,7 @@ const injectedRtkApi = api
       >({
         query: (queryArg) => ({
           url: `/api/student-schedule/teachers/${queryArg.name}`,
+          params: { date: queryArg.date },
         }),
         providesTags: ["student-schedule"],
       }),
@@ -149,6 +150,7 @@ export type StudentScheduleControllerGetTeacherScheduleApiResponse =
   /** status 200 Get teacher schedule */ SubjectDto[];
 export type StudentScheduleControllerGetTeacherScheduleApiArg = {
   name: string;
+  date: string;
 };
 export type ReactionsDto = {
   count: number;

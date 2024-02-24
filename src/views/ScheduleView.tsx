@@ -102,13 +102,15 @@ const ScheduleView = ({ id }: { id: string }) => {
           dispatch(setScheduleModal(null));
         }}
       />
-      {activeModal === "teacher" && (
-        <TeacherModal
-          onClose={() => {
-            dispatch(setScheduleModal(null));
-          }}
-        />
-      )}
+      <TeacherModal
+        activeModal={activeModal}
+        onActiveModalChange={(activeModal) => {
+          dispatch(setScheduleModal(activeModal));
+        }}
+        onClose={() => {
+          dispatch(setScheduleModal(null));
+        }}
+      />
     </>
   );
 
