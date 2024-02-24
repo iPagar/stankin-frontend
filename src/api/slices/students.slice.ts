@@ -94,7 +94,10 @@ const injectedRtkApi = api
         StudentScheduleControllerGetAudienciesApiResponse,
         StudentScheduleControllerGetAudienciesApiArg
       >({
-        query: () => ({ url: `/api/student-schedule/audiencies` }),
+        query: (queryArg) => ({
+          url: `/api/student-schedule/audiencies`,
+          params: { date: queryArg.date },
+        }),
         providesTags: ["student-schedule"],
       }),
       studentScheduleControllerGetAudienceSchedule: build.query<
@@ -198,8 +201,10 @@ export type StudentsControllerGetOneApiArg = {
   id: number;
 };
 export type StudentScheduleControllerGetAudienciesApiResponse =
-  /** status 200 Get audiencies */ string[];
-export type StudentScheduleControllerGetAudienciesApiArg = void;
+  /** status 200 Get audiencies */ AudienceDto[];
+export type StudentScheduleControllerGetAudienciesApiArg = {
+  date?: string;
+};
 export type StudentScheduleControllerGetAudienceScheduleApiResponse =
   /** status 200 Get audience schedule */ SubjectDto[];
 export type StudentScheduleControllerGetAudienceScheduleApiArg = {
@@ -265,6 +270,10 @@ export type SubjectDto = {
   type: string;
   year: number;
   _id: string;
+};
+export type AudienceDto = {
+  name: string;
+  lessons: SubjectDto[];
 };
 export const {
   useStudentsControllerGetMeQuery,
