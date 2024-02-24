@@ -19,7 +19,7 @@ export function Audiences(props: {
   onCancelClick?: () => void;
   onAudienceClick?: (audience: string) => void;
 }) {
-  const today = moment("2024-02-26, 13:00").toDate();
+  const today = moment().toDate();
   const [search, setSearch] = useState("");
   const { data, isLoading } = useStudentScheduleControllerGetAudienciesQuery({
     date: moment(today).format("YYYY-MM-DD"),
