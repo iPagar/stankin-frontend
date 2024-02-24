@@ -63,96 +63,98 @@ export function Audiences(props: {
         <Separator wide />
       </FixedLayout>
       {isLoading && <Spinner size="large" style={{ marginTop: 60 }} />}
-      <List
-        style={{
-          paddingTop: 60,
-        }}
-      >
-        {sortedByOccupied?.map((audience, i) => {
-          const occupied = audience.lessons.some((lesson) => {
-            const start = moment(lesson.start_date);
-            const end = moment(lesson.end_date);
-            const now = moment(today);
+      <Div>
+        <List
+          style={{
+            paddingTop: 60,
+          }}
+        >
+          {sortedByOccupied?.map((audience, i) => {
+            const occupied = audience.lessons.some((lesson) => {
+              const start = moment(lesson.start_date);
+              const end = moment(lesson.end_date);
+              const now = moment(today);
 
-            const isOccupied = now.isBetween(start, end);
+              const isOccupied = now.isBetween(start, end);
 
-            return isOccupied;
-          });
-          const occupiedBy = audience.lessons.find((lesson) => {
-            const start = moment(lesson.start_date);
-            const end = moment(lesson.end_date);
-            const now = moment(today);
+              return isOccupied;
+            });
+            const occupiedBy = audience.lessons.find((lesson) => {
+              const start = moment(lesson.start_date);
+              const end = moment(lesson.end_date);
+              const now = moment(today);
 
-            const isOccupied = now.isBetween(start, end);
+              const isOccupied = now.isBetween(start, end);
 
-            return isOccupied;
-          });
+              return isOccupied;
+            });
 
-          return (
-            <SimpleCell
-              key={i}
-              onClick={() => {
-                props.onAudienceClick?.(audience.name);
-              }}
-              after={
-                occupiedBy ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-end",
-                    }}
-                  >
+            return (
+              <SimpleCell
+                key={i}
+                onClick={() => {
+                  props.onAudienceClick?.(audience.name);
+                }}
+                after={
+                  occupiedBy ? (
                     <div
                       style={{
-                        fontSize: 12,
-                        color: "var(--text_secondary)",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
                       }}
                     >
-                      {occupiedBy.teacher}
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: "var(--text_secondary)",
+                        }}
+                      >
+                        {occupiedBy.teacher}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: "var(--text_secondary)",
+                        }}
+                      >
+                        {occupiedBy.stgroup}
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: "var(--text_secondary)",
-                      }}
-                    >
-                      {occupiedBy.stgroup}
-                    </div>
-                  </div>
-                ) : (
-                  ""
-                )
-              }
-            >
-              {audience.name}
-            </SimpleCell>
-          );
-        })}
-        {!isLoading && filteredData?.length === 0 && (
-          <Div>
-            <div
-              style={{
-                textAlign: "center",
-                color: "var(--text_secondary)",
-                marginTop: 20,
-                marginBottom: 5,
-              }}
-            >
-              Ничего не найдено
-            </div>
-            <div
-              style={{
-                textAlign: "center",
-                color: "var(--text_secondary)",
-                fontSize: 12,
-              }}
-            >
-              Если аудитории нет в списке, то в ней нет занятий
-            </div>
-          </Div>
-        )}
-      </List>
+                  ) : (
+                    ""
+                  )
+                }
+              >
+                {audience.name}
+              </SimpleCell>
+            );
+          })}
+          {!isLoading && filteredData?.length === 0 && (
+            <Div>
+              <div
+                style={{
+                  textAlign: "center",
+                  color: "var(--text_secondary)",
+                  marginTop: 20,
+                  marginBottom: 5,
+                }}
+              >
+                Ничего не найдено
+              </div>
+              <div
+                style={{
+                  textAlign: "center",
+                  color: "var(--text_secondary)",
+                  fontSize: 12,
+                }}
+              >
+                Если аудитории нет в списке, то в ней нет занятий
+              </div>
+            </Div>
+          )}
+        </List>
+      </Div>
     </Panel>
   );
 }

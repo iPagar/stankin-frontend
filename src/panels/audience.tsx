@@ -46,6 +46,7 @@ export function Audience(props: { name: string }) {
         {Object.entries(groupByDate || {}).map(([date, lessons]) => {
           return (
             <Group
+              mode="plain"
               key={date}
               header={moment(date).format("DD MMMM")}
               separator="hide"
