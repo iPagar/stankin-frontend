@@ -155,7 +155,7 @@ export const HorizontalCalendar = ({
                     : hasLessons
                     ? light
                       ? "#E4F1FF"
-                      : "#bdbdbd"
+                      : "var(--vkui--color_text_secondary)"
                     : "var(--vkui--color_background_secondary)",
                   color: isChoosed
                     ? light
