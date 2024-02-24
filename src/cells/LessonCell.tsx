@@ -1,6 +1,6 @@
 import styles from "./LessonCell.module.scss";
 import moment from "moment";
-import { Icon16User } from "@vkontakte/icons";
+import { Icon16User, Icon16Users } from "@vkontakte/icons";
 import clsx from "clsx";
 import { useLazyTeachersControllerFindByNameQuery } from "../api/slices/teachers.enhanced";
 import { Snackbar, Spinner } from "@vkontakte/vkui";
@@ -12,18 +12,23 @@ import {
 } from "../api/slices/schedule.slice";
 import { setSnackbar } from "../api/slices/burger.slice";
 
+export function useTeacher(teacherName: string, onTeacherClick: () => void) {}
+
 const LessonCell = ({
   lesson,
   isTeacher,
+  hideAudience,
 }: {
   lesson: {
     start_time: string;
     end_time: string;
-    audience: string;
+    audience?: string;
     subject: string;
     type: string;
     teacher?: string;
+    stgroup?: string;
   };
+  hideAudience?: boolean;
   isTeacher?: boolean;
 }) => {
   const isNow = moment().isBetween(
@@ -48,9 +53,11 @@ const LessonCell = ({
           <span className={styles.lessonCell__time__time}>
             {lesson.start_time} - {lesson.end_time}
           </span>
-          <div className={styles.lessonCell__time__status}>
-            {!lesson.audience && lesson.subject ? "Онлайн" : lesson.audience}
-          </div>
+          {hideAudience || (
+            <div className={styles.lessonCell__time__status}>
+              {!lesson.audience && lesson.subject ? "Онлайн" : lesson.audience}
+            </div>
+          )}
         </div>
         <div className={styles.lessonCell__subject}>{lesson.subject}</div>
         <div className={styles.lessonCell__type}>{lesson.type}</div>
@@ -68,7 +75,9 @@ const LessonCell = ({
               } catch (e) {
                 dispatch(
                   setScheduleSnackbar(
-                    <Snackbar onClose={() => dispatch(setSnackbar(null))}>
+                    <Snackbar
+                      onClose={() => dispatch(setScheduleSnackbar(null))}
+                    >
                       Преподаватель не найден
                     </Snackbar>
                   )
@@ -81,6 +90,14 @@ const LessonCell = ({
               {lesson.teacher}
             </span>
             {isLoading && <Spinner size="small" />}
+          </div>
+        )}
+        {lesson.stgroup && (
+          <div className={styles.lessonCell__teacher}>
+            <Icon16Users fill="#99A2AD" />
+            <span className={styles.lessonCell__teacher__name}>
+              {lesson.stgroup}
+            </span>
           </div>
         )}
       </div>
