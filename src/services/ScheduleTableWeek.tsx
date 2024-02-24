@@ -11,6 +11,7 @@ import { HorizontalCalendar } from "./calendar";
 import moment from "moment";
 import { Icon24CalendarOutline } from "@vkontakte/icons";
 import styles from "./ScheduleTableWeek.module.scss";
+import { useClickAway } from "react-use";
 
 const ScheduleTableWeek = ({
   lessonsWeek,
@@ -37,6 +38,11 @@ const ScheduleTableWeek = ({
 }) => {
   const [choosed, setChoosed] = useState(1);
   const [opened, setOpened] = useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+  const calendarRef = React.useRef<HTMLDivElement>(null);
+  useClickAway(calendarRef, () => {
+    setOpened(false);
+  });
 
   return (
     <React.Fragment>
@@ -70,10 +76,12 @@ const ScheduleTableWeek = ({
                 onClick={() => {
                   setOpened(!opened);
                 }}
+                ref={ref}
               >
                 <Icon24CalendarOutline fill="var(--vkui--color_text_accent)" />
               </div>
             </div>
+
             <HorizontalCalendar
               date={props.pickedDate}
               choosed={choosed}
@@ -81,7 +89,7 @@ const ScheduleTableWeek = ({
                 .filter((day) => {
                   return day.lessons.length > 0;
                 })
-                .map((day) => new Date(day.date))}
+                .map((day) => moment(day.date, "YYYY.MM.DD").toDate())}
               onClick={({
                 choosedDay,
                 dayNumber,
@@ -92,28 +100,33 @@ const ScheduleTableWeek = ({
                 setChoosed(dayNumber);
               }}
             />
-
-            {opened && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <LocaleProvider value={"ru"}>
-                  <Calendar
-                    value={props.pickedDate}
-                    onChange={(date) => {
-                      props.onDateChange?.(date);
-                      setOpened(false);
-                      setChoosed(0);
-                    }}
-                  />
-                </LocaleProvider>
-              </div>
-            )}
           </div>
         </FixedLayout>
+      )}
+      {opened && ref && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            position: "absolute",
+            zIndex: 100,
+            top: ref.current?.getBoundingClientRect().bottom,
+            marginTop: 80,
+            width: "100%",
+          }}
+        >
+          <LocaleProvider value={"ru"}>
+            <Calendar
+              getRootRef={calendarRef}
+              value={props.pickedDate}
+              onChange={(date) => {
+                props.onDateChange?.(date);
+                setOpened(false);
+                setChoosed(0);
+              }}
+            />
+          </LocaleProvider>
+        </div>
       )}
 
       <Div>
@@ -147,6 +160,7 @@ const ScheduleTableWeek = ({
                 onClick={() => {
                   setOpened(!opened);
                 }}
+                ref={ref}
               >
                 <Icon24CalendarOutline fill="var(--vkui--color_text_accent)" />
               </div>
@@ -160,6 +174,7 @@ const ScheduleTableWeek = ({
               >
                 <LocaleProvider value={"ru"}>
                   <Calendar
+                    getRootRef={calendarRef}
                     value={props.pickedDate}
                     onChange={(date) => {
                       props.onDateChange?.(date);
@@ -169,7 +184,7 @@ const ScheduleTableWeek = ({
                 </LocaleProvider>
               </div>
             )}
-            {
+            {before && (
               <div
                 style={{
                   display: "flex",
@@ -179,7 +194,7 @@ const ScheduleTableWeek = ({
               >
                 {before}
               </div>
-            }
+            )}
             <div
               style={{
                 display: "flex",

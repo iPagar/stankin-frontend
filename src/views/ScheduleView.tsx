@@ -135,7 +135,7 @@ const ScheduleView = ({ id }: { id: string }) => {
             Расписание
           </PanelHeader>
 
-          {!stgroup || !group ? (
+          {(!stgroup || !group) && !isFetching ? (
             <Placeholder
               header="Группа не выбрана"
               icon={<Icon56Users3Outline />}
