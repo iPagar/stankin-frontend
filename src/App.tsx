@@ -22,6 +22,7 @@ import {
   setGroup,
   setGroupAndStgroup,
   setIsFetching,
+  setScheduleModal,
   setStgroup,
 } from "./api/slices/schedule.slice";
 import { useStudentsControllerGetMeQuery } from "./api/slices/students.slice";
@@ -151,8 +152,10 @@ export function App() {
                     stgroup: stgroup,
                     group: data[0],
                   });
-                  // await dispatch(loadSchedule());
+
+                  dispatch(setGroupAndStgroup({ group: data[0], stgroup }));
                   dispatch(setView("scheduleView"));
+                  dispatch(setScheduleModal(null));
                 } else {
                   await dispatch(setStgroup(stgroup));
                   dispatch(setView("groupsView"));
@@ -176,8 +179,8 @@ export function App() {
 
             dispatch(setGroupAndStgroup({ group, stgroup }));
 
-            // await dispatch(loadSchedule());
             dispatch(setView("scheduleView"));
+            dispatch(setScheduleModal(null));
           }}
         />
       </Root>
