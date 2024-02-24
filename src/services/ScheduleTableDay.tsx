@@ -102,7 +102,7 @@ const ScheduleTableDay = ({
       const start = moment(lesson.end_time, "HH:mm");
       const end = moment(nextLesson.start_time, "HH:mm");
 
-      if (end.diff(start, "minutes") > 10) {
+      if (end.diff(start, "minutes") > 40) {
         lessonsDay.splice(i + 1, 0, {
           lessonType: "break",
         });
