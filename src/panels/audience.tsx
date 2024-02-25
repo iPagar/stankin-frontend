@@ -11,6 +11,7 @@ import { useStudentScheduleControllerGetAudienceScheduleQuery } from "../api/sli
 import LessonCell from "../cells/LessonCell";
 import moment from "moment";
 import { SubjectDto } from "../api/slices/student-schedule.slice";
+import { groupByDateAndStgroup } from "../views/schedule-utils";
 
 export function Audience(props: { name: string }) {
   const { data, isLoading } =
@@ -22,14 +23,7 @@ export function Audience(props: { name: string }) {
     return <Spinner size="large" style={{ marginTop: 20 }} />;
   }
 
-  const groupByDate = data?.reduce((acc, lesson) => {
-    const date = moment(lesson.start_date).format("YYYY-MM-DD");
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push(lesson);
-    return acc;
-  }, {} as Record<string, SubjectDto[]>);
+  const grouped = groupByDateAndStgroup(data || []);
 
   return (
     <Div>
@@ -43,12 +37,12 @@ export function Audience(props: { name: string }) {
       </Header>
 
       <List>
-        {Object.entries(groupByDate || {}).map(([date, lessons]) => {
+        {Object.entries(grouped || {}).map(([date, lessons]) => {
           return (
             <Group
               mode="plain"
               key={date}
-              header={moment(date).format("DD MMMM")}
+              header={moment(date, "DD.MM.YYYY").format("DD MMMM, dddd")}
               separator="hide"
               style={{
                 margin: 0,
@@ -79,7 +73,7 @@ export function Audience(props: { name: string }) {
             </Group>
           );
         })}
-        {Object.keys(groupByDate || {}).length === 0 && (
+        {Object.keys(grouped || {}).length === 0 && (
           <Subhead style={{ textAlign: "center", marginTop: 20 }}>
             Занятий не найдено
           </Subhead>

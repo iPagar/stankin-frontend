@@ -3,16 +3,12 @@ import moment from "moment";
 import { Icon16User, Icon16Users } from "@vkontakte/icons";
 import clsx from "clsx";
 import { useLazyTeachersControllerFindByNameQuery } from "../api/slices/teachers.enhanced";
-import { Snackbar, Spinner } from "@vkontakte/vkui";
+import { Spinner } from "@vkontakte/vkui";
 import { useAppDispatch } from "../api/store";
 import {
   setScheduleModal,
-  setScheduleSnackbar,
   setSelectedTeacher,
 } from "../api/slices/schedule.slice";
-import { setSnackbar } from "../api/slices/burger.slice";
-
-export function useTeacher(teacherName: string, onTeacherClick: () => void) {}
 
 const LessonCell = ({
   lesson,
@@ -70,18 +66,13 @@ const LessonCell = ({
                   name: teacherName,
                 }).unwrap();
 
-                dispatch(setSelectedTeacher({ ...teacher, fio: teacherName }));
+                dispatch(
+                  setSelectedTeacher({ data: teacher, fio: teacherName })
+                );
                 dispatch(setScheduleModal("teacher"));
               } catch (e) {
-                dispatch(
-                  setScheduleSnackbar(
-                    <Snackbar
-                      onClose={() => dispatch(setScheduleSnackbar(null))}
-                    >
-                      Преподаватель не найден
-                    </Snackbar>
-                  )
-                );
+                dispatch(setSelectedTeacher({ fio: teacherName }));
+                dispatch(setScheduleModal("teacher"));
               }
             }}
           >

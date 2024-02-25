@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { useStudentScheduleControllerGetAudienciesQuery } from "../api/slices/student-schedule.slice";
 import moment from "moment";
+import { groupByDateAndStgroup } from "../views/schedule-utils";
 
 export function Audiences(props: {
   id: string;
@@ -70,24 +71,35 @@ export function Audiences(props: {
           }}
         >
           {sortedByOccupied?.map((audience, i) => {
-            const occupied = audience.lessons.some((lesson) => {
-              const start = moment(lesson.start_date);
-              const end = moment(lesson.end_date);
-              const now = moment(today);
+            const grouped = groupByDateAndStgroup(audience.lessons);
 
-              const isOccupied = now.isBetween(start, end);
+            const occupiedBy = Object.entries(grouped).reduce(
+              (acc, [date, lessons]) => {
+                const found = lessons.find((lesson) => {
+                  const start = moment(lesson.start_date);
+                  const end = moment(lesson.end_date);
+                  const now = moment(today);
 
-              return isOccupied;
-            });
-            const occupiedBy = audience.lessons.find((lesson) => {
-              const start = moment(lesson.start_date);
-              const end = moment(lesson.end_date);
-              const now = moment(today);
+                  const isOccupied = now.isBetween(start, end);
 
-              const isOccupied = now.isBetween(start, end);
+                  return isOccupied;
+                });
 
-              return isOccupied;
-            });
+                if (found) {
+                  acc.push({
+                    stgroup: found.stgroup,
+                    teacher: found.teacher,
+                  });
+                }
+
+                return acc;
+              },
+              [] as {
+                stgroup: string;
+                teacher: string;
+              }[]
+            );
+            const isOccupied = occupiedBy.length > 0;
 
             return (
               <SimpleCell
@@ -96,7 +108,7 @@ export function Audiences(props: {
                   props.onAudienceClick?.(audience.name);
                 }}
                 after={
-                  occupiedBy ? (
+                  isOccupied ? (
                     <div
                       style={{
                         display: "flex",
@@ -107,18 +119,18 @@ export function Audiences(props: {
                       <div
                         style={{
                           fontSize: 12,
-                          color: "var(--text_secondary)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
                         }}
                       >
-                        {occupiedBy.teacher}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: "var(--text_secondary)",
-                        }}
-                      >
-                        {occupiedBy.stgroup}
+                        <span
+                          style={{
+                            color: "#aebfcf",
+                          }}
+                        >
+                          {occupiedBy[0].teacher}
+                        </span>
                       </div>
                     </div>
                   ) : (
@@ -126,7 +138,12 @@ export function Audiences(props: {
                   )
                 }
               >
-                {audience.name}
+                {audience.name}{" "}
+                {isOccupied && (
+                  <svg width="10" height="10" viewBox="0 0 10 10">
+                    <circle cx="5" cy="5" r="5" fill="#FF3347" />
+                  </svg>
+                )}
               </SimpleCell>
             );
           })}

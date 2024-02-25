@@ -20,8 +20,9 @@ const initialState = {
   activeStgroup: string;
   activeGroup: string;
   modal: string | null;
-  selectedTeacher?: TeacherDto & {
+  selectedTeacher?: {
     fio: string;
+    data: TeacherDto;
   };
   snackbar: ReactNode;
 };
