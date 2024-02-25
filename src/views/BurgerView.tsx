@@ -44,6 +44,8 @@ import { useAppDispatch, useAppSelector } from "../api/store";
 import {
   setActiveModal,
   setActivePanel,
+  setAudience,
+  setHistory,
   setSearchTeacher,
 } from "../api/slices/burger.slice";
 import { useMarksControllerSwitchNotifyMutation } from "../api/slices/marks.slice";
@@ -64,7 +66,7 @@ const BurgerView = ({ id }: { id: string }) => {
     isNotify: boolean;
   } | null>(null);
   const { data: me, isLoading: meLoading } = useStudentsControllerGetMeQuery();
-  const [history, setHistory] = useState(["main"]);
+  const history = useAppSelector((state) => state.burger.history);
 
   useEffect(() => {
     updateAdditional();
@@ -76,7 +78,7 @@ const BurgerView = ({ id }: { id: string }) => {
     if (hash.includes("teachers")) {
       burgerPanel = "teachers";
       dispatch(setActivePanel(burgerPanel));
-      setHistory(["main", "teachers"]);
+      dispatch(setHistory(["main", "teachers"]));
 
       if (hash.match(/\?.*/) && hash.match(/\?.*/)![0].slice(1)) {
         teacherName = decodeURI(hash.match(/\?.*/)![0].slice(1));
@@ -125,7 +127,7 @@ const BurgerView = ({ id }: { id: string }) => {
     if (newActivePanel === "main") {
       bridge.send("VKWebAppDisableSwipeBack");
     }
-    setHistory(newHistory);
+    dispatch(setHistory(newHistory));
     dispatch(setActivePanel(newActivePanel));
   };
 
@@ -135,12 +137,12 @@ const BurgerView = ({ id }: { id: string }) => {
     if (activePanel === "main") {
       bridge.send("VKWebAppEnableSwipeBack");
     }
-    setHistory(newHistory);
+    dispatch(setHistory(newHistory));
     dispatch(setActivePanel(activePanel));
   };
 
   const [notify] = useMarksControllerSwitchNotifyMutation();
-  const [audience, setAudience] = useState<string>("");
+  const audience = useAppSelector((state) => state.burger.audience);
 
   return (
     <SplitLayout modal={modal}>
@@ -376,7 +378,7 @@ const BurgerView = ({ id }: { id: string }) => {
           id="audiences"
           onCancelClick={() => goBack()}
           onAudienceClick={(audience) => {
-            setAudience(audience);
+            dispatch(setAudience(audience));
             goForward("audience");
           }}
         />

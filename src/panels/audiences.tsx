@@ -68,6 +68,7 @@ export function Audiences(props: {
         <List
           style={{
             paddingTop: 60,
+            paddingBottom: 60,
           }}
         >
           {sortedByOccupied?.map((audience, i) => {

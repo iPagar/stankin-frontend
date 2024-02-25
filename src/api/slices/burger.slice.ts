@@ -9,6 +9,7 @@ const initialState = {
   teacher: "",
   snackbar: null,
   searchTeacher: "",
+  history: ["main"],
 } as {
   activePanel: string;
   activeModal: string | null;
@@ -16,6 +17,8 @@ const initialState = {
   teacher: string;
   snackbar: SnackbarProps | null;
   searchTeacher: string;
+  audience: string | null;
+  history: string[];
 };
 
 const burgerSlice = createSlice({
@@ -40,6 +43,12 @@ const burgerSlice = createSlice({
     setSearchTeacher(state, action) {
       state.searchTeacher = action.payload;
     },
+    setAudience(state, action) {
+      state.audience = action.payload;
+    },
+    setHistory(state, action) {
+      state.history = action.payload;
+    },
   },
 });
 
@@ -50,6 +59,8 @@ export const {
   setTeacher,
   setSnackbar,
   setSearchTeacher,
+  setAudience,
+  setHistory,
 } = burgerSlice.actions;
 
 export default burgerSlice.reducer;

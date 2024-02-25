@@ -1,16 +1,7 @@
-import {
-  Div,
-  Group,
-  Header,
-  List,
-  SimpleCell,
-  Spinner,
-  Subhead,
-} from "@vkontakte/vkui";
+import { Div, Group, Header, List, Spinner, Subhead } from "@vkontakte/vkui";
 import { useStudentScheduleControllerGetAudienceScheduleQuery } from "../api/slices/students.slice";
 import LessonCell from "../cells/LessonCell";
 import moment from "moment";
-import { SubjectDto } from "../api/slices/student-schedule.slice";
 import { groupByDateAndStgroup } from "../views/schedule-utils";
 
 export function Audience(props: { name: string }) {
@@ -26,7 +17,11 @@ export function Audience(props: { name: string }) {
   const grouped = groupByDateAndStgroup(data || []);
 
   return (
-    <Div>
+    <Div
+      style={{
+        paddingBottom: 60,
+      }}
+    >
       <Header
         mode="secondary"
         style={{
