@@ -78,7 +78,6 @@
   &__teacher {
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 4px;
     padding: 2px 4px;
 
@@ -92,6 +91,10 @@
       line-height: 16px; /* 114.286% */
       letter-spacing: -0.08px;
       white-space: nowrap;
+
+      &__stgroup {
+        white-space: normal;
+      }
 
       @media (prefers-color-scheme: dark) {
         color: var(--Dark-Text-Secondary, #818c99);

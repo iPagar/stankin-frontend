@@ -86,7 +86,12 @@ const LessonCell = ({
         {lesson.stgroup && (
           <div className={styles.lessonCell__teacher}>
             <Icon16Users fill="#99A2AD" />
-            <span className={styles.lessonCell__teacher__name}>
+            <span
+              className={clsx(
+                styles.lessonCell__teacher__name,
+                styles.lessonCell__teacher__name__stgroup
+              )}
+            >
               {lesson.stgroup}
             </span>
           </div>
