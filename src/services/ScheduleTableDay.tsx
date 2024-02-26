@@ -7,6 +7,11 @@ import LessonCell from "../cells/LessonCell";
 import { Icon56GestureOutline } from "@vkontakte/icons";
 import { LessonBreak } from "../cells/lesson-break";
 import { useLazyTeachersControllerFindByNameQuery } from "../api/slices/teachers.enhanced";
+import {
+  setScheduleModal,
+  setSelectedAudience,
+} from "../api/slices/schedule.slice";
+import { useAppDispatch } from "../api/store";
 
 moment.locale("ru");
 
@@ -117,6 +122,7 @@ const ScheduleTableDay = ({
 
     return lessonsDay;
   };
+  const dispatch = useAppDispatch();
 
   return (
     <div style={{ maxWidth: 400, display: "contents", ...style }}>
@@ -138,7 +144,15 @@ const ScheduleTableDay = ({
         >
           {parsedLessons.map((lesson, i) => {
             return lesson.lessonType === "lesson" ? (
-              <LessonCell key={i} lesson={lesson} isTeacher={isTeacher} />
+              <LessonCell
+                key={i}
+                lesson={lesson}
+                isTeacher={isTeacher}
+                onAudienceClick={(audience) => {
+                  dispatch(setSelectedAudience(audience));
+                  dispatch(setScheduleModal("audience"));
+                }}
+              />
             ) : (
               <LessonBreak key={i} />
             );

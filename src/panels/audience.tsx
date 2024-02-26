@@ -11,7 +11,7 @@ export function Audience(props: { name: string }) {
     });
 
   if (isLoading) {
-    return <Spinner size="large" style={{ marginTop: 20 }} />;
+    return <Spinner size="large" style={{ marginTop: 20, height: 200 }} />;
   }
 
   const grouped = groupByDateAndStgroup(data || []);

@@ -14,6 +14,7 @@ const LessonCell = ({
   lesson,
   isTeacher,
   hideAudience,
+  onAudienceClick,
 }: {
   lesson: {
     start_time: string;
@@ -26,6 +27,7 @@ const LessonCell = ({
   };
   hideAudience?: boolean;
   isTeacher?: boolean;
+  onAudienceClick?: (audience: string) => void;
 }) => {
   const isNow = moment().isBetween(
     moment(lesson.start_time),
@@ -50,7 +52,14 @@ const LessonCell = ({
             {lesson.start_time} - {lesson.end_time}
           </span>
           {hideAudience || (
-            <div className={styles.lessonCell__time__status}>
+            <div
+              className={styles.lessonCell__time__status}
+              onClick={() => {
+                if (lesson.audience && onAudienceClick) {
+                  onAudienceClick(lesson.audience);
+                }
+              }}
+            >
               {!lesson.audience && lesson.subject ? "Онлайн" : lesson.audience}
             </div>
           )}

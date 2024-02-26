@@ -31,6 +31,7 @@ import { useAppDispatch, useAppSelector } from "../api/store";
 import { setIsFetching, setScheduleModal } from "../api/slices/schedule.slice";
 import { TeacherModal } from "./teacher-modal";
 import { SubjectDto } from "../api/slices/student-schedule.slice";
+import { AudienceModal } from "./audience-modal";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ScheduleView = ({ id }: { id: string }) => {
@@ -112,6 +113,12 @@ const ScheduleView = ({ id }: { id: string }) => {
         onActiveModalChange={(activeModal) => {
           dispatch(setScheduleModal(activeModal));
         }}
+        onClose={() => {
+          dispatch(setScheduleModal(null));
+        }}
+      />
+      <AudienceModal
+        activeModal={activeModal}
         onClose={() => {
           dispatch(setScheduleModal(null));
         }}

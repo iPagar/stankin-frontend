@@ -25,6 +25,7 @@ const initialState = {
     data: TeacherDto;
   };
   snackbar: ReactNode;
+  selectedAudience?: string;
 };
 
 const scheduleSlice = createSlice({
@@ -53,6 +54,9 @@ const scheduleSlice = createSlice({
     setScheduleSnackbar: (state, action) => {
       state.snackbar = action.payload;
     },
+    setSelectedAudience: (state, action) => {
+      state.selectedAudience = action.payload;
+    },
   },
 });
 
@@ -64,6 +68,7 @@ export const {
   setScheduleModal,
   setSelectedTeacher,
   setScheduleSnackbar,
+  setSelectedAudience,
 } = scheduleSlice.actions;
 
 export default scheduleSlice.reducer;
