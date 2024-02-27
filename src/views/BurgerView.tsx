@@ -35,6 +35,7 @@ import {
   Icon20Info,
   Icon28NotificationCircleFillGray,
   Icon16Location,
+  Icon16Compass,
 } from "@vkontakte/icons";
 import TopView from "./TopView";
 import telegram from "../img/telegram.png";
@@ -221,7 +222,7 @@ const BurgerView = ({ id }: { id: string }) => {
               </SimpleCell>
               <SimpleCell
                 expandable="always"
-                before={<Icon16Location width={28} height={28} />}
+                before={<Icon16Compass width={28} height={28} />}
                 onClick={() => {
                   goForward("audiences");
                 }}

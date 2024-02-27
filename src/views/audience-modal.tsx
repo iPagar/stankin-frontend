@@ -43,6 +43,7 @@ export function AudienceModal({
         id="audience"
         header={<ModalPageHeader>{audience}</ModalPageHeader>}
         dynamicContentHeight
+        settlingHeight={100}
       >
         <Audience name={audience} />
       </ModalPage>
