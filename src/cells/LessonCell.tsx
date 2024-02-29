@@ -29,10 +29,15 @@ const LessonCell = ({
   isTeacher?: boolean;
   onAudienceClick?: (audience: string) => void;
 }) => {
-  const isNow = moment().isBetween(
-    moment(lesson.start_time),
-    moment(lesson.end_time)
-  );
+  const startTime = moment(lesson.start_time);
+  const endTime = moment(lesson.start_time);
+  // add 90 minutes if lesson time is less then 18 hours
+  if (startTime.hours() > 18) {
+    endTime.add(90, "minute");
+  } else {
+    endTime.add(100, "minute");
+  }
+  const isNow = moment().isBetween(startTime, endTime);
   const [findByName, { isLoading }] =
     useLazyTeachersControllerFindByNameQuery();
   const dispatch = useAppDispatch();
@@ -49,7 +54,7 @@ const LessonCell = ({
       >
         <div className={styles.lessonCell__time}>
           <span className={styles.lessonCell__time__time}>
-            {lesson.start_time} - {lesson.end_time}
+            {startTime.format("HH:mm")} - {endTime.format("HH:mm")}
           </span>
           {hideAudience || (
             <div

@@ -86,15 +86,12 @@ const ScheduleTableDay = ({
     )[] = [];
     const groups = [[], [], [], [], [], [], [], []];
     data.forEach((lesson) => {
-      const day = moment(lesson.start_date);
+      const day = lesson.start_date;
 
       lessonsDay.push({
         ...lesson,
-        start_time: day.format("H:mm"),
-        end_time:
-          moment.utc(lesson.start_date).hours() + 3 < 18
-            ? day.add(100, "minutes").format("H:mm")
-            : day.add(90, "minutes").format("H:mm"),
+        start_time: day,
+        end_time: lesson.start_date,
         lessonType: "lesson",
       });
     });

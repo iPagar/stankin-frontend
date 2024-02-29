@@ -54,8 +54,8 @@ export function Audience(props: { name: string }) {
                     key={lesson._id}
                     hideAudience
                     lesson={{
-                      start_time: moment(lesson.start_date).format("HH:mm"),
-                      end_time: moment(lesson.end_date).format("HH:mm"),
+                      start_time: lesson.start_date,
+                      end_time: lesson.end_date,
                       audience: lesson.audience,
                       subject: lesson.subject,
                       type: lesson.type,

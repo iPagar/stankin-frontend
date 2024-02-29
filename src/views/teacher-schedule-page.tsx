@@ -81,10 +81,8 @@ export function TeacherSchedulePage({
                     audience: item.audience,
                     subject: item.subject,
                     type: item.type,
-                    end_time: moment(item.end_date)
-                      .add(100, "minute")
-                      .format("LT"),
-                    start_time: moment(item.start_date).format("LT"),
+                    end_time: item.end_date,
+                    start_time: item.start_date,
                     stgroup: item.stgroup,
                   }}
                 />
