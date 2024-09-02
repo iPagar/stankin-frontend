@@ -9,6 +9,63 @@ import {
   setScheduleModal,
   setSelectedTeacher,
 } from "../api/slices/schedule.slice";
+// TODO: what is this?
+export function getBreakTime(startTime: string) {
+  const time = moment(startTime);
+  const hours = time.hours();
+
+  switch (hours) {
+    case 8:
+      return moment("10", "mm");
+    case 10:
+      return moment("20", "mm");
+    case 12:
+      return moment("10", "mm");
+    case 14:
+      return moment("10", "mm");
+    case 16:
+      return moment("20", "mm");
+    case 18:
+      return moment("10", "mm");
+    default:
+      return moment("10", "mm");
+  }
+}
+// TODO: what is this?
+export function isLessonNext(lesson: { start_time: string }) {
+  const now = moment();
+  const lessonStartTime = moment(lesson.start_time, "HH:mm");
+  const breakTime = getBreakTime(lesson.start_time);
+
+  // Добавляем время перерыва к времени начала урока для корректировки времени начала
+  const adjustedLessonStartTime = lessonStartTime
+    .subtract(breakTime.hours(), "hours")
+    .subtract(breakTime.minutes(), "minutes");
+
+  // Определяем время окончания урока в зависимости от времени его начала
+  let endTime = moment(lesson.start_time, "HH:mm");
+  if (endTime.hours() > 18) {
+    endTime.add(90, "minutes");
+  } else {
+    endTime.add(100, "minutes");
+  }
+
+  // Проверяем, что текущее время находится в пределах интервала до начала следующего урока
+  if (now.isBefore(adjustedLessonStartTime)) {
+    // Проверяем, что текущее время + длительность типичного урока (максимально возможная длительность для упрощения) не превышает время начала следующего урока
+    // Это условие предполагает, что уроки идут один за другим без перерывов между ними, кроме указанных перерывов
+    let maxLessonDuration = 100; // Максимальная длительность урока для упрощения проверки
+    let nextPossibleLessonTime = now.add(maxLessonDuration, "minutes");
+    if (
+      nextPossibleLessonTime.isBefore(adjustedLessonStartTime) ||
+      nextPossibleLessonTime.isSame(adjustedLessonStartTime)
+    ) {
+      return true; // Урок является следующим
+    }
+  }
+
+  return false; // Урок не является следующим
+}
 
 const LessonCell = ({
   lesson,
