@@ -69,7 +69,7 @@ function Form({
           to={{ opacity: 1 }}
         >
           {(props) => (
-            <div style={props}>
+            <div style={{ width: "100%", maxWidth: "250px", ...props }}>
               <FormLayoutGroup>
                 <FormItem
                   status={errors.login ? "error" : "default"}
@@ -161,23 +161,35 @@ export function Login({ id }: { id: string }) {
           </Avatar>
         }
         duration={10000}
+        onActionClick={() => {
+          setModal(true);
+          setSnackbar(null);
+        }}
+        action={
+          <Button
+            mode="outline"
+            size="s"
+            style={{
+              paddingLeft: 16,
+              paddingRight: 16,
+            }}
+          >
+            Помощь со входом
+          </Button>
+        }
       >
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
+            marginBottom: 12,
           }}
         >
           <Text weight="2" style={{ marginBottom: 8 }}>
             Ошибка входа
           </Text>
-          <Text style={{ marginBottom: 12 }}>
-            Неверный логин или пароль. Проверьте введенные данные.
-          </Text>
-          <Button mode="outline" onClick={() => setModal(true)}>
-            Помощь со входом
-          </Button>
+          <Text>Неверный логин или пароль. Проверьте введенные данные.</Text>
         </div>
       </Snackbar>
     );
