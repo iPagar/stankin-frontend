@@ -88,8 +88,8 @@ const LessonCell = ({
 }) => {
   const startTime = moment(lesson.start_time);
   const endTime = moment(lesson.start_time);
-  // add 90 minutes if lesson time is less then 18 hours
-  if (startTime.hours() > 18) {
+  // add 90 minutes if lesson time is less or equal 18 hours
+  if (startTime.hours() >= 18) {
     endTime.add(90, "minute");
   } else {
     endTime.add(100, "minute");
