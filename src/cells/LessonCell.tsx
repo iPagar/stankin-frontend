@@ -1,5 +1,5 @@
 import styles from "./LessonCell.module.scss";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Icon16User, Icon16Users } from "@vkontakte/icons";
 import clsx from "clsx";
 import { useLazyTeachersControllerFindByNameQuery } from "../api/slices/teachers.enhanced";
@@ -33,8 +33,12 @@ export function getBreakTime(startTime: string) {
 }
 // TODO: what is this?
 export function isLessonNext(lesson: { start_time: string }) {
-  const now = moment();
-  const lessonStartTime = moment(lesson.start_time, "HH:mm");
+  const now = moment().tz("Europe/Moscow");
+  const lessonStartTime = moment.tz(
+    lesson.start_time,
+    "HH:mm",
+    "Europe/Moscow"
+  );
   const breakTime = getBreakTime(lesson.start_time);
 
   // Добавляем время перерыва к времени начала урока для корректировки времени начала
@@ -86,10 +90,11 @@ const LessonCell = ({
   isTeacher?: boolean;
   onAudienceClick?: (audience: string) => void;
 }) => {
+  // start_time приходит с бэкенда уже в московском времени
   const startTime = moment(lesson.start_time);
   const endTime = moment(lesson.start_time);
-  // add 90 minutes if lesson time is less or equal 18 hours
-  if (startTime.hours() >= 18) {
+  const startMoscowTime = moment.tz(lesson.start_time, "Europe/Moscow");
+  if (startMoscowTime.hours() >= 18) {
     endTime.add(90, "minute");
   } else {
     endTime.add(100, "minute");
